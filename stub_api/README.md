@@ -9,7 +9,7 @@ Core API
         /book/<book_id>/full.json
  * page info, including text - id either number or other id scheme (see *page_1.json* - note the syntax I'm suggesting for marking place references in the HTML text):
         /book/<book_id>/pages/<page_id>.json
- * detailed place info, including description, metadata, etc (see *place_1.json*):
+ * detailed place info, including description, metadata, etc (see *place_1.json* - there might be lots of additional metadata we might add):
         /places/<place_id>.json
 
 Probably Unnecessary API
@@ -22,5 +22,6 @@ These are probably part of the core book data, so may not need their own URIs.
 
 API Questions
 -----------------
+ * Will the full book info be an excessively large download for large works?
  * Do authors need a model at this point? (I'm guessing they will eventually)
  * Is it worth designing the API for non-point geometries (e.g. polygons, etc), or can we assume that's it for now?
