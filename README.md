@@ -1,0 +1,1 @@
+GapVis is (ok, will be) an visual interface for reading ancient texts. It's part of the Google Ancient Places project - read more at http://googleancientplaces.wordpress.com/
