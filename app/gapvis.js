@@ -75,6 +75,36 @@ var gv = (function(window) {
         initCollections: function() {
             this.places.reset(this.get('places'));
             this.pages.reset(this.get('pages'));
+        },
+        
+        // array of page labels for timemap
+        labels: function() {
+            return this.pages.map(function(p) { return p.id });
+        },
+        
+        // array of items for timemap
+        timemapItems: function() {
+            var book = this,
+                items = [];
+            this.pages.each(function(page) {
+                var places = page.get('places') || [];
+                places.forEach(function(placeId) {
+                    var place = book.places.get(placeId),
+                        ll = place.get('ll');
+                    items.push({
+                        title: place.get('title'),
+                        point: {
+                            lat: ll[0],
+                            lon: ll[1]
+                        },
+                        page: page.id,
+                        options: {
+                            place: place
+                        }
+                    });
+                });
+            });
+            return items;
         }
     });
     
@@ -105,13 +135,14 @@ var gv = (function(window) {
     // default view
     var View = Backbone.View.extend({
             open: function() {
-                $(this.el).slideDown();
+                $(this.el).show();
             },
             close: function() {
-                $(this.el).slideUp();
+                $(this.el).hide();
             }
         }),
-        BookListView, IndexView, BookView, BookTitleView;
+        BookListView, IndexView, 
+        BookView, BookTitleView, TimemapView;
     
     // View: BookListView (item in book index)
     BookListView = View.extend({
@@ -152,19 +183,28 @@ var gv = (function(window) {
     BookView = View.extend({
         el: '#book-view',
         
-        initialize: function(opts) {
-            var book = this.model = new Book({ id: opts.bookId });
-            book.bind('change', this.initViews, this);
+        initialize: function() {
+            var view = this,
+                book = this.model;
             book.fetch({ 
                 success: function() {
-                    book.initCollections(); 
-                } 
+                    book.initCollections();
+                    view.initViews();
+                }
+                // XXX: error
             });
         },
         
         initViews: function() {
-            var view = this.titleView = new BookTitleView({ model: this.model });
-            $(this.el).append(view.render().el);
+            var $el = $(this.el);
+            this.views = {
+                title: new BookTitleView({ model: this.model }),
+                timemap: new TimemapView({ model: this.model })
+            };
+            _(this.views).each(function(view) {
+                $el.append(view.render().el);
+            });
+            this.views.timemap.initTimemap();
         },
         
         clear: function() {
@@ -184,6 +224,65 @@ var gv = (function(window) {
         render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
+        }
+    });
+    
+    // View: TimemapView
+    TimemapView = View.extend({
+        tagName: 'div',
+        id: 'timemap-view',
+        
+        initialize: function() {
+            this.template = $('#timemap-template').html();
+        },
+        
+        render: function() {
+            $(this.el).html(this.template);
+            return this;
+        },
+        
+        initTimemap: function() {
+            var book = this.model,
+                // create band info
+                bandInfo = [
+                    Timeline.createBandInfo({
+                        width:          "88%", 
+                        intervalUnit:   Timeline.DateTime.YEAR, 
+                        intervalPixels: 110,
+                        eventSource:    false
+                    }),
+                    Timeline.createBandInfo({
+                        width:          "12%", 
+                        intervalUnit:   Timeline.DateTime.DECADE, 
+                        intervalPixels: 200,
+                        overview:       true,
+                        eventSource:    false
+                    })
+                ],
+                // add custom labeller
+                labelUtils = new LabelUtils(bandInfo, book.labels(), function() { return false; });
+            
+            this.tm = TimeMap.init({
+                mapId: "map",
+                timelineId: "timeline",
+                options: {
+                    eventIconPath: "images/"
+                },
+                datasets: [
+                    {
+                        theme: "blue",
+                        type: "basic",
+                        options: {
+                            items: book.timemapItems(),
+                            transformFunction: function(item) {
+                                item.start = labelUtils.getLabelIndex(item.page) + ' AD';
+                                return item;
+                            }
+                        }
+                    }
+                ],
+                bands: bandInfo
+            });
         }
     });
     
@@ -207,7 +306,6 @@ var gv = (function(window) {
         index: function() {
             // index is cached
             if (!this.indexView) {
-                
                 this.indexView = new IndexView({ model: this.books });
             }
             this.open(this.indexView);
@@ -217,7 +315,8 @@ var gv = (function(window) {
             bid = parseInt(bid);
             if (bid != this.currentBookId) {
                 this.currentBookId = bid;
-                this.bookView = new BookView({ bookId: bid });
+                var book = new Book({ id: bid });
+                this.bookView = new BookView({ model:book });
             }
             this.open(this.bookView);
         },
@@ -226,7 +325,7 @@ var gv = (function(window) {
         open: function(view) {
             if (view) {
                 var oldview = this.currentView;
-                if (oldview) {
+                if (oldview && oldview != view) {
                     oldview.close();
                 }
                 this.currentView = view;

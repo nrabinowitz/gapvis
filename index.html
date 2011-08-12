@@ -16,7 +16,9 @@
     <script type="text/javascript" src="lib/mxn.core-min.js"></script>
     <script type="text/javascript" src="lib/mxn.googlev3.core-min.js"></script>
     <script type="text/javascript" src="lib/timeline-2.3.0.js"></script>
+    <!-- <script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js"></script> -->
     <script type="text/javascript" src="lib/timemap_full.pack.js"></script>
+    <script type="text/javascript" src="lib/label_utils.js"></script>
     <script type="text/javascript" src="lib/backbone.min.js"></script>
     <script type="text/javascript" src="lib/d3.js"></script>
     <script type="text/javascript" src="app/gapvis.js"></script>
@@ -50,6 +52,7 @@
     </div>
 
     <!-- Templates -->
+    
     <script type="text/template" id="book-title-template">
         <h2 id="book-title"><%= title %></h2>
         <p>Author: <%= author %></p>
@@ -58,5 +61,14 @@
         <p>Pages: <%= pages.length %>
     </script>
 
+    <script type="text/template" id="timemap-template">
+        <div id="mapcontainer">
+          <div id="map"></div>
+        </div>
+        <div id="timelinecontainer">
+          <div id="timeline"></div>
+        </div>
+    </script>
+    
 </body>
 </html>
