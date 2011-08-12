@@ -1,0 +1,52 @@
+/* GapVis styles. */
+
+body {
+    font-family: Georgia, Garamond, serif;
+}
+h1, h2, h3, h4 {
+    font-style: italic;
+    color: steelblue;
+}
+
+/* structure */
+header {
+    margin: 10px 20px;
+}
+
+div#index-view, div#book-view {
+    background: #eee;
+    margin: 0 20px 30px 20px;
+    padding: 15px;
+    width: 70%;
+    display: none;
+}
+
+/* specific text styles */
+#book-list li {
+    color: steelblue;
+    cursor: pointer;
+}
+
+/* timemap styles. */
+div#timemap {
+    padding: 1em;
+}
+div#timelinecontainer{
+    width: 100%;
+    height: 300px;
+}
+div#timeline{
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    background: #CCCCCC;
+}
+div#mapcontainer {
+    width: 100%;
+    height: 300px;
+}
+div#map {
+    width: 100%;
+    height: 100%;
+    background: #EEEEEE;
+}

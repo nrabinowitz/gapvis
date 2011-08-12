@@ -1,0 +1,62 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>GapVis: Visual Interface for Reading Ancient Texts</title>
+    <meta name="description" content="GapVis is a visual interface for reading ancient texts for the Google Ancient Places project.">
+    <meta name="author" content="Nick Rabinowitz / Google Ancient Places Project">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/gapvis.css">
+    
+    <!-- Eventually, compress and concat -->
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <script type="text/javascript" src="lib/underscore-min.js"></script>
+    <script type="text/javascript" src="lib/jquery-1.6.2.min.js"></script>
+    <script type="text/javascript" src="lib/mxn-min.js"></script>
+    <script type="text/javascript" src="lib/mxn.core-min.js"></script>
+    <script type="text/javascript" src="lib/mxn.googlev3.core-min.js"></script>
+    <script type="text/javascript" src="lib/timeline-2.3.0.js"></script>
+    <script type="text/javascript" src="lib/timemap_full.pack.js"></script>
+    <script type="text/javascript" src="lib/backbone.min.js"></script>
+    <script type="text/javascript" src="lib/d3.js"></script>
+    <script type="text/javascript" src="app/gapvis.js"></script>
+</head>
+
+<body>
+
+    <div id="container">
+        <header>
+            <h1>GapVis</h1>
+        </header>
+        <div id="main" role="main">
+        
+        <!-- Homepage -->
+        <div id="index-view">
+            <p>GapVis is a visual Interface for reading ancient texts.</p>
+            
+            <p>Select a book to view:</p>
+            
+            <ul id="book-list"></ul>
+        </div>
+        
+        <!-- Book -->
+        <div id="book-view">
+        </div>
+
+        </div>
+        <footer>
+
+        </footer>
+    </div>
+
+    <!-- Templates -->
+    <script type="text/template" id="book-title-template">
+        <h2 id="book-title"><%= title %></h2>
+        <p>Author: <%= author %></p>
+        <p>Google URI: <a href="<%= uri %>"><%= uri %></a></p>
+        <p>Published: <%= printed %></p>
+        <p>Pages: <%= pages.length %>
+    </script>
+
+</body>
+</html>

@@ -3,14 +3,16 @@ API Suggestions
 
 Core API
 -----------
+ * list of books, with core metadata (see *books.json*):
+        /books.json
  * book info, with metadata (see *book_2.json*):
         /book/<book_id>.json
  * book info, with metadata, plus a list of pages with place refs and a list of places appearing here, core data only (see *book_full_2.json*):
         /book/<book_id>/full.json
  * page info, including text - id either number or other id scheme (see *page_1.json* - note the syntax I'm suggesting for marking place references in the HTML text):
-        /book/<book_id>/pages/<page_id>.json
+        /book/<book_id>/page/<page_id>.json
  * detailed place info, including description, metadata, etc (see *place_1.json* - there might be lots of additional metadata we might add):
-        /places/<place_id>.json
+        /place/<place_id>.json
 
 Probably Unnecessary API
 ------------------------
