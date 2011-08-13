@@ -428,9 +428,23 @@ var gv = (function(window) {
         
         // go to a specific page
         scrollTo: function(pageId) {
-            var d = this.labelUtils.labelToDate(pageId);
-            // XXX: might do something to fix the jumping for repeated clicks
-            this.tm.scrollToDate(d, false, true);
+            var view = this,
+                d = this.labelUtils.labelToDate(pageId);
+            // insert our variable into the closure. Ugly? Very.
+            SimileAjax.Graphics.createAnimation = function(f, from, to, duration, cont) {
+                cont = function() {
+                    view.animation = null;
+                    cont();
+                };
+                view.animation = new SimileAjax.Graphics._Animation(f, from, to, duration, cont);
+                return view.animation;
+            };
+            // stop anything that's running
+            if (view.animation) {
+                view.animation.stop();
+            }
+            // run
+            view.tm.scrollToDate(d, false, true);
         }
     });
     
@@ -515,5 +529,18 @@ var gv = (function(window) {
 // kick things off
 $(gv.init);
 
+
+//-----------------------------------
+// Monkey patches :(
+
 // Throws an annoying error otherwise
 SimileAjax.History.enabled = false;
+
+// allow animations to be stopped
+SimileAjax.Graphics._Animation.prototype.run = function() {
+    var a = this;
+    a.timeoutId = window.setTimeout(function() { a.step(); }, 50);
+};
+SimileAjax.Graphics._Animation.prototype.stop = function() {
+    window.clearTimeout(this.timeoutId);
+};
