@@ -102,9 +102,9 @@ var gv = (function(window) {
                             lat: ll[0],
                             lon: ll[1]
                         },
-                        page: page.id,
                         options: {
-                            place: place
+                            place: place,
+                            page: page
                         }
                     });
                 });
@@ -228,7 +228,7 @@ var gv = (function(window) {
         
         openPage: function(pageId) {
             var view = this,
-                book = this.model;
+                book = view.model;
             // we're still loading, come back later
             if (!book.pages.length) {
                 book.pages.bind('reset', function() { view.openPage(pageId) });
@@ -238,26 +238,27 @@ var gv = (function(window) {
             var page = pageId && book.pages.get(pageId) || 
                 book.pages.first();
             // another page is open; close it
-            if (this.pageView) {
-                this.pageView.close();
+            if (view.pageView) {
+                view.pageView.close();
             }
             // page view has been created; show
             if (page.view) {
-                this.pageView = page.view;
-                this.page = page;
+                view.pageView = page.view;
+                view.page = page;
                 page.view.open();
                 // update next/prev links
-                this.updateNextPrev();
-                this.renderNextPrev();
-                // update url
+                view.updateNextPrev();
+                view.renderNextPrev();
+                // update url and timeline
                 ctrl.navigate('book/' + book.id + '/page/' + page.id);
+                view.timemapView.scrollTo(page.id);
             } else {
                 // make a new page view
                 page.bind('change', function() {
                     $('#page-view').prepend(page.view.render().el);
                     view.openPage(page.id);
                 });
-                this.pageView = new PageView({ model: page });
+                view.pageView = new PageView({ model: page });
             }
         },
         
@@ -352,13 +353,20 @@ var gv = (function(window) {
                     })
                 ],
                 // add custom labeller
-                labelUtils = new LabelUtils(bandInfo, book.labels(), function() { return false; });
+                labelUtils = this.labelUtils = new LabelUtils(
+                    bandInfo, book.labels(), function() { return false; }
+                );
             
             this.tm = TimeMap.init({
                 mapId: "map",
                 timelineId: "timeline",
                 options: {
-                    eventIconPath: "images/"
+                    eventIconPath: "images/",
+                    openInfoWindow: function() {
+                        console.log(this);
+                        ctrl.navigate('book/' + book.id + '/page/' + this.opts.page.id, true);
+                        TimeMapItem.openInfoWindowBasic.call(this);
+                    }
                 },
                 datasets: [
                     {
@@ -367,7 +375,7 @@ var gv = (function(window) {
                         options: {
                             items: book.timemapItems(),
                             transformFunction: function(item) {
-                                item.start = labelUtils.getLabelIndex(item.page) + ' AD';
+                                item.start = labelUtils.getLabelIndex(item.options.page.id) + ' AD';
                                 return item;
                             }
                         }
@@ -398,6 +406,12 @@ var gv = (function(window) {
         stop: function() {
             window.clearInterval(this._intervalId);
             this._intervalId = null;
+        },
+        
+        // go to a specific page
+        scrollTo: function(pageId) {
+            var d = this.labelUtils.labelToDate(pageId);
+            this.tm.scrollToDate(d);
         }
     });
     
