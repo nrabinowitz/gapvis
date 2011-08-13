@@ -390,10 +390,9 @@ var gv = (function(window) {
                 var topband = tm.timeline.getBand(0),
                     maxVisibleDate = topband.getMaxVisibleDate().getTime(),
                     minVisibleDate = topband.getMinVisibleDate().getTime(),
-                    itemStart = item.getStartTime(),
                     images = ['blue-100.png', 'blue-80.png', 'blue-60.png', 'blue-40.png', 'blue-20.png'],
                     pos = Math.floor(
-                        (maxVisibleDate - itemStart) / (maxVisibleDate - minVisibleDate)
+                        (maxVisibleDate - item.getStartTime()) / (maxVisibleDate - minVisibleDate)
                         * images.length
                     );
                 // set image according to timeline position
@@ -430,7 +429,8 @@ var gv = (function(window) {
         // go to a specific page
         scrollTo: function(pageId) {
             var d = this.labelUtils.labelToDate(pageId);
-            this.tm.scrollToDate(d);
+            // XXX: might do something to fix the jumping for repeated clicks
+            this.tm.scrollToDate(d, false, true);
         }
     });
     
