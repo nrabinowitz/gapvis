@@ -33,7 +33,12 @@ var gv = (function(window) {
             
         }),
         Collection = Backbone.Collection,
+        state,
         Place, PlaceList, Page, PageList, Book, BookList;
+        
+    
+    // state holds non-routed state, e.g. map state
+    state = new Backbone.Model(),
         
     // Model: Place
     Place = Model.extend({
@@ -144,31 +149,14 @@ var gv = (function(window) {
         BookListView, IndexView, 
         BookView, BookTitleView, TimemapView;
     
-    // View: BookListView (item in book index)
-    BookListView = View.extend({
-        tagName: 'li',
-        
-        events: {
-            "click": "open"
-        },
-        
-        render: function() {
-            $(this.el).html(this.model.get('title'));
-            return this;
-        },
-        
-        open: function() {
-            ctrl.navigate('book/' + this.model.id, true);
-        }
-    });
-    
     // View: IndexView (index page)
     IndexView = View.extend({
         el: '#index-view',
         
         initialize: function() {
-            var books = this.model;
+            var books = this.model = new BookList();
             books.bind('reset', this.addList, this);
+            books.fetch();
         },
         
         addList: function() {
@@ -179,32 +167,113 @@ var gv = (function(window) {
         }
     });
     
+    // View: BookListView (item in book index)
+    BookListView = View.extend({
+        tagName: 'li',
+        
+        events: {
+            "click": "openBook"
+        },
+        
+        render: function() {
+            $(this.el).html(this.model.get('title'));
+            return this;
+        },
+        
+        openBook: function() {
+            ctrl.navigate('book/' + this.model.id, true);
+        }
+    });
+    
     // View: BookView (master view for the book screen)
     BookView = View.extend({
         el: '#book-view',
         
-        initialize: function() {
+        events: {
+            'click #nextlink.on':   'nextPage',
+            'click #prevlink.on':   'prevPage'
+        },
+        
+        initialize: function(opts) {
             var view = this,
-                book = this.model;
+                book = this.model = new Book({ id: opts.bookId });
             book.fetch({ 
                 success: function() {
                     book.initCollections();
-                    view.initViews();
+                    view.initViews().render();
+                },
+                error: function() {
+                    console.log('Error fetching book ' + book.id)
                 }
-                // XXX: error
             });
         },
         
         initViews: function() {
-            var $el = $(this.el);
-            this.views = {
-                title: new BookTitleView({ model: this.model }),
-                timemap: new TimemapView({ model: this.model })
-            };
-            _(this.views).each(function(view) {
-                $el.append(view.render().el);
-            });
-            this.views.timemap.initTimemap();
+            var book = this.model;
+            this.titleView = new BookTitleView({ model: book });
+            this.timemapView = new TimemapView({ model: book });
+            return this;
+        },
+        
+        render: function() {
+            this.titleView.render();
+            this.timemapView.render();
+            return this;
+        },
+        
+        renderNextPrev: function() {
+            $('#prevlink').attr('class', this.prevPage ? 'on' : '');
+            $('#nextlink').attr('class', this.nextPage ? 'on' : '');
+        },
+        
+        openPage: function(pageId) {
+            var view = this,
+                book = this.model;
+            // we're still loading, come back later
+            if (!book.pages.length) {
+                book.pages.bind('reset', function() { view.openPage(pageId) });
+                return;
+            }
+            // get the relevant page
+            var page = pageId && book.pages.get(pageId) || 
+                book.pages.first();
+            // another page is open; close it
+            if (this.pageView) {
+                this.pageView.close();
+            }
+            // page view has been created; show
+            if (page.view) {
+                this.pageView = page.view;
+                this.page = page;
+                page.view.open();
+                // update next/prev links
+                this.updateNextPrev();
+                this.renderNextPrev();
+                // update url
+                ctrl.navigate('book/' + book.id + '/page/' + page.id);
+            } else {
+                // make a new page view
+                page.bind('change', function() {
+                    $('#page-view').prepend(page.view.render().el);
+                    view.openPage(page.id);
+                });
+                this.pageView = new PageView({ model: page });
+            }
+        },
+        
+        updateNextPrev: function() {
+            var pages = this.model.pages,
+                idx = pages.indexOf(this.page);
+            this.prevPage = pages.at(idx-1);
+            this.nextPage = pages.at(idx+1);
+        },
+        
+        nextPage: function() {
+            this.openPage(this.nextPage);
+        },
+        
+        prevPage: function() {
+            this.openPage(this.prevPage);
         },
         
         clear: function() {
@@ -214,8 +283,7 @@ var gv = (function(window) {
     
     // View: BookTitleView (title and metadata)
     BookTitleView = View.extend({
-        tagName: 'div',
-        id: 'book-title-view',
+        el: '#book-title-view',
         
         initialize: function() {
             this.template = _.template($('#book-title-template').html())
@@ -227,10 +295,37 @@ var gv = (function(window) {
         }
     });
     
+    // View: PageView (title and metadata)
+    PageView = View.extend({
+        tagName: 'div',
+        className: 'page-view',
+        
+        initialize: function() {
+            var view = this,
+                page = view.model;
+            view.template = _.template($('#page-template').html());
+            // set backreference
+            page.view = view;
+            // load page
+            page.fetch({
+                success: function() {
+                    view.render();
+                },
+                error: function() {
+                    console.log('Error fetching page ' + view.model.id)
+                }
+            });
+        },
+        
+        render: function() {
+            $(this.el).html(this.template(this.model.toJSON()));
+            return this;
+        }
+    });
+    
     // View: TimemapView
     TimemapView = View.extend({
-        tagName: 'div',
-        id: 'timemap-view',
+        el: '#timemap-view',
         
         initialize: function() {
             this.template = $('#timemap-template').html();
@@ -238,10 +333,7 @@ var gv = (function(window) {
         
         render: function() {
             $(this.el).html(this.template);
-            return this;
-        },
-        
-        initTimemap: function() {
+            
             var book = this.model,
                 // create band info
                 bandInfo = [
@@ -283,6 +375,29 @@ var gv = (function(window) {
                 ],
                 bands: bandInfo
             });
+            
+            return this;
+        },
+        
+        // animate the timeline
+        play: function() {
+            if (!this._intervalId) {
+                var band = this.tm.timeline.getBand(0),
+                    centerDate = band.getCenterVisibleDate(),
+                    dateInterval = 850000000, // trial and error
+                    timeInterval = 25;
+
+                this._intervalId = window.setInterval(function() {
+                    centerDate = new Date(centerDate.getTime() + dateInterval);
+                    band.setCenterVisibleDate(centerDate);
+                }, timeInterval);
+            }
+        },
+        
+        // stop animation
+        stop: function() {
+            window.clearInterval(this._intervalId);
+            this._intervalId = null;
         }
     });
     
@@ -293,32 +408,53 @@ var gv = (function(window) {
     var Ctrl = Backbone.Router.extend({
     
         initialize: function() {
-            // we'll always need the list of books
-            this.books = new BookList();
-            this.books.fetch();
+            this._viewCache = {};
         },
 
         routes: {
-            "":            "index",
-            "book/:bid":   "book",
+            "":                     "index",
+            "book/:bid":            "book",
+            "book/:bid/page/:pid":  "book",
+        },
+        
+        // function to cache and retrieve views
+        cache: function(k, view) {
+            if (view) {
+                this._viewCache[k] = view;
+            } 
+            return this._viewCache[k];
         },
         
         index: function() {
-            // index is cached
-            if (!this.indexView) {
-                this.indexView = new IndexView({ model: this.books });
-            }
-            this.open(this.indexView);
+            var view = this.cache('index') || 
+                this.cache('index', new IndexView());
+            this.open(view);
         },
         
-        book: function(bid) {
+        book: function(bid, pid) {
+            // get state vars if any
+            bid = this.parseState(bid);
+            // XXX: depends on how API delivers ids
             bid = parseInt(bid);
-            if (bid != this.currentBookId) {
-                this.currentBookId = bid;
-                var book = new Book({ id: bid });
-                this.bookView = new BookView({ model:book });
+            // get view
+            var view = this.cache('book-' + bid) || 
+                this.cache('book-' + bid, new BookView({ bookId: bid }));
+            this.open(view);
+            // set current page
+            pid = pid && parseInt(pid); // XXX: depends on how API delivers ids
+            view.openPage(pid);
+        },
+        
+        // strip and set any global state variables
+        parseState: function(param) {
+            var parts = param.split('?'),
+                param = parts[0],
+                qs = parts[1];
+            if (qs) {
+                // XXX: parse the querystring and set the values 
+                // in the state object
             }
-            this.open(this.bookView);
+            return param;
         },
         
         // close the current view and open a new one

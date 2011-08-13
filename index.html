@@ -28,22 +28,33 @@
 
     <div id="container">
         <header>
-            <h1>GapVis</h1>
+            <h1><a href="#">GapVis</a></h1>
         </header>
         <div id="main" role="main">
         
-        <!-- Homepage -->
-        <div id="index-view">
-            <p>GapVis is a visual Interface for reading ancient texts.</p>
+            <!-- Homepage -->
+            <div id="index-view">
+                <p>GapVis is a visual Interface for reading ancient texts.</p>
+                
+                <p>Select a book to view:</p>
+                
+                <ul id="book-list"></ul>
+            </div>
             
-            <p>Select a book to view:</p>
-            
-            <ul id="book-list"></ul>
-        </div>
-        
-        <!-- Book -->
-        <div id="book-view">
-        </div>
+            <!-- Book -->
+            <div id="book-view" class="clearfix">
+                <div id="sidebar">
+                    <div id="book-title-view"></div>
+                    <div id="page-view">
+                    
+                        <div id="textnav">
+                            <span id="prevlink">&lt;&lt; previous</span>
+                            <span id="nextlink">next &gt;&gt;</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="timemap-view"></div>
+            </div>
 
         </div>
         <footer>
@@ -55,10 +66,10 @@
     
     <script type="text/template" id="book-title-template">
         <h2 id="book-title"><%= title %></h2>
-        <p>Author: <%= author %></p>
-        <p>Google URI: <a href="<%= uri %>"><%= uri %></a></p>
-        <p>Published: <%= printed %></p>
-        <p>Pages: <%= pages.length %>
+        <p><em>By <%= author %></em></p>
+        <p>
+        Published <%= printed %>, <%= pages.length %> pages<br>
+        <a href="<%= uri %>">View on Google Books</a></p>
     </script>
 
     <script type="text/template" id="timemap-template">
@@ -70,5 +81,12 @@
         </div>
     </script>
     
+    <script type="text/template" id="page-template">
+        <div class="pagecontainer">
+            <%= OCR %>
+        <div>
+        
+    </script>
+
 </body>
 </html>
