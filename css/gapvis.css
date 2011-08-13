@@ -29,6 +29,9 @@ div#sidebar {
 div#timemap-view {
     width: 60%;
 }
+div#page-view {
+    overflow: hidden;
+}
 div.pagecontainer {
     background: #FFF;
     border: 1px solid #CCC;

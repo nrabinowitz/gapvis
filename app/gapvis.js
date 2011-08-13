@@ -319,7 +319,8 @@ var gv = (function(window) {
         },
         
         render: function() {
-            $(this.el).html(this.template(this.model.toJSON()));
+            $(this.el)
+                .html(this.template(this.model.toJSON()));
             return this;
         }
     });
@@ -357,7 +358,7 @@ var gv = (function(window) {
                     bandInfo, book.labels(), function() { return false; }
                 );
             
-            this.tm = TimeMap.init({
+            var tm = this.tm = TimeMap.init({
                 mapId: "map",
                 timelineId: "timeline",
                 options: {
@@ -382,6 +383,24 @@ var gv = (function(window) {
                     }
                 ],
                 bands: bandInfo
+            });
+            
+            // set up fade filter
+            tm.addFilter("map", function(item) {
+                var topband = tm.timeline.getBand(0),
+                    maxVisibleDate = topband.getMaxVisibleDate().getTime(),
+                    minVisibleDate = topband.getMinVisibleDate().getTime(),
+                    itemStart = item.getStartTime(),
+                    images = ['blue-100.png', 'blue-80.png', 'blue-60.png', 'blue-40.png', 'blue-20.png'],
+                    pos = Math.floor(
+                        (maxVisibleDate - itemStart) / (maxVisibleDate - minVisibleDate)
+                        * images.length
+                    );
+                // set image according to timeline position
+                if (pos >= 0 && pos < images.length) {
+                    item.getNativePlacemark().setIcon("images/" + images[pos]);
+                }
+                return true;
             });
             
             return this;
