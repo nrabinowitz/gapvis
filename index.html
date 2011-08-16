@@ -30,7 +30,7 @@
         <header>
             <h1><a href="#">GapVis</a></h1>
         </header>
-        <div id="main" role="main">
+        <div id="app-view" role="main">
         
             <!-- Homepage -->
             <div id="index-view">
@@ -45,11 +45,18 @@
             <div id="book-view" class="clearfix">
                 <div id="sidebar">
                     <div id="book-title-view"></div>
-                    <div id="page-view">
-                    
-                        <div id="textnav">
-                            <span id="prevlink">&lt;&lt; previous</span>
-                            <span id="nextlink">next &gt;&gt;</span>
+                    <div id="pagecontainer">
+                        <div id="page-view"></div>
+                        <div id="page-control-view">
+                            <div id="nextprev">
+                                <span id="prev" class="control">&lt;&lt; previous</span>
+                                <span id="next" class="control">next &gt;&gt;</span>
+                            </div>
+                            <div id="imagetoggle">
+                                Show:
+                                <span id="showtext" class="control">Text</span> |
+                                <span id="showimg" class="control">Scan</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -82,8 +89,9 @@
     </script>
     
     <script type="text/template" id="page-template">
-        <div class="pagecontainer">
-            <%= OCR %>
+        <div class="single-page">
+            <div class="ocr"><%= OCR %></div>
+            <div class="img"><img src="<%= Image %>"></div>
         <div>
         
     </script>

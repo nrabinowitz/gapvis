@@ -31,8 +31,9 @@ div#timemap-view {
 }
 div#page-view {
     overflow: hidden;
+    width: 350px;
 }
-div.pagecontainer {
+div.single-page {
     background: #FFF;
     border: 1px solid #CCC;
     height: 400px;
@@ -40,9 +41,14 @@ div.pagecontainer {
     margin-bottom: 1em;
     padding: .5em;
 }
-div#textnav {
-    margin: 10px 1em 10px 0px;
-    text-align: right;
+div.single-page .img {
+    display: none;
+}
+div.single-page .img img {
+    width: 300px;
+}
+div#page-control-view {
+    width: 350px;
 }
 
 /* specific text styles */
@@ -62,16 +68,20 @@ div#book-title-view p {
     margin-top: 0;
 }
 
-span#nextlink, span#prevlink {
-    color: #CCCCCC;
+/* page control buttons */
+span.control {
+    color: #999;
     cursor: default;
 }
-span#nextlink.on, span#prevlink.on {
+span.control.on {
     color: steelblue;
     cursor: pointer;
 }
-span#prevlink {
+span#prev {
     margin-right: 15px;
+}
+div#nextprev{
+    float: right;
 }
 
 /* timemap styles. */

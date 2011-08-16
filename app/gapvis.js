@@ -2,6 +2,26 @@
  * Copyright (c) 2011, Nick Rabinowitz / Google Ancient Places Project
  * Licensed under the BSD License (see LICENSE.txt)
  */
+ 
+/*
+ Basic architecture:
+ - Models are responsible for getting book data from API
+ - Singleton state model is responsible for ui state data
+ - Views are responsible for:
+    initialize:
+    - instantiating/fetching their models if necessary
+    - instantiating sub-views
+    - listening for state changes
+    - listening for model changes
+    events:
+    - listening for ui events, updating state
+    ui methods:
+    - updating ui on state change
+    - updating ui on model change
+ - Singleton router is responsible for:
+    - setting state depending on route
+    - setting route depending on state
+*/
 
 /**
  * @namespace
@@ -12,8 +32,7 @@ var gv = (function(window) {
 
     // namespace within the anonymous function
     var gv = {},
-        Backbone = window.Backbone,
-        ctrl;
+        Backbone = window.Backbone;
         
     //---------------------------------------
     // Models
@@ -33,12 +52,27 @@ var gv = (function(window) {
             
         }),
         Collection = Backbone.Collection,
-        state,
-        Place, PlaceList, Page, PageList, Book, BookList;
-        
+        Param, state,
+        Place, PlaceList, 
+        Page, PageList, 
+        Book, BookList;
     
-    // state holds non-routed state, e.g. map state
-    state = new Backbone.Model(),
+    // factory for de/serializable state parameters
+    function param(deserialize, serialize) {
+        return {
+            deserialize: deserialize || _.identity,
+            serialize: serialize || _.identity
+        }
+    }
+    
+    // model to hold current state, with defaults
+    state = new Backbone.Model({
+        pageview: 'text'
+    });
+    state.params = {
+        bookid: param(parseInt),
+        pageid: param(parseInt)
+    };
         
     // Model: Place
     Place = Model.extend({
@@ -110,6 +144,31 @@ var gv = (function(window) {
                 });
             });
             return items;
+        },
+        
+        // next/prev ids
+        nextPrevId: function(pageId, prev) {
+            var pages = this.pages,
+                currPage = pages.get(pageId),
+                idx = currPage ? pages.indexOf(currPage) + (prev ? -1 : 1) : -1,
+                page = pages.at(idx)
+            return page && page.id;
+        },
+        
+        // next page id
+        nextId: function(pageId) {
+            return this.nextPrevId(pageId);
+        },
+        
+        // previous page id
+        prevId: function(pageId) {
+            return this.nextPrevId(pageId, true);
+        },
+        
+        // first page id
+        firstId: function() {
+            var first = this.pages.first()
+            return first && first.id;
         }
     });
     
@@ -144,10 +203,17 @@ var gv = (function(window) {
             },
             close: function() {
                 $(this.el).hide();
+            },
+            clear: function() {
+                $(this.el).empty();
             }
         }),
         BookListView, IndexView, 
-        BookView, BookTitleView, TimemapView;
+        BookView, BookTitleView, TimemapView, PageControlView,
+        AppView;
+        
+    //---------------------------------------
+    // Index Views
     
     // View: IndexView (index page)
     IndexView = View.extend({
@@ -166,121 +232,29 @@ var gv = (function(window) {
             })
         }
     });
+    IndexView.key = 'index';
     
     // View: BookListView (item in book index)
     BookListView = View.extend({
         tagName: 'li',
-        
-        events: {
-            "click": "openBook"
-        },
         
         render: function() {
             $(this.el).html(this.model.get('title'));
             return this;
         },
         
-        openBook: function() {
-            ctrl.navigate('book/' + this.model.id, true);
+        events: {
+            "click": "uiOpenBook"
+        },
+        
+        uiOpenBook: function() {
+            state.set({ 'bookid': this.model.id });
+            state.set({ 'topview': BookView });
         }
     });
     
-    // View: BookView (master view for the book screen)
-    BookView = View.extend({
-        el: '#book-view',
-        
-        events: {
-            'click #nextlink.on':   'nextPage',
-            'click #prevlink.on':   'prevPage'
-        },
-        
-        initialize: function(opts) {
-            var view = this,
-                book = this.model = new Book({ id: opts.bookId });
-            book.fetch({ 
-                success: function() {
-                    book.initCollections();
-                    view.initViews().render();
-                },
-                error: function() {
-                    console.log('Error fetching book ' + book.id)
-                }
-            });
-        },
-        
-        initViews: function() {
-            var book = this.model;
-            this.titleView = new BookTitleView({ model: book });
-            this.timemapView = new TimemapView({ model: book });
-            return this;
-        },
-        
-        render: function() {
-            this.titleView.render();
-            this.timemapView.render();
-            return this;
-        },
-        
-        renderNextPrev: function() {
-            $('#prevlink').attr('class', this.prevPage ? 'on' : '');
-            $('#nextlink').attr('class', this.nextPage ? 'on' : '');
-        },
-        
-        openPage: function(pageId) {
-            var view = this,
-                book = view.model;
-            // we're still loading, come back later
-            if (!book.pages.length) {
-                book.pages.bind('reset', function() { view.openPage(pageId) });
-                return;
-            }
-            // get the relevant page
-            var page = pageId && book.pages.get(pageId) || 
-                book.pages.first();
-            // another page is open; close it
-            if (view.pageView) {
-                view.pageView.close();
-            }
-            // page view has been created; show
-            if (page.view) {
-                view.pageView = page.view;
-                view.page = page;
-                page.view.open();
-                // update next/prev links
-                view.updateNextPrev();
-                view.renderNextPrev();
-                // update url and timeline
-                ctrl.navigate('book/' + book.id + '/page/' + page.id);
-                view.timemapView.scrollTo(page.id);
-            } else {
-                // make a new page view
-                page.bind('change', function() {
-                    $('#page-view').prepend(page.view.render().el);
-                    view.openPage(page.id);
-                });
-                view.pageView = new PageView({ model: page });
-            }
-        },
-        
-        updateNextPrev: function() {
-            var pages = this.model.pages,
-                idx = pages.indexOf(this.page);
-            this.prevPage = pages.at(idx-1);
-            this.nextPage = pages.at(idx+1);
-        },
-        
-        nextPage: function() {
-            this.openPage(this.nextPage);
-        },
-        
-        prevPage: function() {
-            this.openPage(this.prevPage);
-        },
-        
-        clear: function() {
-            $(this.el).empty();
-        }
-    });
+    //---------------------------------------
+    // Book Views
     
     // View: BookTitleView (title and metadata)
     BookTitleView = View.extend({
@@ -296,6 +270,69 @@ var gv = (function(window) {
         }
     });
     
+    // View: PageControlView (control buttons)
+    PageControlView = View.extend({
+        el: '#page-control-view',
+        
+        initialize: function(opts) {
+            // listen for state changes
+            state.bind('change:pageid', this.renderNextPrev, this);
+            state.bind('change:pageview', this.renderPageView, this);
+        },
+        
+        render: function() {
+            this.renderNextPrev();
+            this.renderPageView();
+        },
+        
+        renderNextPrev: function() {
+            // update next/prev
+            var book = this.model,
+                pageId = state.get('pageid') || book.firstId();
+            this.prev = book.prevId(pageId);
+            this.next = book.nextId(pageId);
+            // render
+            $('#prev').toggleClass('on', !!this.prev);
+            $('#next').toggleClass('on', !!this.next);
+        },
+        
+        renderPageView: function() {
+            var pageView = state.get('pageview');
+            // render
+            $('#showimg').toggleClass('on', pageView == 'text');
+            $('#showtext').toggleClass('on', pageView == 'image');
+        },
+        
+        clear: function() {
+            $('#prev, #next').removeClass('on');
+        },
+        
+        // UI Event Handlers - update state
+        
+        events: {
+            'click #next.on':       'uiNext',
+            'click #prev.on':       'uiPrev',
+            'click #showimg.on':    'uiShowImage',
+            'click #showtext.on':   'uiShowText'
+        },
+        
+        uiNext: function() {
+            state.set({ pageid: this.next });
+        },
+        
+        uiPrev: function() {
+            state.set({ pageid: this.prev });
+        },
+        
+        uiShowImage: function() {
+            state.set({ pageview:'image' })
+        },
+        
+        uiShowText: function() {
+            state.set({ pageview:'text' })
+        }
+    });
+    
     // View: PageView (title and metadata)
     PageView = View.extend({
         tagName: 'div',
@@ -305,6 +342,8 @@ var gv = (function(window) {
             var view = this,
                 page = view.model;
             view.template = _.template($('#page-template').html());
+            // listen for state changes
+            state.bind('change:pageview', this.renderPageView, this);
             // set backreference
             page.view = view;
             // load page
@@ -319,9 +358,18 @@ var gv = (function(window) {
         },
         
         render: function() {
-            $(this.el)
-                .html(this.template(this.model.toJSON()));
-            return this;
+            var view = this;
+            $(view.el)
+                .html(view.template(view.model.toJSON()));
+            view.renderPageView();
+            return view;
+        },
+        
+        renderPageView: function() {
+            var pageView = state.get('pageview');
+            // render
+            this.$('.ocr').toggle(pageView == 'text');
+            this.$('.img').toggle(pageView == 'image');
         }
     });
     
@@ -330,7 +378,12 @@ var gv = (function(window) {
         el: '#timemap-view',
         
         initialize: function() {
-            this.template = $('#timemap-template').html();
+            var view = this;
+            view.template = $('#timemap-template').html();
+            // listen for state changes
+            state.bind('change:pageid', function() {
+                view.scrollTo(state.get('pageid') || view.model.firstId())
+            });
         },
         
         render: function() {
@@ -364,8 +417,7 @@ var gv = (function(window) {
                 options: {
                     eventIconPath: "images/",
                     openInfoWindow: function() {
-                        console.log(this);
-                        ctrl.navigate('book/' + book.id + '/page/' + this.opts.page.id, true);
+                        state.set({ pageid: this.opts.page.id });
                         TimeMapItem.openInfoWindowBasic.call(this);
                     }
                 },
@@ -430,38 +482,138 @@ var gv = (function(window) {
         scrollTo: function(pageId) {
             var view = this,
                 d = this.labelUtils.labelToDate(pageId);
-            // insert our variable into the closure. Ugly? Very.
-            SimileAjax.Graphics.createAnimation = function(f, from, to, duration, cont) {
-                cont = function() {
-                    view.animation = null;
-                    cont();
-                };
-                view.animation = new SimileAjax.Graphics._Animation(f, from, to, duration, cont);
-                return view.animation;
-            };
             // stop anything that's running
             if (view.animation) {
                 view.animation.stop();
             }
+            // insert our variable into the closure. Ugly? Very.
+            SimileAjax.Graphics.createAnimation = function(f, from, to, duration, cont) {
+                view.animation = new SimileAjax.Graphics._Animation(f, from, to, duration, function() {
+                    view.animation = null;
+                });
+                return view.animation;
+            };
             // run
             view.tm.scrollToDate(d, false, true);
         }
     });
     
-    //---------------------------------------
-    // Controller
-    //---------------------------------------
+    // View: BookView (master view for the book screen)
+    BookView = View.extend({
+        el: '#book-view',
+        
+        initialize: function(opts) {
+            var view = this;
+            // listen for state changes
+            state.bind('change:bookid', function() {
+                view.clear();
+                view.updateBook();
+            });
+            state.bind('change:pageid', view.updatePage, view);
+            // instantiate book
+            this.updateBook();
+        },
+        
+        childViews: [
+            BookTitleView,
+            TimemapView,
+            PageControlView
+        ],
+        
+        updateViews: function() {
+            var view = this,
+                book = view.model;
+            view.children = view.childViews.map(function(cls) {
+                return new cls({ 
+                    model: book,
+                    parent: view
+                })
+            });
+            return view;
+        },
+        
+        // Render functions
+        
+        render: function() {
+            // render all children
+            this.children.forEach(function(child) {
+                child.render();
+            });
+            return this;
+        },
+        
+        clear: function() {
+            // delete contents of all children
+            view.children.forEach(function(child) {
+                child.clear();
+            });
+            $('page-view').empty();
+        },
+        
+        // Model update functions
+        
+        updateBook: function() {
+            var view = this,
+                book = view.model = new Book({ id: state.get('bookid') });
+            book.fetch({ 
+                success: function() {
+                    book.initCollections();
+                    if (!state.get('pageid')) {
+                        state.set({ pageid: book.firstId() });
+                    }
+                    view.updateViews().render();
+                    view.updatePage();
+                },
+                error: function() {
+                    console.log('Error fetching book ' + book.id)
+                }
+            });
+        },
+        
+        updatePage: function() {
+            var view = this,
+                book = view.model,
+                pageId = state.get('pageid');
+            // we're still loading, come back later
+            if (!book.pages.length) {
+                book.pages.bind('reset', view.openPage, view);
+                return;
+            }
+            // get the relevant page
+            var page = pageId && book.pages.get(pageId) || 
+                book.pages.first();
+            // another page is open; close it
+            if (view.pageView) {
+                view.pageView.close();
+            }
+            // make a new page view if necessary
+            if (!page.view) {
+                page.bind('change', function() {
+                    $('#page-view').append(page.view.render().el);
+                    view.updatePage();
+                });
+                new PageView({ model: page });
+            } 
+            // page view has been created; show
+            else {
+                view.pageView = page.view;
+                page.view.open();
+            }
+        }
+        
+    });
+    BookView.key = 'book';
     
-    var Ctrl = Backbone.Router.extend({
+    //---------------------------------------
+    // App View
+        
+    // View: AppView (master view)
+    AppView = View.extend({
     
         initialize: function() {
             this._viewCache = {};
-        },
-
-        routes: {
-            "":                     "index",
-            "book/:bid":            "book",
-            "book/:bid/page/:pid":  "book",
+            // listen for state changes
+            state.bind('change:topview', this.updateView, this);
         },
         
         // function to cache and retrieve views
@@ -472,36 +624,12 @@ var gv = (function(window) {
             return this._viewCache[k];
         },
         
-        index: function() {
-            var view = this.cache('index') || 
-                this.cache('index', new IndexView());
-            this.open(view);
-        },
-        
-        book: function(bid, pid) {
-            // get state vars if any
-            bid = this.parseState(bid);
-            // XXX: depends on how API delivers ids
-            bid = parseInt(bid);
-            // get view
-            var view = this.cache('book-' + bid) || 
-                this.cache('book-' + bid, new BookView({ bookId: bid }));
-            this.open(view);
-            // set current page
-            pid = pid && parseInt(pid); // XXX: depends on how API delivers ids
-            view.openPage(pid);
-        },
-        
-        // strip and set any global state variables
-        parseState: function(param) {
-            var parts = param.split('?'),
-                param = parts[0],
-                qs = parts[1];
-            if (qs) {
-                // XXX: parse the querystring and set the values 
-                // in the state object
-            }
-            return param;
+        // update the top-level view
+        updateView: function() {
+            var cls = state.get('topview'),
+                key = cls.key,
+                view = this.cache(key) || this.cache(key, new cls());
+            this.open(view)
         },
         
         // close the current view and open a new one
@@ -515,13 +643,104 @@ var gv = (function(window) {
                 view.open();
             }
         }
+    
+    });
+    
+    //---------------------------------------
+    // Router
+    //---------------------------------------
+    
+    var AppRouter = Backbone.Router.extend({
+    
+        initialize: function() {
+            // listen for state changes
+            var router = this,
+                f = function() { router.updateRoute() };
+            state.bind('change:topview', f);
+            state.bind('change:bookid', f);
+            state.bind('change:pageid', f);
+        },
+
+        routes: {
+            "":                         "index",
+            "book/:bid":                "book",
+            "book/:bid/:pid":           "book"
+        },
+        
+        index: function() {
+            // update view
+            this.setState('topview', IndexView);
+        },
+        
+        book: function(bid, pid, qs) {
+            // get state vars if any
+            this.parseQS(qs);
+            // update parameters
+            this.setState('bookid', bid);
+            this.setState('pageid', pid);
+            // update view
+            this.setState('topview', BookView);
+        },
+        
+        // apply transform, if any, and update state
+        setState: function(key, value) {
+            var params = state.params,
+                f = params[key] && params[key].deserialize || _.identity,
+                o = {};
+            o[key] = f(value);
+            state.set(o);
+        },
+        
+        // list of parameters to de/serialize in the querystring
+        qsParams: [],
+        
+        // get any global state variables from the querystring
+        parseQS: function(qs) {
+            if (qs) {
+                qs.substring(1).split('&').forEach(function(pair) {
+                    var kv = pair.split('=');
+                    if (kv.length > 1) {
+                        this.setState(kv[0], decodeURI(kv[1]));
+                    }
+                });
+            }
+        },
+        
+        // encode a querystring from state parameters
+        getQS: function() {
+            var params = state.params,
+                qs = this.qsParams.reduce(function(qs, key) {
+                    var value = state.get(key);
+                    if (value) {
+                        f = params[key] && params[key].serialize || String;
+                        qs += key + '=' + encodeURI(f(value));
+                    }
+                }, '') || '';
+            return qs ? '?' + qs : '';
+        },
+        
+        // update the url based on the current state
+        updateRoute: function() {
+            var qs = this.getQS(),
+                topview = state.get('topview'),
+                // this is effectively the index view
+                route = '';
+            // create book view route
+            if (topview == BookView){
+                route = 'book/' + state.get('bookid') + 
+                        (state.get('pageid') ? '/' + state.get('pageid') : '');
+            }
+            this.navigate(route);
+        }
 
     });
     
     gv.init = function() {
-        ctrl = gv.ctrl = new Ctrl();
+        gv.state = state;
+        gv.app = new AppView();
+        gv.router = new AppRouter();
         Backbone.history.start();
-    }
+    };
     
     return gv;
 }(window));
