@@ -58,6 +58,14 @@ header h1 a {
 header a#permalink {
     float: right;
 }
+span.place {
+    color: steelblue;
+    cursor: pointer;
+    font-weight: bold;
+}
+span.place.hi {
+    background: yellow;
+}
 
 a:link, a:visited, #book-list li {
     color: steelblue;

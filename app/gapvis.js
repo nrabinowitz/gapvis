@@ -52,30 +52,52 @@ var gv = (function(window) {
             
         }),
         Collection = Backbone.Collection,
-        Param, state,
+        State, state,
         tmParams = TimeMap.state.params,
         Place, PlaceList, 
         Page, PageList, 
         Book, BookList;
+        
     
-    // factory for de/serializable state parameters
-    function param(deserialize, serialize) {
-        return {
-            deserialize: deserialize || _.identity,
-            serialize: serialize || _.identity
+    //---------------------------------------
+    // State model
+    
+    // model to hold current state
+    State = Backbone.Model.extend({
+        deserialize: function(key, value) {
+            var params = this.params,
+                f = params[key] && params[key].deserialize || _.identity;
+            return f(value);
+        },
+        serialize: function(key, value) {
+            var params = this.params,
+                f = params[key] && params[key].serialize || _.identity;
+            return f(value);
+        },
+        // convenience function to set a serialized value
+        setSerialized: function(key, value) {
+            o = {};
+            o[key] = this.deserialize(key, value);
+            this.set(o);
+        },
+        // factory for de/serializable state parameters
+        param: function(deserialize, serialize) {
+            return {
+                deserialize: deserialize || _.identity,
+                serialize: serialize || _.identity
+            };
         }
-    }
-    
-    // model to hold current state, with defaults
-    state = new Backbone.Model({
+    });
+    // create a singleton instance
+    state = new State({
         pageview: 'text'
     });
     state.params = {
-        bookid: param(parseInt),
-        pageid: param(parseInt),
-        mapcenter: param(tmParams.center.fromString, tmParams.center.toString),
-        mapzoom: param(parseInt),
-        mapitem: param(tmParams.selected.fromString, tmParams.selected.toString)
+        bookid: state.param(parseInt),
+        pageid: state.param(parseInt),
+        placeid: state.param(parseInt),
+        mapzoom: state.param(parseInt),
+        mapcenter: state.param(tmParams.center.fromString, tmParams.center.toString)
     };
         
     // Model: Place
@@ -348,6 +370,7 @@ var gv = (function(window) {
             view.template = _.template($('#page-template').html());
             // listen for state changes
             state.bind('change:pageview', this.renderPageView, this);
+            state.bind('change:placeid', this.renderPlaceHighlight, this);
             // set backreference
             page.view = view;
             // load page
@@ -366,6 +389,7 @@ var gv = (function(window) {
             $(view.el)
                 .html(view.template(view.model.toJSON()));
             view.renderPageView();
+            view.renderPlaceHighlight();
             return view;
         },
         
@@ -374,7 +398,29 @@ var gv = (function(window) {
             // render
             this.$('.ocr').toggle(pageView == 'text');
             this.$('.img').toggle(pageView == 'image');
-        }
+        },
+        
+        renderPlaceHighlight: function() {
+            var placeId = state.get('placeid');
+            // render
+            this.$('span.place').each(function() {
+                $(this).toggleClass('hi', $(this).attr('data-place-id') == placeId);
+            });
+        },
+        
+        // UI Event Handlers - update state
+        
+        events: {
+            'click .place':    'uiPlaceClick'
+        },
+        
+        uiPlaceClick: function(e) {
+            var placeId = $(e.target).attr('data-place-id');
+            if (placeId) {
+                state.setSerialized('placeid', placeId);
+            }
+        },
+        
     });
     
     // View: InfoWindowView (content for the map infowindow)
@@ -435,6 +481,7 @@ var gv = (function(window) {
             state.bind('change:pageid', this.updateTimeline, this);
             state.bind('change:mapzoom', this.updateMapZoom, this);
             state.bind('change:mapcenter', this.updateMapCenter, this);
+            state.bind('change:placeid', this.updateSelectedItem, this);
         },
         
         render: function() {
@@ -465,19 +512,17 @@ var gv = (function(window) {
                 
             // custom info window function
             function openPlaceWindow() {
-                state.set({ mapitem: this });
-                state.set({ pageid: this.opts.page.id });
-                // create info window view if necessary
-                var opts = this.opts;
-                if (!this.infoView) {
-                    this.infoView = new InfoWindowView({
-                        model: opts.place,
-                        page: opts.page,
-                        point: this.getInfoPoint()
-                    });
-                    opts.infoHtml = this.infoView.render().el;
+                var item = this,
+                    opts = item.opts,
+                    start = item.getStart(),
+                    band = tm.timeline.getBand(0);
+                // move the item to the visible timeline if necessary
+                if (start.getTime() < band.getMinVisibleDate().getTime()) {
+                    band.setMinVisibleDate(start);
                 }
-                TimeMapItem.openInfoWindowBasic.call(this);
+                // ugh - order matters here
+                state.set({ pageid: opts.page.id });
+                state.set({ placeid: opts.place.id });
             }
             
             // set center and zoom if available
@@ -485,7 +530,7 @@ var gv = (function(window) {
                 mapZoom = state.get('mapzoom'),
                 centerOnItems = !(mapCenter && mapZoom);
             
-            var tm = view.tm = TimeMap.init({
+            var tm = this.tm = TimeMap.init({
                 mapId: "map",
                 timelineId: "timeline",
                 options: {
@@ -497,6 +542,7 @@ var gv = (function(window) {
                 },
                 datasets: [
                     {
+                        id: "places",
                         theme: "blue",
                         type: "basic",
                         options: {
@@ -508,19 +554,10 @@ var gv = (function(window) {
                         }
                     }
                 ],
-                bands: bandInfo,
-                dataDisplayedFunction: function(tm) {
-                    var value = state.get('mapitem'),
-                        ds = value && tm.datasets[value.dataset],
-                        item;
-                    if (ds) {
-                        item = ds.getItems()[value.index];
-                        if (item && !item.isSelected()) {
-                            item.openInfoWindow();
-                        }
-                    }
-                }
+                bands: bandInfo
             });
+            // the load is synchronous, so we have to call after TimeMap.init()
+            view.updateSelectedItem(); 
             
             // set UI listeners for map
             tm.map.endPan.addHandler(function() {
@@ -572,6 +609,57 @@ var gv = (function(window) {
             // check to avoid loop
             if (!map.getCenter().roughlyEquals(center, map.getZoom())) {
                 map.setCenter(center);
+            }
+        },
+        
+        updateSelectedItem: function() {
+            // find the item
+            var tm = this.tm,
+                selected = tm.getSelected(),
+                test = function(item) {
+                    return item.opts.place.id == state.get('placeid') &&
+                        item.opts.page.id == state.get('pageid');
+                },
+                item;
+            // look at the selected item first
+            if (selected && test(selected)) {
+                item = selected;
+            } else {
+                // get first item meeting test
+                var items = tm.datasets.places.items,
+                    i;
+                for (i=0; i < items.length; i++) {
+                    if (test(items[i])) {
+                        item = items[i]; 
+                        break;
+                    }
+                }
+            }
+            if (item) {
+                // create info window view if necessary 
+                var opts = item.opts,
+                    start = item.getStart(),
+                    band = tm.timeline.getBand(0);
+                if (!item.infoView) {
+                    item.infoView = new InfoWindowView({
+                        model: opts.place,
+                        page: opts.page,
+                        point: item.getInfoPoint()
+                    });
+                    opts.infoHtml = item.infoView.render().el;
+                }
+                // move the item to the visible timeline if necessary
+                if (start.getTime() < band.getMinVisibleDate().getTime()) {
+                    band.setMinVisibleDate(start);
+                }
+                // set a handler to deal with closing the info window
+                item.placemark.closeInfoBubble.addHandler(function() {
+                    if (test(item)) {
+                        state.unset('placeid');
+                    }
+                });
+                // open info window
+                TimeMapItem.openInfoWindowBasic.call(item);
             }
         },
         
@@ -784,15 +872,17 @@ var gv = (function(window) {
             // listen for state changes
             var router = this,
                 f = function() { router.updateRoute() };
-            state.bind('change:topview', f);
-            state.bind('change:bookid', f);
-            state.bind('change:pageid', f);
+            state.bind('change:topview',    f);
+            state.bind('change:bookid',     f);
+            state.bind('change:pageid',     f);
+            state.bind('change:placeid',    f);
         },
 
         routes: {
-            "":                         "index",
-            "book/:bid":                "book",
-            "book/:bid/:pid":           "book"
+            "":                                 "index",
+            "book/:bookid":                     "book",
+            "book/:bookid/:pageid":             "book",
+            "book/:bookid/:pageid/:placeid":    "book"
         },
         
         index: function() {
@@ -800,41 +890,33 @@ var gv = (function(window) {
             this.setState('topview', IndexView);
         },
         
-        book: function(bid, pid) {
+        book: function(bookId, pageId, placeId) {
             // look for querystring. XXX: not thrilled with doing this here.
-            bid = this.parseQS(bid);
-            pid = this.parseQS(pid);
+            bookId = this.parseQS(bookId);
+            pageId = this.parseQS(pageId);
+            placeId = this.parseQS(placeId);
             // update parameters
-            this.setState('bookid', bid);
-            this.setState('pageid', pid);
+            state.setSerialized('bookid', bookId);
+            state.setSerialized('pageid', pageId);
+            state.setSerialized('placeid', placeId);
             // update view
-            this.setState('topview', BookView);
-        },
-        
-        // apply transform, if any, and update state
-        setState: function(key, value) {
-            var params = state.params,
-                f = params[key] && params[key].deserialize || _.identity,
-                o = {};
-            o[key] = f(value);
-            state.set(o);
+            state.set({ topview: BookView });
         },
         
         // list of parameters to de/serialize in the querystring
-        qsParams: ['mapzoom', 'mapcenter', 'mapitem'],
+        qsParams: ['mapzoom', 'mapcenter'],
         
         // strip and set any global state variables from the querystring
         parseQS: function(value) {
             if (value) {
-                var router = this,
-                    parts = value.split('?'),
+                var parts = value.split('?'),
                     qs = parts[1];
                 if (qs) {
                     qs.split('&').forEach(function(pair) {
                         var kv = pair.split('='),
                             val = kv[1] ? decodeURIComponent(kv[1]) : null;
                         if (kv.length > 1) {
-                            router.setState(kv[0], val);
+                            state.setSerialized(kv[0], val);
                         }
                     });
                 }
@@ -849,22 +931,22 @@ var gv = (function(window) {
             // create book view route
             if (topview == BookView){
                 route = 'book/' + state.get('bookid') + 
-                        (state.get('pageid') ? '/' + state.get('pageid') : '');
+                        (state.get('pageid') ? '/' + state.get('pageid') +
+                            (state.get('placeid') ? '/' + state.get('placeid') : '')
+                        : '');
             }
             return route;
         },
         
         // encode a querystring from state parameters
         getQS: function() {
-            var params = state.params,
-                qs = this.qsParams.map(function(key) {
+            var qs = this.qsParams.map(function(key) {
                     var value = state.get(key),
-                        qs = '';
+                        fragment = '';
                     if (value) {
-                        f = params[key] && params[key].serialize || String;
-                        qs = key + '=' + encodeURI(f(value));
+                        fragment = key + '=' + encodeURI(state.serialize(key, value));
                     }
-                    return qs;
+                    return fragment;
                 }).filter(_.identity).join('&');
             return qs ? '?' + qs : '';
         },
