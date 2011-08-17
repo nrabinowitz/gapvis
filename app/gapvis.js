@@ -53,6 +53,7 @@ var gv = (function(window) {
         }),
         Collection = Backbone.Collection,
         Param, state,
+        tmParams = TimeMap.state.params,
         Place, PlaceList, 
         Page, PageList, 
         Book, BookList;
@@ -71,7 +72,10 @@ var gv = (function(window) {
     });
     state.params = {
         bookid: param(parseInt),
-        pageid: param(parseInt)
+        pageid: param(parseInt),
+        mapcenter: param(tmParams.center.fromString, tmParams.center.toString),
+        mapzoom: param(parseInt),
+        mapitem: param(tmParams.selected.fromString, tmParams.selected.toString)
     };
         
     // Model: Place
@@ -209,7 +213,7 @@ var gv = (function(window) {
             }
         }),
         BookListView, IndexView, 
-        BookView, BookTitleView, TimemapView, PageControlView,
+        BookView, BookTitleView, InfoWindowView, TimemapView, PageControlView,
         AppView;
         
     //---------------------------------------
@@ -373,6 +377,53 @@ var gv = (function(window) {
         }
     });
     
+    // View: InfoWindowView (content for the map infowindow)
+    InfoWindowView = View.extend({
+        tagName: 'div',
+        className: 'infowindow',
+        
+        initialize: function(opts) {
+            this.template = _.template($('#info-window-template').html());
+            // listen for state changes
+            state.bind('change:mapzoom', this.updateZoomControl, this);
+        },
+        
+        // render and update functions
+        
+        render: function() {
+            var place = this.model;
+            // XXX: better flag here?
+            if (!place.get('uri')) {
+                place.bind('change', this.render, this);
+                place.fetch();
+            } else {
+                var context = _.extend(place.toJSON(), { page: this.options.page.id});
+                $(this.el).html(this.template(context));
+                this.updateZoomControl();
+            }
+            return this;
+        },
+        
+        updateZoomControl: function() {
+            this.$('.zoom').toggleClass('on', state.get('mapzoom') < 12);
+        },
+        
+        // UI Event Handlers - update state
+        
+        events: {
+            'click span.zoom': 'uiZoom'
+        },
+        
+        uiZoom: function() {
+            var zoom = state.get('mapzoom');
+            zoom = Math.min(zoom+2, 12);
+            state.set({ 
+                mapzoom: zoom, 
+                mapcenter: this.options.point
+            });
+        }
+    });
+    
     // View: TimemapView
     TimemapView = View.extend({
         el: '#timemap-view',
@@ -381,15 +432,16 @@ var gv = (function(window) {
             var view = this;
             view.template = $('#timemap-template').html();
             // listen for state changes
-            state.bind('change:pageid', function() {
-                view.scrollTo(state.get('pageid') || view.model.firstId())
-            });
+            state.bind('change:pageid', this.updateTimeline, this);
+            state.bind('change:mapzoom', this.updateMapZoom, this);
+            state.bind('change:mapcenter', this.updateMapCenter, this);
         },
         
         render: function() {
             $(this.el).html(this.template);
             
-            var book = this.model,
+            var view = this,
+                book = view.model,
                 // create band info
                 bandInfo = [
                     Timeline.createBandInfo({
@@ -407,19 +459,41 @@ var gv = (function(window) {
                     })
                 ],
                 // add custom labeller
-                labelUtils = this.labelUtils = new LabelUtils(
+                labelUtils = view.labelUtils = new LabelUtils(
                     bandInfo, book.labels(), function() { return false; }
                 );
+                
+            // custom info window function
+            function openPlaceWindow() {
+                state.set({ mapitem: this });
+                state.set({ pageid: this.opts.page.id });
+                // create info window view if necessary
+                var opts = this.opts;
+                if (!this.infoView) {
+                    this.infoView = new InfoWindowView({
+                        model: opts.place,
+                        page: opts.page,
+                        point: this.getInfoPoint()
+                    });
+                    opts.infoHtml = this.infoView.render().el;
+                }
+                TimeMapItem.openInfoWindowBasic.call(this);
+            }
             
-            var tm = this.tm = TimeMap.init({
+            // set center and zoom if available
+            var mapCenter = state.get('mapcenter'),
+                mapZoom = state.get('mapzoom'),
+                centerOnItems = !(mapCenter && mapZoom);
+            
+            var tm = view.tm = TimeMap.init({
                 mapId: "map",
                 timelineId: "timeline",
                 options: {
                     eventIconPath: "images/",
-                    openInfoWindow: function() {
-                        state.set({ pageid: this.opts.page.id });
-                        TimeMapItem.openInfoWindowBasic.call(this);
-                    }
+                    openInfoWindow: openPlaceWindow,
+                    mapCenter: mapCenter,
+                    mapZoom: mapZoom,
+                    centerOnItems: centerOnItems
                 },
                 datasets: [
                     {
@@ -434,7 +508,26 @@ var gv = (function(window) {
                         }
                     }
                 ],
-                bands: bandInfo
+                bands: bandInfo,
+                dataDisplayedFunction: function(tm) {
+                    var value = state.get('mapitem'),
+                        ds = value && tm.datasets[value.dataset],
+                        item;
+                    if (ds) {
+                        item = ds.getItems()[value.index];
+                        if (item && !item.isSelected()) {
+                            item.openInfoWindow();
+                        }
+                    }
+                }
+            });
+            
+            // set UI listeners for map
+            tm.map.endPan.addHandler(function() {
+                state.set({ mapcenter: tm.map.getCenter() })
+            });
+            tm.map.changeZoom.addHandler(function() {
+                state.set({ mapzoom: tm.map.getZoom() })
             });
             
             // set up fade filter
@@ -456,6 +549,34 @@ var gv = (function(window) {
             
             return this;
         },
+        
+        // UI update functions
+        
+        updateTimeline: function() {
+            var view = this;
+            view.scrollTo(state.get('pageid') || view.model.firstId());
+        },
+        
+        updateMapZoom: function() {
+            var map = this.tm.map,
+                zoom = state.get('mapzoom');
+            // check to avoid loop
+            if (map.getZoom() != zoom) {
+                map.setZoom(zoom);
+            }
+        },
+        
+        updateMapCenter: function() {
+            var map = this.tm.map,
+                center = state.get('mapcenter');
+            // check to avoid loop
+            if (!map.getCenter().roughlyEquals(center, map.getZoom())) {
+                map.setCenter(center);
+            }
+        },
+        
+        
+        // Timeline animation helpers
         
         // animate the timeline
         play: function() {
@@ -614,6 +735,8 @@ var gv = (function(window) {
             this._viewCache = {};
             // listen for state changes
             state.bind('change:topview', this.updateView, this);
+            state.bind('change:mapzoom', this.updatePermalink, this);
+            state.bind('change:mapcenter', this.updatePermalink, this);
         },
         
         // function to cache and retrieve views
@@ -630,6 +753,11 @@ var gv = (function(window) {
                 key = cls.key,
                 view = this.cache(key) || this.cache(key, new cls());
             this.open(view)
+        },
+        
+        updatePermalink: function() {
+            var router = this.options.router;
+            $('#permalink').attr('href', router.getPermalink());
         },
         
         // close the current view and open a new one
@@ -672,9 +800,10 @@ var gv = (function(window) {
             this.setState('topview', IndexView);
         },
         
-        book: function(bid, pid, qs) {
-            // get state vars if any
-            this.parseQS(qs);
+        book: function(bid, pid) {
+            // look for querystring. XXX: not thrilled with doing this here.
+            bid = this.parseQS(bid);
+            pid = this.parseQS(pid);
             // update parameters
             this.setState('bookid', bid);
             this.setState('pageid', pid);
@@ -692,37 +821,29 @@ var gv = (function(window) {
         },
         
         // list of parameters to de/serialize in the querystring
-        qsParams: [],
+        qsParams: ['mapzoom', 'mapcenter', 'mapitem'],
         
-        // get any global state variables from the querystring
-        parseQS: function(qs) {
-            if (qs) {
-                qs.substring(1).split('&').forEach(function(pair) {
-                    var kv = pair.split('=');
-                    if (kv.length > 1) {
-                        this.setState(kv[0], decodeURI(kv[1]));
-                    }
-                });
+        // strip and set any global state variables from the querystring
+        parseQS: function(value) {
+            if (value) {
+                var router = this,
+                    parts = value.split('?'),
+                    qs = parts[1];
+                if (qs) {
+                    qs.split('&').forEach(function(pair) {
+                        var kv = pair.split('='),
+                            val = kv[1] ? decodeURIComponent(kv[1]) : null;
+                        if (kv.length > 1) {
+                            router.setState(kv[0], val);
+                        }
+                    });
+                }
+                return parts[0];
             }
         },
         
-        // encode a querystring from state parameters
-        getQS: function() {
-            var params = state.params,
-                qs = this.qsParams.reduce(function(qs, key) {
-                    var value = state.get(key);
-                    if (value) {
-                        f = params[key] && params[key].serialize || String;
-                        qs += key + '=' + encodeURI(f(value));
-                    }
-                }, '') || '';
-            return qs ? '?' + qs : '';
-        },
-        
-        // update the url based on the current state
-        updateRoute: function() {
-            var qs = this.getQS(),
-                topview = state.get('topview'),
+        getRoute: function() {
+            var topview = state.get('topview'),
                 // this is effectively the index view
                 route = '';
             // create book view route
@@ -730,15 +851,42 @@ var gv = (function(window) {
                 route = 'book/' + state.get('bookid') + 
                         (state.get('pageid') ? '/' + state.get('pageid') : '');
             }
-            this.navigate(route);
+            return route;
+        },
+        
+        // encode a querystring from state parameters
+        getQS: function() {
+            var params = state.params,
+                qs = this.qsParams.map(function(key) {
+                    var value = state.get(key),
+                        qs = '';
+                    if (value) {
+                        f = params[key] && params[key].serialize || String;
+                        qs = key + '=' + encodeURI(f(value));
+                    }
+                    return qs;
+                }).filter(_.identity).join('&');
+            return qs ? '?' + qs : '';
+        },
+        
+        // the full link, with querystring in state
+        getPermalink: function() {
+            return window.location.href + this.getQS();
+        },
+        
+        // update the url based on the current state
+        updateRoute: function() {
+            this.navigate(this.getRoute());
         }
 
     });
     
     gv.init = function() {
         gv.state = state;
-        gv.app = new AppView();
         gv.router = new AppRouter();
+        gv.app = new AppView({ 
+            router: gv.router
+        });
         Backbone.history.start();
     };
     
@@ -762,4 +910,12 @@ SimileAjax.Graphics._Animation.prototype.run = function() {
 };
 SimileAjax.Graphics._Animation.prototype.stop = function() {
     window.clearTimeout(this.timeoutId);
+};
+
+mxn.LatLonPoint.prototype.roughlyEquals = function(otherPoint, zoom) {
+    function roughly(f) {
+        return f.toFixed(~~(zoom/2))
+    }
+    return roughly(this.lat) == roughly(otherPoint.lat) 
+        && roughly(this.lon)== roughly(otherPoint.lon);
 };

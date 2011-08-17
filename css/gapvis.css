@@ -55,6 +55,9 @@ div#page-control-view {
 header h1 a {
     text-decoration: none;
 }
+header a#permalink {
+    float: right;
+}
 
 a:link, a:visited, #book-list li {
     color: steelblue;
@@ -106,4 +109,14 @@ div#map {
 }
 div.timeline-event-label {
     margin: 3px 0px 0px 3px;
+}
+div.infowindow  h3 {
+    margin: 0;
+}
+div.infowindow  span.zoom {
+    font-size: .6em;
+}
+div.pagenum {
+    color: #999;
+    font-style: italic;
 }

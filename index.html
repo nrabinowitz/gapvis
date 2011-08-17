@@ -28,6 +28,7 @@
 
     <div id="container">
         <header>
+            <a href="#" id="permalink">Permalink</a>
             <h1><a href="#">GapVis</a></h1>
         </header>
         <div id="app-view" role="main">
@@ -93,7 +94,12 @@
             <div class="ocr"><%= OCR %></div>
             <div class="img"><img src="<%= Image %>"></div>
         <div>
-        
+    </script>
+    
+    <script type="text/template" id="info-window-template">
+        <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
+        <div class="pagenum">Page <%= page %></div>
+        <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
     </script>
 
 </body>
