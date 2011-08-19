@@ -128,3 +128,20 @@ div.pagenum {
     color: #999;
     font-style: italic;
 }
+
+/* pagenav styles. */
+#page-nav-view {
+    margin-bottom: .5em;
+}
+#page-nav-view svg {
+    background: #fff;
+}
+#page-nav-view svg rect {
+    stroke: #ccc;
+    stroke-width: 1;
+    fill: #eee;
+}
+#page-nav-view svg rect.current {
+    stroke: steelblue;
+    stroke-width: 2;
+}

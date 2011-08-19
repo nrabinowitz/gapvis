@@ -235,7 +235,8 @@ var gv = (function(window) {
             }
         }),
         BookListView, IndexView, 
-        BookView, BookTitleView, InfoWindowView, TimemapView, PageControlView,
+        BookView, PageNavView, BookTitleView, 
+        InfoWindowView, TimemapView, PageControlView,
         AppView;
         
     //---------------------------------------
@@ -293,6 +294,63 @@ var gv = (function(window) {
         render: function() {
             $(this.el).html(this.template(this.model.toJSON()));
             return this;
+        }
+    });
+    
+    // View: PageNavView (little thumbnails)
+    PageNavView = View.extend({
+        el: '#page-nav-view',
+        
+        initialize: function() {
+            // listen for state changes
+            state.bind('change:pageid', this.renderCurrentPage, this);
+        },
+        
+        render: function() {
+            var book = this.model;
+            // we're still loading, come back later
+            if (!book.pages.length) {
+                book.pages.bind('reset', this.render, this);
+                return;
+            }
+            
+            var data = book.pages.models,
+                h = 40,
+                ratio = 3/4,
+                spacing = 5,
+                pages = data.length,
+                w = $('#book-view').width() - 40,
+                ph = h - spacing * 2,
+                pw = ph * ratio,
+                rows = 1, cols;
+            while ((pw + spacing) * pages / rows > (w - spacing)) {
+                h *= 1.2;
+                rows++;
+                ph = ((h - spacing * (rows+1)) / rows);
+                pw = ph * ratio;
+            }
+            cols = ~~((w - spacing) / (pw + spacing));
+            // make nav
+            d3.select(this.el)
+              .append('svg:svg')
+                .attr('height', h)
+                .attr('width', w)
+              .selectAll('rect')
+                .data(data)
+              .enter().append('svg:rect')
+                .attr('x', function(d,i) { return (i%cols) * (pw + spacing) + spacing })
+                .attr('y', function(d,i) { return ~~(i/cols) * (ph + spacing) + spacing })
+                .attr('width', pw)
+                .attr('height', ph);
+            
+            this.renderCurrentPage();
+        },
+        
+        renderCurrentPage: function() {
+            var pageId = state.get('pageid');
+            d3.select(this.el)
+              .selectAll('rect')
+                .classed('current', function(d) { return d.id == pageId });
         }
     });
     
@@ -726,7 +784,8 @@ var gv = (function(window) {
         childViews: [
             BookTitleView,
             TimemapView,
-            PageControlView
+            PageControlView,
+            PageNavView
         ],
         
         updateViews: function() {
@@ -887,7 +946,7 @@ var gv = (function(window) {
         
         index: function() {
             // update view
-            this.setState('topview', IndexView);
+            state.set({ topview: IndexView });
         },
         
         book: function(bookId, pageId, placeId) {
