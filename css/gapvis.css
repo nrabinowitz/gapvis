@@ -132,16 +132,21 @@ div.pagenum {
 /* pagenav styles. */
 #page-nav-view {
     margin-bottom: .5em;
-}
-#page-nav-view svg {
     background: #fff;
+    padding: 0 5px 5px 0;
 }
-#page-nav-view svg rect {
-    stroke: #ccc;
-    stroke-width: 1;
-    fill: #eee;
+#page-nav-view div {
+    border: 1px solid #ccc;
+    background: #eee;
+    float: left;
+    margin: 5px 0 0 5px;
+    cursor: pointer;
 }
-#page-nav-view svg rect.current {
-    stroke: steelblue;
-    stroke-width: 2;
+#page-nav-view div.current {
+    border: 2px solid steelblue;
+    margin-top: 4px;
+    cursor: auto;
+}
+#page-nav-view div.haspoi {
+    background: yellow;
 }

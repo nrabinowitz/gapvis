@@ -304,6 +304,7 @@ var gv = (function(window) {
         initialize: function() {
             // listen for state changes
             state.bind('change:pageid', this.renderCurrentPage, this);
+            state.bind('change:placeid', this.renderSelectedPlace, this);
         },
         
         render: function() {
@@ -320,37 +321,56 @@ var gv = (function(window) {
                 spacing = 5,
                 pages = data.length,
                 w = $('#book-view').width() - 40,
-                ph = h - spacing * 2,
+                ph = h - spacing,
                 pw = ph * ratio,
                 rows = 1, cols;
-            while ((pw + spacing) * pages / rows > (w - spacing)) {
+            while ((pw + spacing) * pages / rows > w) {
                 h *= 1.2;
                 rows++;
-                ph = ((h - spacing * (rows+1)) / rows);
+                ph = ((h - spacing * rows) / rows);
                 pw = ph * ratio;
             }
-            cols = ~~((w - spacing) / (pw + spacing));
+            cols = ~~(w / (pw + spacing));
             // make nav
             d3.select(this.el)
-              .append('svg:svg')
-                .attr('height', h)
-                .attr('width', w)
-              .selectAll('rect')
+                .style('height', h + 'px')
+              .selectAll('div')
                 .data(data)
-              .enter().append('svg:rect')
-                .attr('x', function(d,i) { return (i%cols) * (pw + spacing) + spacing })
-                .attr('y', function(d,i) { return ~~(i/cols) * (ph + spacing) + spacing })
-                .attr('width', pw)
-                .attr('height', ph);
+              .enter().append('div')
+                .style('width', pw + 'px')
+                .style('height', ph + 'px');
             
             this.renderCurrentPage();
+            this.renderSelectedPlace();
         },
         
         renderCurrentPage: function() {
             var pageId = state.get('pageid');
             d3.select(this.el)
-              .selectAll('rect')
+              .selectAll('div')
                 .classed('current', function(d) { return d.id == pageId });
+        },
+        
+        renderSelectedPlace: function() {
+            var placeId = state.get('placeid');
+            d3.select(this.el)
+              .selectAll('div')
+                .classed('haspoi', function(d) {
+                    var places = d.get('places');
+                    return places && places.indexOf(placeId) >= 0; 
+                });
+        },
+        
+        // UI Event Handlers - update state
+        
+        events: {
+            'click div':    'uiOpenPage'
+        },
+        
+        uiOpenPage: function(e) {
+            // this is a little ugly - better to use d3's machinery?
+            var pageId = e.target.__data__.id;
+            state.set({ pageid: pageId });
         }
     });
     
@@ -616,6 +636,7 @@ var gv = (function(window) {
             });
             // the load is synchronous, so we have to call after TimeMap.init()
             view.updateSelectedItem(); 
+            view.updateTimeline();
             
             // set UI listeners for map
             tm.map.endPan.addHandler(function() {
@@ -641,6 +662,8 @@ var gv = (function(window) {
                 }
                 return true;
             });
+            // run filter immediately to update images
+            tm.filter('map');
             
             return this;
         },
