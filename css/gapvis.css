@@ -99,12 +99,38 @@ div#nextprev{
 div#timelinecontainer{
     width: 100%;
     height: 200px;
+    position: relative;
 }
 div#timeline{
     width: 100%;
     height: 100%;
     font-size: 12px;
     background: #CCCCCC;
+}
+div#timeline-controls {
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    background: #ccc;
+    width: 25px;
+    height: 50px;
+}
+div#timeline-controls div {
+    width: 16px;
+    height: 16px;
+    margin: 5px;
+    background-color: #999;
+    background-repeat: none;
+}
+div#timeline-controls div.on {
+    background-color: steelblue;
+    cursor: pointer;
+}
+div#timeline-controls div#timeline-play {
+    background-image: url(../images/play.png);
+}
+div#timeline-controls div#timeline-stop {
+    background-image: url(../images/stop.png);
 }
 div#mapcontainer {
     width: 100%;

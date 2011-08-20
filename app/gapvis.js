@@ -560,6 +560,12 @@ var gv = (function(window) {
             state.bind('change:mapzoom', this.updateMapZoom, this);
             state.bind('change:mapcenter', this.updateMapCenter, this);
             state.bind('change:placeid', this.updateSelectedItem, this);
+            state.bind('change:autoplay', this.updateAutoplay, this);
+            state.bind('change:autoplay', this.renderAutoplayControls, this);
+            // cancel autoplay on other UI events
+            state.bind('change:topview', this.stopAutoplay, this);
+            state.bind('change:placeid', this.stopAutoplay, this);
+            state.bind('change:pageid', this.stopAutoplay, this);
         },
         
         render: function() {
@@ -668,6 +674,13 @@ var gv = (function(window) {
             return this;
         },
         
+        renderAutoplayControls: function() {
+            var playing = state.get('autoplay');
+            // render
+            $('#timeline-play').toggleClass('on', !playing);
+            $('#timeline-stop').toggleClass('on', playing);
+        },
+        
         // UI update functions
         
         updateTimeline: function() {
@@ -744,28 +757,31 @@ var gv = (function(window) {
             }
         },
         
-        
-        // Timeline animation helpers
-        
-        // animate the timeline
-        play: function() {
-            if (!this._intervalId) {
-                var band = this.tm.timeline.getBand(0),
-                    centerDate = band.getCenterVisibleDate(),
-                    dateInterval = 850000000, // trial and error
-                    timeInterval = 25;
+        updateAutoplay: function() {
+            var view = this,
+                playing = state.get('autoplay');
+            if (playing) {
+                // run autoplay
+                if (!this._intervalId) {
+                    var band = this.tm.timeline.getBand(0),
+                        centerDate = band.getCenterVisibleDate(),
+                        dateInterval = 850000000, // trial and error
+                        timeInterval = 25;
 
-                this._intervalId = window.setInterval(function() {
-                    centerDate = new Date(centerDate.getTime() + dateInterval);
-                    band.setCenterVisibleDate(centerDate);
-                }, timeInterval);
+                    this._intervalId = window.setInterval(function() {
+                        if (band.getMaxVisibleDate().getTime() < band._theme.timeline_stop.getTime()) {
+                            centerDate = new Date(centerDate.getTime() + dateInterval);
+                            band.setCenterVisibleDate(centerDate);
+                        } else {
+                            // this is because we need to reset state as well
+                            view.stopAutoplay();
+                        }
+                    }, timeInterval);
+                }
+            } else {
+                window.clearInterval(this._intervalId);
+                this._intervalId = null;
             }
-        },
-        
-        // stop animation
-        stop: function() {
-            window.clearInterval(this._intervalId);
-            this._intervalId = null;
         },
         
         // go to a specific page
@@ -785,6 +801,21 @@ var gv = (function(window) {
             };
             // run
             view.tm.scrollToDate(d, false, true);
+        },
+        
+        // UI Event Handlers
+        
+        events: {
+            'click #timeline-play': 'startAutoplay',
+            'click #timeline-stop': 'stopAutoplay'
+        },
+        
+        startAutoplay: function() {
+            state.set({ autoplay: true });
+        },
+        
+        stopAutoplay: function() {
+            state.set({ autoplay: false });
         }
     });
     
