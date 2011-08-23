@@ -104,7 +104,7 @@ var gv = (function(window) {
     Place = Model.extend({
         defaults: {
             title: "Untitled Place"
-        },
+        }
     });
     
     // Model: Page
@@ -195,6 +195,35 @@ var gv = (function(window) {
         firstId: function() {
             var first = this.pages.first()
             return first && first.id;
+        },
+        
+        // next/prev place references
+        nextPrevPlaceRef: function(pageId, placeId, prev) {
+            var pages = this.pages,
+                currPage = pages.get(pageId);
+            if (currPage) {
+                var idx = pages.indexOf(currPage),
+                    test = function(page) {
+                        var places = page.get('places');
+                        return places && places.indexOf(placeId) >= 0;
+                    },
+                    increment = function() { idx += (prev ? -1 : 1); return idx };
+                while (currPage = pages.at(increment(idx))) {
+                    if (test(currPage)) {
+                        return currPage.id;
+                    }
+                }
+            }
+        },
+        
+        // next page id
+        nextPlaceRef: function(pageId, placeId) {
+            return this.nextPrevPlaceRef(pageId, placeId);
+        },
+        
+        // previous page id
+        prevPlaceRef: function(pageId, placeId) {
+            return this.nextPrevPlaceRef(pageId, placeId, true);
         }
     });
     
@@ -509,33 +538,72 @@ var gv = (function(window) {
         initialize: function(opts) {
             this.template = _.template($('#info-window-template').html());
             // listen for state changes
-            state.bind('change:mapzoom', this.updateZoomControl, this);
+            state.bind('change:placeid', this.render, this);
+            state.bind('change:pageid', this.renderNextPrevControl, this);
+            state.bind('change:mapzoom', this.renderZoomControl, this);
         },
         
         // render and update functions
         
         render: function() {
-            var place = this.model;
-            // XXX: better flag here?
+            var book = this.model,
+                map = this.map,
+                placeId = state.get('placeid'),
+                place;
+            // if no map or place has been set, give up
+            if (!map || !placeId) {
+                return;
+            }
+            // get the place
+            place = book.places.get(placeId);
+            // if the place isn't fully loaded, do so
+            // XXX: a better flag might be nice here
             if (!place.get('uri')) {
                 place.bind('change', this.render, this);
                 place.fetch();
             } else {
-                var context = _.extend(place.toJSON(), { page: this.options.page.id});
-                $(this.el).html(this.template(context));
-                this.updateZoomControl();
+                // create content
+                $(this.el).html(this.template(place.toJSON()));
+                this.renderZoomControl();
+                this.renderNextPrevControl();
+                // open bubble
+                map.openBubble(this.getPoint(), this.el);
+                map.closeInfoBubble.addHandler(function() {
+                    if (state.get('placeid') == placeId) {
+                        state.unset('placeid');
+                    }
+                })
             }
             return this;
         },
         
-        updateZoomControl: function() {
+        renderZoomControl: function() {
             this.$('.zoom').toggleClass('on', state.get('mapzoom') < 12);
+        },
+        
+        renderNextPrevControl: function() {
+            var book = this.model,
+                pageId = state.get('pageid'),
+                placeId = state.get('placeid');
+            this.prev = book.prevPlaceRef(pageId, placeId);
+            this.next = book.nextPlaceRef(pageId, placeId);
+            this.$('.prev').toggleClass('on', !!this.prev);
+            this.$('.next').toggleClass('on', !!this.next);
+        },
+        
+        getPoint: function() {
+            var placeId = state.get('placeid'),
+                place = this.model.places.get(placeId),
+                ll = place.get('ll');
+            return new mxn.LatLonPoint(ll[0], ll[1]);
         },
         
         // UI Event Handlers - update state
         
         events: {
-            'click span.zoom': 'uiZoom'
+            'click span.zoom.on': 'uiZoom',
+            'click span.next.on': 'uiNext',
+            'click span.prev.on': 'uiPrev'
         },
         
         uiZoom: function() {
@@ -543,8 +611,16 @@ var gv = (function(window) {
             zoom = Math.min(zoom+2, 12);
             state.set({ 
                 mapzoom: zoom, 
-                mapcenter: this.options.point
+                mapcenter: this.getPoint()
             });
+        },
+        
+        uiNext: function() {
+            state.set({ pageid: this.next });
+        },
+        
+        uiPrev: function() {
+            state.set({ pageid: this.prev });
         }
     });
     
@@ -555,11 +631,11 @@ var gv = (function(window) {
         initialize: function() {
             var view = this;
             view.template = $('#timemap-template').html();
+            view.infoWindowView = new InfoWindowView({ model: view.model });
             // listen for state changes
             state.bind('change:pageid', this.updateTimeline, this);
             state.bind('change:mapzoom', this.updateMapZoom, this);
             state.bind('change:mapcenter', this.updateMapCenter, this);
-            state.bind('change:placeid', this.updateSelectedItem, this);
             state.bind('change:autoplay', this.updateAutoplay, this);
             state.bind('change:autoplay', this.renderAutoplayControls, this);
             // cancel autoplay on other UI events
@@ -597,13 +673,7 @@ var gv = (function(window) {
             // custom info window function
             function openPlaceWindow() {
                 var item = this,
-                    opts = item.opts,
-                    start = item.getStart(),
-                    band = tm.timeline.getBand(0);
-                // move the item to the visible timeline if necessary
-                if (start.getTime() < band.getMinVisibleDate().getTime()) {
-                    band.setMinVisibleDate(start);
-                }
+                    opts = item.opts;
                 // ugh - order matters here
                 state.set({ pageid: opts.page.id });
                 state.set({ placeid: opts.place.id });
@@ -620,6 +690,7 @@ var gv = (function(window) {
                 options: {
                     eventIconPath: "images/",
                     openInfoWindow: openPlaceWindow,
+                    closeInfoWindow: $.noop,
                     mapCenter: mapCenter,
                     mapZoom: mapZoom,
                     centerOnItems: centerOnItems
@@ -641,8 +712,11 @@ var gv = (function(window) {
                 bands: bandInfo
             });
             // the load is synchronous, so we have to call after TimeMap.init()
-            view.updateSelectedItem(); 
             view.updateTimeline();
+            
+            // create info window view
+            view.infoWindowView.map = tm.map;
+            view.infoWindowView.render();
             
             // set UI listeners for map
             tm.map.endPan.addHandler(function() {
@@ -703,57 +777,6 @@ var gv = (function(window) {
             // check to avoid loop
             if (!map.getCenter().roughlyEquals(center, map.getZoom())) {
                 map.setCenter(center);
-            }
-        },
-        
-        updateSelectedItem: function() {
-            // find the item
-            var tm = this.tm,
-                selected = tm.getSelected(),
-                test = function(item) {
-                    return item.opts.place.id == state.get('placeid') &&
-                        item.opts.page.id == state.get('pageid');
-                },
-                item;
-            // look at the selected item first
-            if (selected && test(selected)) {
-                item = selected;
-            } else {
-                // get first item meeting test
-                var items = tm.datasets.places.items,
-                    i;
-                for (i=0; i < items.length; i++) {
-                    if (test(items[i])) {
-                        item = items[i]; 
-                        break;
-                    }
-                }
-            }
-            if (item) {
-                // create info window view if necessary 
-                var opts = item.opts,
-                    start = item.getStart(),
-                    band = tm.timeline.getBand(0);
-                if (!item.infoView) {
-                    item.infoView = new InfoWindowView({
-                        model: opts.place,
-                        page: opts.page,
-                        point: item.getInfoPoint()
-                    });
-                    opts.infoHtml = item.infoView.render().el;
-                }
-                // move the item to the visible timeline if necessary
-                if (start.getTime() < band.getMinVisibleDate().getTime()) {
-                    band.setMinVisibleDate(start);
-                }
-                // set a handler to deal with closing the info window
-                item.placemark.closeInfoBubble.addHandler(function() {
-                    if (test(item)) {
-                        state.unset('placeid');
-                    }
-                });
-                // open info window
-                TimeMapItem.openInfoWindowBasic.call(item);
             }
         },
         
@@ -838,8 +861,8 @@ var gv = (function(window) {
         childViews: [
             BookTitleView,
             TimemapView,
-            PageControlView,
-            PageNavView
+            PageControlView
+            // PageNavView
         ],
         
         updateViews: function() {

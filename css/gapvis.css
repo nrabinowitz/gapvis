@@ -144,6 +144,9 @@ div#map {
 div.timeline-event-label {
     margin: 3px 0px 0px 3px;
 }
+div.infowindow {
+    height: 7em;
+}
 div.infowindow  h3 {
     margin: 0;
 }

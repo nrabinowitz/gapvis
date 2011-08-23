@@ -44,7 +44,7 @@
             
             <!-- Book -->
             <div id="book-view" class="clearfix">
-                <div id="page-nav-view"></div>
+                <!-- <div id="page-nav-view"></div> -->
                 <div id="sidebar">
                     <div id="book-title-view"></div>
                     <div id="pagecontainer">
@@ -103,8 +103,11 @@
     
     <script type="text/template" id="info-window-template">
         <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
-        <div class="pagenum">Page <%= page %></div>
         <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
+        <p>
+            <span class="control prev">&lt;&lt; prev</span> | 
+            <span class="control next">next &gt;&gt;</span>
+        </p>
     </script>
 
 </body>
