@@ -103,17 +103,21 @@ var gv = (function(window) {
     // Model: Place
     Place = Model.extend({
         defaults: {
-            title: "Untitled Place"
+            title: "Untitled Place",
+            frequency: 0
         }
     });
     
     // Model: Page
     Page = Model.extend({
+        defaults: {
+            places: []
+        }, 
+        
         initialize: function() {
             this.set({
                 title:'Page ' + this.id
             });
-            // XXX: should I map place ids to real Places?
         }
     });
     
@@ -130,16 +134,31 @@ var gv = (function(window) {
         initialize: function() {
             var book = this,
                 // create collections
-                places = book.places = new PlaceList(),
+                places = book.places = new PlaceList({
+                    comparator: function(place) {
+                        return place.get('frequency')
+                    }
+                }),
                 pages = book.pages = new PageList();
+            // set backreferences
             places.book = book;
-            book.pages.book = book;
+            pages.book = book;
         },
         
         // reset collections with current data
         initCollections: function() {
-            this.places.reset(this.get('places'));
-            this.pages.reset(this.get('pages'));
+            var places = this.places,
+                pages = this.pages;
+            places.reset(this.get('places'));
+            pages.reset(this.get('pages'));
+            // calculate frequencies
+            pages.each(function(page) {
+                page.get('places').forEach(function(placeId) {
+                    var place = places.get(placeId),
+                        freq = place.get('frequency');
+                    place.set({ frequency: freq+1 })
+                });
+            })
         },
         
         // array of page labels for timemap
@@ -152,7 +171,7 @@ var gv = (function(window) {
             var book = this,
                 items = [];
             this.pages.each(function(page) {
-                var places = page.get('places') || [];
+                var places = page.get('places');
                 places.forEach(function(placeId) {
                     var place = book.places.get(placeId),
                         ll = place.get('ll');
@@ -205,7 +224,7 @@ var gv = (function(window) {
                 var idx = pages.indexOf(currPage),
                     test = function(page) {
                         var places = page.get('places');
-                        return places && places.indexOf(placeId) >= 0;
+                        return places.indexOf(placeId) >= 0;
                     },
                     increment = function() { idx += (prev ? -1 : 1); return idx };
                 while (currPage = pages.at(increment(idx))) {
@@ -665,10 +684,50 @@ var gv = (function(window) {
                         eventSource:    false
                     })
                 ],
+                novisibility = [{ visibility: "off" }],
+                mapStyle = [
+                  {
+                    elementType: "labels",
+                    stylers: novisibility
+                  },{
+                    featureType: "administrative",
+                    elementType: "geometry",
+                    stylers: novisibility
+                  },{
+                    featureType: "road",
+                    elementType: "geometry",
+                    stylers: novisibility
+                  },{
+                    featureType: "transit",
+                    elementType: "geometry",
+                    stylers: novisibility
+                  },{
+                    featureType: "poi",
+                    elementType: "geometry",
+                    stylers: novisibility
+                  },{
+                    featureType: "water",
+                    stylers: [
+                      { hue: "#0033ff" },
+                      { saturation: 82 },
+                      { lightness: 85 }
+                    ]
+                  }
+                ],
+                // create themes by frequency
+                scaleColors = ["090066", "6b0051", "ce003c", "cc0020", "ee0000"],
+                colorScale = d3.scale.quantize()
+                    .domain([1, book.places.first().get('frequency')])
+                    .range(scaleColors.map(function(color) {
+                        return TimeMapTheme.createCircleTheme({ color: color })
+                    })),
                 // add custom labeller
                 labelUtils = view.labelUtils = new LabelUtils(
                     bandInfo, book.labels(), function() { return false; }
                 );
+                
+                
+            console.log(colorScale.domain(), colorScale.range());
                 
             // custom info window function
             function openPlaceWindow() {
@@ -688,7 +747,6 @@ var gv = (function(window) {
                 mapId: "map",
                 timelineId: "timeline",
                 options: {
-                    eventIconPath: "images/",
                     openInfoWindow: openPlaceWindow,
                     closeInfoWindow: $.noop,
                     mapCenter: mapCenter,
@@ -698,12 +756,13 @@ var gv = (function(window) {
                 datasets: [
                     {
                         id: "places",
-                        theme: "blue",
+                        theme: TimeMapTheme.createCircleTheme(),
                         type: "basic",
                         options: {
                             items: book.timemapItems(),
                             transformFunction: function(item) {
                                 item.start = labelUtils.getLabelIndex(item.options.page.id) + ' AD';
+                                item.options.theme = colorScale(item.options.place.get('frequency'));
                                 return item;
                             }
                         }
@@ -713,6 +772,12 @@ var gv = (function(window) {
             });
             // the load is synchronous, so we have to call after TimeMap.init()
             view.updateTimeline();
+            
+            // set the map to our custom style
+            var gmap = tm.getNativeMap();
+            gmap.setOptions({
+                styles: mapStyle
+            });
             
             // create info window view
             view.infoWindowView.map = tm.map;
@@ -726,19 +791,38 @@ var gv = (function(window) {
                 state.set({ mapzoom: tm.map.getZoom() })
             });
             
+            // set up icon images
+            tm.eachItem(function(item) {
+                var opts = item.opts,
+                    theme = opts.theme,
+                    size = 18,
+                    color = theme.color,
+                    gmaps = google.maps;
+                opts.markerImages = ['ff', 'cc', '99', '66', '33']
+                    .map(function(alpha) {
+                        var url = TimeMapTheme.getCircleUrl(size, color, alpha);
+                        return new gmaps.MarkerImage(
+                            url,
+                            new gmaps.Size(size, size),
+                            undefined,
+                            new gmaps.Point(size/2, size/2)
+                        );
+                    });
+            });
+            
             // set up fade filter
             tm.addFilter("map", function(item) {
                 var topband = tm.timeline.getBand(0),
                     maxVisibleDate = topband.getMaxVisibleDate().getTime(),
                     minVisibleDate = topband.getMinVisibleDate().getTime(),
-                    images = ['blue-100.png', 'blue-80.png', 'blue-60.png', 'blue-40.png', 'blue-20.png'],
+                    images = item.opts.markerImages,
                     pos = Math.floor(
                         (maxVisibleDate - item.getStartTime()) / (maxVisibleDate - minVisibleDate)
                         * images.length
                     );
                 // set image according to timeline position
                 if (pos >= 0 && pos < images.length) {
-                    item.getNativePlacemark().setIcon("images/" + images[pos]);
+                    item.getNativePlacemark().setIcon(images[pos]);
                 }
                 return true;
             });

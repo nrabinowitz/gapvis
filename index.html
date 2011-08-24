@@ -18,6 +18,7 @@
     <script type="text/javascript" src="lib/timeline-2.3.0.js"></script>
     <!-- <script type="text/javascript" src="http://static.simile.mit.edu/timeline/api-2.3.0/timeline-api.js"></script> -->
     <script type="text/javascript" src="lib/timemap_full.pack.js"></script>
+    <script type="text/javascript" src="lib/circle_icons.js"></script>
     <script type="text/javascript" src="lib/label_utils.js"></script>
     <script type="text/javascript" src="lib/backbone.min.js"></script>
     <script type="text/javascript" src="lib/d3.js"></script>
@@ -105,6 +106,7 @@
         <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
         <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
         <p>
+            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? '' : 's' %>:
             <span class="control prev">&lt;&lt; prev</span> | 
             <span class="control next">next &gt;&gt;</span>
         </p>
