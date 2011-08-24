@@ -9,9 +9,8 @@
     gv.PermalinkView = View.extend({
     
         initialize: function() {
-            // listen for state changes
-            state.bind('change:mapzoom', this.render, this);
-            state.bind('change:mapcenter', this.render, this);
+            // listen for all state changes
+            state.bind('change', this.render, this);
         },
         
         render: function() {

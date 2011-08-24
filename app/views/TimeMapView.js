@@ -125,7 +125,6 @@
                 placeId = state.get('placeid');
             this.prev = book.prevPlaceRef(pageId, placeId);
             this.next = book.nextPlaceRef(pageId, placeId);
-            console.log(this.prev, this.next);
             this.$('.prev').toggleClass('on', !!this.prev);
             this.$('.next').toggleClass('on', !!this.next);
         },
@@ -175,6 +174,7 @@
             state.bind('change:pageid', this.updateTimeline, this);
             state.bind('change:mapzoom', this.updateMapZoom, this);
             state.bind('change:mapcenter', this.updateMapCenter, this);
+            state.bind('change:maptypeid', this.updateMapTypeId, this);
             state.bind('change:autoplay', this.updateAutoplay, this);
             state.bind('change:autoplay', this.renderAutoplayControls, this);
             // cancel autoplay on other UI events
@@ -242,6 +242,7 @@
             });
             // the load is synchronous, so we have to call after TimeMap.init()
             view.updateTimeline();
+            view.updateMapTypeId();
             
             // set the map to our custom style
             var gmap = tm.getNativeMap();
@@ -259,6 +260,11 @@
             });
             tm.map.changeZoom.addHandler(function() {
                 state.set({ mapzoom: tm.map.getZoom() })
+            });
+            // have to do this with the native map
+            var gmap = tm.getNativeMap();
+            google.maps.event.addListener(gmap, 'maptypeid_changed', function() {
+                state.set({ maptypeid: gmap.getMapTypeId() });
             });
             
             // set up icon images
@@ -331,6 +337,14 @@
             // check to avoid loop
             if (!map.getCenter().roughlyEquals(center, map.getZoom())) {
                 map.setCenter(center);
+            }
+        },
+        
+        updateMapTypeId: function() {
+            var map = this.tm.getNativeMap(),
+                typeId = state.get('maptypeid');
+            if (typeId) {
+                map.setMapTypeId(typeId);
             }
         },
         

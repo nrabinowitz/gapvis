@@ -9,7 +9,8 @@
     IndexRouter = gv.Router.extend({
 
         routes: {
-            "": "index"
+            "": "index",
+            "index": "index"
         },
         
         index: function() {

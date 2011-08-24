@@ -10,16 +10,22 @@
     AppRouter = gv.AppRouter = gv.Router.extend({
     
         initialize: function() {
+            var router = this;
             // instantiate registered routers
             routers.forEach(function(r) {
                 r.router = new r.cls();
             });
-            // set up route to listen for querystrings
-            var router = this;
-            this.route(/^(.*)\?(.+)/, "qs", function(route, qs) { 
-                router.parseQS(qs);
-                router.navigate(route, true);
-            });
+            // set up history to catch querystrings
+            Backbone.history.getFragment = function() {
+                var fragment = Backbone.History.prototype.getFragment.apply(this, arguments),
+                    // intercept and get querystring
+                    parts = fragment.split('?'),
+                    qs = parts[1];
+                if (qs) {
+                    router.parseQS(qs);
+                }
+                return parts[0];
+            };
             // listen for state changes
             state.bind('change:topview', this.updateRoute, this);
         },
@@ -46,7 +52,7 @@
         // Querystring functions
         
         // list of parameters to de/serialize in the querystring
-        qsParams: ['mapzoom', 'mapcenter'],
+        qsParams: ['mapzoom', 'mapcenter', 'pageview', 'maptypeid'],
         
         // set any global state variables from the querystring
         parseQS: function(qs) {
