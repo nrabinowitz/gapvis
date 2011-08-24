@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project name="gapvis" default="build-dev">
+    
+    <!-- define ant-contrib tasks -->
+    <taskdef resource="net/sf/antcontrib/antlib.xml">
+        <classpath>
+            <pathelement location="lib/ant-contrib-1.0b3.jar"/>
+        </classpath>
+    </taskdef>
+    
+    <!-- get properties -->
+    <property file="build.properties" />
+    <property name="build.dir" value="build" />
+    <property name="index.template" value="index.tmpl.html" />
+    <property name="index.build" value="${build.dir}/index.html" />
+    <property name="index.target" value="index.html" />
+    
+    
+    <!-- Build Targets -->
+    <target name="build-dev"
+            depends="start-build-dev,
+                     build-js-dev, 
+                     build-css-dev,
+                     finish-build-dev"/>
+            
+    <target name="build-production"/>
+            
+    <!-- Core Targets -->
+    <target name="start-build">
+        <mkdir dir="${build.dir}"/>
+    </target>
+    
+    <target name="clean-build">
+        <delete dir="${build.dir}" />
+    </target>
+    
+    <!-- Dev Targets -->
+    <target name="start-build-dev" depends="start-build">
+        <echo>Starting dev build</echo>
+        <copy file="${index.template}" tofile="${index.build}"/>
+    </target>
+    
+    <target name="build-js-dev">
+        <echo>Creating tags for dev JS files</echo>
+        <!-- Put in script files -->
+        <for list="${js.files}" param="file.url" trim="true">
+            <sequential>
+                <replace file="${index.build}" 
+                    token="${placeholder.js}"
+                    value="&lt;script type=&quot;text/javascript&quot; src=&quot;@{file.url}&quot;&gt;&lt;/script&gt;${placeholder.js}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.js}" value=""/>
+    </target>
+    
+    <target name="build-css-dev">
+        <echo>Creating tags for dev CSS files</echo>
+        <!-- Put in css files -->
+        <for list="${css.files}" param="file.url" trim="true">
+            <sequential>
+                <replace file="${index.build}" 
+                    token="${placeholder.css}"
+                    value="&lt;link rel=&quot;stylesheet&quot; href=&quot;@{file.url}&quot;&gt;${placeholder.css}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.css}" value=""/>
+    </target>
+    
+    <target name="finish-build-dev">
+        <echo>Finishing dev build</echo>
+        <copy file="${index.build}" tofile="${index.target}"/>
+        <ant target="clean-build"/>
+    </target>
+    
+</project>
