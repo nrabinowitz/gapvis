@@ -42,6 +42,5 @@
             })
         }
     });
-    IndexView.key = 'index';
     
 }(window, gv));

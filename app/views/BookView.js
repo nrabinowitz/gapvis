@@ -104,6 +104,5 @@
         }
         
     });
-    BookView.key = 'book';
     
 }(window, gv));
