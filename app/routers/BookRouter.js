@@ -1,8 +1,9 @@
 /*
  * Book View Router
  */
-(function(window, gv) {
+(function(gv) {
     var state = gv.state,
+        BookView = gv.BookView,
         BookRouter;
     
     BookRouter = gv.Router.extend({
@@ -21,10 +22,6 @@
         },
         
         book: function(bookId, pageId, placeId) {
-            // look for querystring. XXX: not thrilled with doing this here.
-            bookId = this.parseQS(bookId);
-            pageId = this.parseQS(pageId);
-            placeId = this.parseQS(placeId);
             // update parameters
             state.setSerialized('bookid', bookId);
             state.setSerialized('pageid', pageId);
@@ -42,6 +39,6 @@
 
     });
     
-    gv.AppRouter.register(BookRouter, gv.BookView);
+    gv.AppRouter.register(BookRouter, BookView);
     
-}(window, gv));
+}(gv));

@@ -1,14 +1,14 @@
 /*
  * Page models
  */
-(function(window, gv) {
+(function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
         API_ROOT = gv.API_ROOT,
-        Book, BookList;
+        Book;
        
     // Model: Book
-    gv.Book = Model.extend({
+    Book = gv.Book = Model.extend({
         defaults: {
             title: "Untitled Book"
         },
@@ -138,4 +138,4 @@
         url: API_ROOT +  '/books.json'
     });
     
-}(window, gv));
+}(gv));

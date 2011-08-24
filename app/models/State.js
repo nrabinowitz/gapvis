@@ -1,15 +1,12 @@
 /*
  * State model
  */
-(function(window, gv) {
+(function(gv) {
     var State, state,
         tmParams = TimeMap.state.params;
-        
-    //---------------------------------------
-    // State model
     
     // model to hold current state
-    State = gv.State = Backbone.Model.extend({
+    State = Backbone.Model.extend({
         defaults: {
             pageview: 'text'
         },
@@ -32,6 +29,9 @@
         }
     });
     
+    // initialize the singleton
+    state = gv.state = new State();
+    
     // factory for de/serializable state parameters
     function param(deserialize, serialize) {
         return {
@@ -41,7 +41,7 @@
     };
     
     // add parameters
-    State.params = {
+    state.params = {
         bookid: param(parseInt),
         pageid: param(parseInt),
         placeid: param(parseInt),
@@ -49,4 +49,4 @@
         mapcenter: param(tmParams.center.fromString, tmParams.center.toString)
     };
     
-}(window, gv));
+}(gv));

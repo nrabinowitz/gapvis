@@ -1,14 +1,14 @@
 /*
  * Place models
  */
-(function(window, gv) {
+(function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
         API_ROOT = gv.API_ROOT,
-        Place, PlaceList;
+        Place;
        
     // Model: Place
-    gv.Place = Model.extend({
+    Place = gv.Place = Model.extend({
         defaults: {
             title: "Untitled Place",
             frequency: 0
@@ -21,4 +21,4 @@
         url: API_ROOT + '/place'
     });
     
-}(window, gv));
+}(gv));

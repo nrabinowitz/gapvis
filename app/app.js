@@ -30,7 +30,6 @@
 var gv = {
 
     init: function() {
-        gv.state = new gv.State();
         gv.router = new gv.AppRouter();
         gv.app = new gv.AppView();
         Backbone.history.start();

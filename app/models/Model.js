@@ -1,12 +1,10 @@
 /*
  * Core setup for models
  */
-(function(window, gv) {
+(function(gv) {
     gv.API_ROOT = 'stub_api';
     
     // set up default model
-    var Backbone = window.Backbone;
-    
     gv.Model = Backbone.Model.extend({
     
         // add .json to url
@@ -22,4 +20,4 @@
         
     gv.Collection = Backbone.Collection;
     
-}(window, gv));
+}(gv));

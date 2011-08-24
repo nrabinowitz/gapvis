@@ -1,13 +1,12 @@
 /*
  * Page View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
-        state = gv.state,
-        PageView;
+        state = gv.state;
     
     // View: PageView (page content)
-    PageView = View.extend({
+    gv.PageView = View.extend({
         tagName: 'div',
         className: 'page-view',
         
@@ -70,4 +69,4 @@
         
     });
     
-}(window, gv));
+}(gv));

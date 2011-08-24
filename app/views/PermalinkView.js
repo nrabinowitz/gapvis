@@ -1,13 +1,12 @@
 /*
  * Permalink View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
-        state = gv.state,
-        PermalinkView;
+        state = gv.state;
     
     // View: PermalinkView (renders the permalink)
-    PermalinkView = View.extend({
+    gv.PermalinkView = View.extend({
     
         initialize: function() {
             // listen for state changes
@@ -21,4 +20,4 @@
     
     });
     
-}(window, gv));
+}(gv));

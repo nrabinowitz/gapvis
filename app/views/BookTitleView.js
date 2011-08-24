@@ -1,7 +1,7 @@
 /*
  * Book Title View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
         BookTitleView;
@@ -22,4 +22,4 @@
     // register
     gv.registerChildView(gv.BookView, BookTitleView);
     
-}(window, gv));
+}(gv));

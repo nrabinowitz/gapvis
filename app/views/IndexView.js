@@ -1,9 +1,10 @@
 /*
  * Index View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
+        BookView = gv.BookView,
         BookListView, IndexView;
     
     // View: BookListView (item in book index)
@@ -43,4 +44,4 @@
         }
     });
     
-}(window, gv));
+}(gv));

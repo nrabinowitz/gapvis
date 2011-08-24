@@ -1,7 +1,7 @@
 /*
  * TimeMap View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
         InfoWindowView, TimemapView,
@@ -33,6 +33,13 @@
                     { hue: "#0033ff" },
                     { saturation: 82 },
                     { lightness: 85 }
+                ]
+            },{
+                featureType: "landscape",
+                stylers: [
+                    { hue: "#80ff00" },
+                    { saturation: 15 },
+                    { lightness: -20 }
                 ]
             }
         ],
@@ -84,7 +91,10 @@
             // if the place isn't fully loaded, do so
             // XXX: a better flag might be nice here
             if (!place.get('uri')) {
-                place.bind('change', this.render, this);
+                var view = this;
+                place.bind('change', function() {
+                    view.render();
+                });
                 place.fetch();
             } else {
                 // create content
@@ -93,11 +103,14 @@
                 this.renderNextPrevControl();
                 // open bubble
                 map.openBubble(this.getPoint(), this.el);
-                map.closeInfoBubble.addHandler(function() {
+                // set a handler to unset place if close is clicked
+                function handler() {
                     if (state.get('placeid') == placeId) {
                         state.unset('placeid');
                     }
-                })
+                    map.closeInfoBubble.removeHandler(handler);
+                }
+                map.closeInfoBubble.addHandler(handler);
             }
             return this;
         },
@@ -112,6 +125,7 @@
                 placeId = state.get('placeid');
             this.prev = book.prevPlaceRef(pageId, placeId);
             this.next = book.nextPlaceRef(pageId, placeId);
+            console.log(this.prev, this.next);
             this.$('.prev').toggleClass('on', !!this.prev);
             this.$('.next').toggleClass('on', !!this.next);
         },
@@ -384,4 +398,4 @@
     // register
     gv.registerChildView(gv.BookView, TimemapView);
     
-}(window, gv));
+}(gv));

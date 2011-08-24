@@ -1,8 +1,9 @@
 /*
  * Book View Router
  */
-(function(window, gv) {
+(function(gv) {
     var state = gv.state,
+        IndexView = gv.IndexView,
         IndexRouter;
     
     IndexRouter = gv.Router.extend({
@@ -22,6 +23,6 @@
 
     });
     
-    gv.AppRouter.register(IndexRouter, gv.IndexView);
+    gv.AppRouter.register(IndexRouter, IndexView);
     
-}(window, gv));
+}(gv));

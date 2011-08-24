@@ -1,13 +1,13 @@
 /*
  * Book View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
         BookView;
     
     // View: BookView (master view for the book screen)
-    BookView = View.extend({
+    BookView = gv.BookView = View.extend({
         el: '#book-view',
         
         initialize: function(opts) {
@@ -105,4 +105,4 @@
         
     });
     
-}(window, gv));
+}(gv));

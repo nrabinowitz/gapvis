@@ -1,7 +1,7 @@
 /*
  * Page Nav View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
         PageNavView;
@@ -86,4 +86,4 @@
     // register
     // gv.registerChildView(gv.BookView, PageNavView);
     
-}(window, gv));
+}(gv));

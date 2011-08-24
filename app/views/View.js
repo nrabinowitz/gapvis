@@ -1,7 +1,7 @@
 /*
  * Core setup for views
  */
-(function(window, gv) {
+(function(gv) {
 
     // default view
     gv.View = Backbone.View.extend({
@@ -25,4 +25,4 @@
         parent.prototype.childClasses.push(child);
     };
     
-}(window, gv));
+}(gv));

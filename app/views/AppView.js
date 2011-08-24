@@ -1,7 +1,7 @@
 /*
  * Index View
  */
-(function(window, gv) {
+(function(gv) {
     var View = gv.View,
         state = gv.state,
         viewCache = [];
@@ -10,11 +10,10 @@
     gv.AppView = View.extend({
     
         initialize: function() {
-            this.initCache();
+            // initiatialize permalink
+            new gv.PermalinkView();
             // listen for state changes
             state.bind('change:topview', this.updateView, this);
-            state.bind('change:mapzoom', this.updatePermalink, this);
-            state.bind('change:mapcenter', this.updatePermalink, this);
         },
         
         cached: function(cls) {
@@ -60,4 +59,4 @@
     
     });
     
-}(window, gv));
+}(gv));

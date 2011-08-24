@@ -1,7 +1,7 @@
 /*
  * App Router
  */
-(function(window, gv) {
+(function(gv) {
     var state = gv.state,
         AppRouter,
         // array to hold registered routers
@@ -87,4 +87,4 @@
         })
     };
     
-}(window, gv));
+}(gv));

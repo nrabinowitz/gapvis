@@ -1,11 +1,9 @@
 /*
  * Core setup for routers
  */
-(function(window, gv) {
+(function(gv) {
     
     // set up default model
-    var Backbone = window.Backbone;
-    
     gv.Router = Backbone.Router.extend({
     
         // navigate to the current route
@@ -21,4 +19,4 @@
         
     });
     
-}(window, gv));
+}(gv));

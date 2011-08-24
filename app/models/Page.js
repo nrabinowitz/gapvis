@@ -1,14 +1,14 @@
 /*
  * Page models
  */
-(function(window, gv) {
+(function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
         API_ROOT = gv.API_ROOT,
-        Page, PageList;
+        Page;
        
     // Model: Page
-    gv.Page = Model.extend({
+    Page = gv.Page = Model.extend({
         defaults: {
             places: []
         }, 
@@ -28,4 +28,4 @@
         }
     });
     
-}(window, gv));
+}(gv));
