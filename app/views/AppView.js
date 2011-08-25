@@ -25,7 +25,7 @@
                 // instantiate and cache
                 cached = {
                     view: cls,
-                    instance: new cls()
+                    instance: new cls({ parent: this })
                 };
                 viewCache.push(cached);
             } 

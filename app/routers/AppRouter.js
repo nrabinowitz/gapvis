@@ -33,9 +33,13 @@
         // get the router for the current top view
         getRouter: function() {
             var topview = state.get('topview');
-            return _(routers).detect(function(r) {
-                return r.view == topview;
-            }).router;
+            try {
+                return _(routers).detect(function(r) {
+                    return r.view == topview;
+                }).router;
+            } catch (e) {
+                console.error('top view not found');
+            }
         },
         
         getRoute: function() {

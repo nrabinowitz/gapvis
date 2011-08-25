@@ -89,8 +89,7 @@
             // get the place
             place = book.places.get(placeId);
             // if the place isn't fully loaded, do so
-            // XXX: a better flag might be nice here
-            if (!place.get('uri')) {
+            if (!place.isFullyLoaded()) {
                 var view = this;
                 place.bind('change', function() {
                     view.render();

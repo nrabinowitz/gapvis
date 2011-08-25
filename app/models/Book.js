@@ -47,6 +47,10 @@
             })
         },
         
+        isFullyLoaded: function() {
+            return this.pages.length && this.places.length;
+        },
+        
         // array of page labels for timemap
         labels: function() {
             return this.pages.map(function(p) { return p.id });

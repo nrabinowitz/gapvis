@@ -79,6 +79,9 @@ a:link, a:visited, #book-list li {
 div.book-title-view h2 {
     margin: 0;
 }
+div.book-title-view h2.on {
+    cursor: pointer;
+}
 div.book-title-view p {
     margin-top: 0;
 }

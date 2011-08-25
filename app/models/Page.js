@@ -17,6 +17,10 @@
             this.set({
                 title:'Page ' + this.id
             });
+        },
+        
+        isFullyLoaded: function() {
+            return !!this.get('ocr');
         }
     });
     

@@ -3,7 +3,7 @@
  */
 (function(gv) {
     var state = gv.state,
-        BookView = gv.BookView,
+        BookReadingView = gv.BookReadingView,
         BookRouter;
     
     BookRouter = gv.Router.extend({
@@ -27,7 +27,7 @@
             state.setSerialized('pageid', pageId);
             state.setSerialized('placeid', placeId);
             // update view
-            state.set({ topview: BookView });
+            state.set({ topview: BookReadingView });
         },
         
         getRoute: function() {
@@ -39,6 +39,6 @@
 
     });
     
-    gv.AppRouter.register(BookRouter, BookView);
+    gv.AppRouter.register(BookRouter, BookReadingView);
     
 }(gv));

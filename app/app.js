@@ -30,6 +30,7 @@
 var gv = {
 
     init: function() {
+        gv.books = new gv.BookList();
         gv.router = new gv.AppRouter();
         gv.app = new gv.AppView();
         Backbone.history.start();

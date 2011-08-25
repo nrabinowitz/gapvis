@@ -4,8 +4,7 @@
 (function(gv) {
     var View = gv.View,
         state = gv.state,
-        BookView = gv.BookView,
-        BookListView, IndexView;
+        BookListView;
     
     // View: BookListView (item in book index)
     BookListView = View.extend({
@@ -22,24 +21,26 @@
         
         uiOpenBook: function() {
             state.set({ 'bookid': this.model.id });
-            state.set({ 'topview': BookView });
+            state.set({ 'topview': gv.BookSummaryView });
         }
     });
         
     // View: IndexView (index page)
-    IndexView = gv.IndexView = View.extend({
+    gv.IndexView = View.extend({
         el: '#index-view',
         
         initialize: function() {
-            var books = this.model = new gv.BookList();
-            books.bind('reset', this.addList, this);
-            books.fetch();
+            var books = this.model = gv.books;
+            books.bind('reset', this.render, this);
+            books.fetchNew();
         },
         
-        addList: function() {
+        render: function() {
+            var $list = this.$("#book-list");
+            $list.empty();
             this.model.forEach(function(book) {
                 var view = new BookListView({ model:book });
-                this.$("#book-list").append(view.render().el);
+                $list.append(view.render().el);
             })
         }
     });
