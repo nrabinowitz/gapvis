@@ -13,14 +13,14 @@ header {
     margin: 10px 20px;
 }
 
-div#index-view, div#book-view {
+div.topview {
     background: #eee;
     margin: 0 20px 30px 20px;
     padding: 15px;
     display: none;
     position: absolute;
     width: 95%;
-    height: 80%;
+    height: 85%;
     -moz-border-radius: 15px;
     border-radius: 15px;
 }

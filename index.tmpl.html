@@ -22,7 +22,7 @@
         <div id="app-view" role="main">
         
             <!-- Homepage -->
-            <div id="index-view">
+            <div id="index-view" class="topview">
                 <p>GapVis is a visual Interface for reading ancient texts.</p>
                 
                 <p>Select a book to view:</p>
@@ -30,8 +30,13 @@
                 <ul id="book-list"></ul>
             </div>
             
-            <!-- Book -->
-            <div id="book-view" class="clearfix">
+            <!-- Book Overview -->
+            <div id="book-overview-view" class="topview clearfix">
+                <div class="book-title-view"></div>
+            </div>
+            
+            <!-- Book Reading View -->
+            <div id="book-view" class="topview clearfix">
                 <a href="#" class="permalink">Permalink</a>
                 <div class="book-title-view"></div>
                 <div id="reading-pane">

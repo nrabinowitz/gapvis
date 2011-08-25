@@ -16,9 +16,9 @@
         },
 
         routes: {
-            "book/:bookid":                     "book",
-            "book/:bookid/:pageid":             "book",
-            "book/:bookid/:pageid/:placeid":    "book"
+            "book/:bookid/read":                    "book",
+            "book/:bookid/read/:pageid":            "book",
+            "book/:bookid/read/:pageid/:placeid":   "book"
         },
         
         book: function(bookId, pageId, placeId) {
@@ -31,7 +31,7 @@
         },
         
         getRoute: function() {
-            return 'book/' + state.get('bookid') + 
+            return 'book/' + state.get('bookid') + '/read' +
                 (state.get('pageid') ? '/' + state.get('pageid') +
                     (state.get('placeid') ? '/' + state.get('placeid') : '')
                 : '');
