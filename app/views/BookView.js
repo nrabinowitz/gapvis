@@ -114,6 +114,14 @@
                     oldPage && pages.indexOf(oldPage) > pages.indexOf(page)
                 );
             }
+        },
+        
+        open: function() {
+            $(this.el).show('slide', {direction: 'right' }, 500);
+        },
+        
+        close: function() {
+            $(this.el).hide('slide', {direction: 'right' }, 500);
         }
         
     });
