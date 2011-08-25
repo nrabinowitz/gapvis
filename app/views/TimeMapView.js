@@ -4,7 +4,7 @@
 (function(gv) {
     var View = gv.View,
         state = gv.state,
-        InfoWindowView, TimemapView,
+        InfoWindowView,
         // map styles
         novisibility = [{ visibility: "off" }],
         mapStyle = [
@@ -163,7 +163,7 @@
     });
     
     // View: TimemapView
-    TimemapView = View.extend({
+    gv.TimeMapView = View.extend({
         el: '#timemap-view',
         
         initialize: function() {
@@ -409,7 +409,5 @@
             state.set({ autoplay: false });
         }
     });
-    // register
-    gv.registerChildView(gv.BookView, TimemapView);
     
 }(gv));

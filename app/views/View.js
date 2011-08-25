@@ -14,15 +14,7 @@
         },
         clear: function() {
             $(this.el).empty();
-        },
-        
-        // holder for registered child classes
-        childClasses: []
+        }
     });
-    
-    // child view registration
-    gv.registerChildView = function(parent, child) {
-        parent.prototype.childClasses.push(child);
-    };
     
 }(gv));

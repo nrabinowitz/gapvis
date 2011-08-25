@@ -14,7 +14,7 @@
         },
         
         render: function() {
-            $('#permalink').attr('href', gv.router.getPermalink());
+            $('a.permalink').attr('href', gv.router.getPermalink());
         }
     
     });

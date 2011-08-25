@@ -3,11 +3,10 @@
  */
 (function(gv) {
     var View = gv.View,
-        state = gv.state,
-        PageControlView;
+        state = gv.state;
     
     // View: PageControlView (control buttons)
-    PageControlView = View.extend({
+    gv.PageControlView = View.extend({
         el: '#page-control-view',
         
         initialize: function(opts) {
@@ -68,7 +67,5 @@
             state.set({ pageview:'text' })
         }
     });
-    // register
-    gv.registerChildView(gv.BookView, PageControlView);
     
 }(gv));

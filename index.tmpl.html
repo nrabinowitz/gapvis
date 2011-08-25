@@ -17,7 +17,6 @@
 
     <div id="container">
         <header>
-            <a href="#" id="permalink">Permalink</a>
             <h1><a href="#">GapVis</a></h1>
         </header>
         <div id="app-view" role="main">
@@ -33,8 +32,9 @@
             
             <!-- Book -->
             <div id="book-view" class="clearfix">
-                <div id="sidebar">
-                    <div id="book-title-view"></div>
+                <a href="#" class="permalink">Permalink</a>
+                <div class="book-title-view"></div>
+                <div id="reading-pane">
                     <div id="pagecontainer">
                         <div id="page-view"></div>
                         <div id="page-control-view">
@@ -83,10 +83,8 @@
     </script>
     
     <script type="text/template" id="page-template">
-        <div class="single-page">
-            <div class="ocr"><%= OCR %></div>
-            <div class="img"><img src="<%= Image %>"></div>
-        <div>
+        <div class="ocr"><%= OCR %></div>
+        <div class="img"><img src="<%= Image %>"></div>
     </script>
     
     <script type="text/template" id="info-window-template">

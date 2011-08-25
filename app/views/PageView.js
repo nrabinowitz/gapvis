@@ -8,7 +8,7 @@
     // View: PageView (page content)
     gv.PageView = View.extend({
         tagName: 'div',
-        className: 'page-view',
+        className: 'single-page',
         
         initialize: function() {
             var view = this,
@@ -52,6 +52,10 @@
             this.$('span.place').each(function() {
                 $(this).toggleClass('hi', $(this).attr('data-place-id') == placeId);
             });
+        },
+        
+        open: function(fromLeft) {
+            $(this.el).show('slide', {direction: (fromLeft ? 'left' : 'right') }, 500);
         },
         
         // UI Event Handlers - update state

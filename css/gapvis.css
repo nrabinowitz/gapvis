@@ -14,7 +14,7 @@ header {
 }
 
 div#index-view, div#book-view {
-    background: #eee;
+    background: #f2f2f2;
     margin: 0 20px 30px 20px;
     padding: 15px;
     display: none;
@@ -22,40 +22,42 @@ div#index-view, div#book-view {
 div#index-view  {
     width: 65%;
 }
-div#sidebar {
-    width: 35%;
-    float: right;
+div#reading-pane {
+    width: 450px;
+    float: left;
 }
 div#timemap-view {
-    width: 60%;
+    margin-left: 450px; 
+    border: 1px solid #CCC;
 }
 div#page-view {
     overflow: hidden;
-    width: 350px;
 }
 div.single-page {
     background: #FFF;
     border: 1px solid #CCC;
-    height: 400px;
+    height: 500px;
+    width: 400px;
     overflow: auto;
     margin-bottom: 1em;
-    padding: .5em;
+    font-size: 1.2em;
+    padding: 1.5em 1em;
 }
 div.single-page .img {
     display: none;
 }
 div.single-page .img img {
-    width: 300px;
+    width: 350px;
 }
 div#page-control-view {
-    width: 350px;
+    width: 400px;
 }
 
 /* specific text styles */
 header h1 a {
     text-decoration: none;
 }
-header a#permalink {
+a.permalink {
     float: right;
 }
 span.place {
@@ -72,10 +74,10 @@ a:link, a:visited, #book-list li {
     cursor: pointer;
 }
 
-div#book-title-view h2 {
+div.book-title-view h2 {
     margin: 0;
 }
-div#book-title-view p {
+div.book-title-view p {
     margin-top: 0;
 }
 

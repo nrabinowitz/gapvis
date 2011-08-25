@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/gapvis.css">
     
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="lib/underscore-min.js"></script><script type="text/javascript" src="lib/jquery-1.6.2.min.js"></script><script type="text/javascript" src="lib/mxn-min.js"></script><script type="text/javascript" src="lib/mxn.core-min.js"></script><script type="text/javascript" src="lib/mxn.googlev3.core-min.js"></script><script type="text/javascript" src="lib/timeline-2.3.0.js"></script><script type="text/javascript" src="lib/timemap_full.pack.js"></script><script type="text/javascript" src="lib/backbone.min.js"></script><script type="text/javascript" src="lib/d3.js"></script><script type="text/javascript" src="lib/circle_icons.js"></script><script type="text/javascript" src="lib/label_utils.js"></script><script type="text/javascript" src="app/patches.js"></script><script type="text/javascript" src="app/app.js"></script><script type="text/javascript" src="app/models/Model.js"></script><script type="text/javascript" src="app/models/State.js"></script><script type="text/javascript" src="app/models/Place.js"></script><script type="text/javascript" src="app/models/Page.js"></script><script type="text/javascript" src="app/models/Book.js"></script><script type="text/javascript" src="app/views/View.js"></script><script type="text/javascript" src="app/views/AppView.js"></script><script type="text/javascript" src="app/views/BookView.js"></script><script type="text/javascript" src="app/views/IndexView.js"></script><script type="text/javascript" src="app/views/BookTitleView.js"></script><script type="text/javascript" src="app/views/PageControlView.js"></script><script type="text/javascript" src="app/views/PageView.js"></script><script type="text/javascript" src="app/views/TimeMapView.js"></script><script type="text/javascript" src="app/views/PageNavView.js"></script><script type="text/javascript" src="app/views/PermalinkView.js"></script><script type="text/javascript" src="app/routers/Router.js"></script><script type="text/javascript" src="app/routers/AppRouter.js"></script><script type="text/javascript" src="app/routers/IndexRouter.js"></script><script type="text/javascript" src="app/routers/BookRouter.js"></script>
+    <script type="text/javascript" src="lib/underscore-min.js"></script><script type="text/javascript" src="lib/jquery-1.6.2.min.js"></script><script type="text/javascript" src="lib/jquery-ui-1.8.16.custom.min.js"></script><script type="text/javascript" src="lib/mxn-min.js"></script><script type="text/javascript" src="lib/mxn.core-min.js"></script><script type="text/javascript" src="lib/mxn.googlev3.core-min.js"></script><script type="text/javascript" src="lib/timeline-2.3.0.js"></script><script type="text/javascript" src="lib/timemap_full.pack.js"></script><script type="text/javascript" src="lib/backbone.min.js"></script><script type="text/javascript" src="lib/d3.js"></script><script type="text/javascript" src="lib/circle_icons.js"></script><script type="text/javascript" src="lib/label_utils.js"></script><script type="text/javascript" src="app/patches.js"></script><script type="text/javascript" src="app/app.js"></script><script type="text/javascript" src="app/models/Model.js"></script><script type="text/javascript" src="app/models/State.js"></script><script type="text/javascript" src="app/models/Place.js"></script><script type="text/javascript" src="app/models/Page.js"></script><script type="text/javascript" src="app/models/Book.js"></script><script type="text/javascript" src="app/views/View.js"></script><script type="text/javascript" src="app/views/AppView.js"></script><script type="text/javascript" src="app/views/BookView.js"></script><script type="text/javascript" src="app/views/IndexView.js"></script><script type="text/javascript" src="app/views/BookTitleView.js"></script><script type="text/javascript" src="app/views/PageControlView.js"></script><script type="text/javascript" src="app/views/PageView.js"></script><script type="text/javascript" src="app/views/TimeMapView.js"></script><script type="text/javascript" src="app/views/PageNavView.js"></script><script type="text/javascript" src="app/views/PermalinkView.js"></script><script type="text/javascript" src="app/routers/Router.js"></script><script type="text/javascript" src="app/routers/AppRouter.js"></script><script type="text/javascript" src="app/routers/IndexRouter.js"></script><script type="text/javascript" src="app/routers/BookRouter.js"></script>
     
 </head>
 
@@ -17,7 +17,6 @@
 
     <div id="container">
         <header>
-            <a href="#" id="permalink">Permalink</a>
             <h1><a href="#">GapVis</a></h1>
         </header>
         <div id="app-view" role="main">
@@ -33,8 +32,9 @@
             
             <!-- Book -->
             <div id="book-view" class="clearfix">
-                <div id="sidebar">
-                    <div id="book-title-view"></div>
+                <a href="#" class="permalink">Permalink</a>
+                <div class="book-title-view"></div>
+                <div id="reading-pane">
                     <div id="pagecontainer">
                         <div id="page-view"></div>
                         <div id="page-control-view">
@@ -83,10 +83,8 @@
     </script>
     
     <script type="text/template" id="page-template">
-        <div class="single-page">
-            <div class="ocr"><%= OCR %></div>
-            <div class="img"><img src="<%= Image %>"></div>
-        <div>
+        <div class="ocr"><%= OCR %></div>
+        <div class="img"><img src="<%= Image %>"></div>
     </script>
     
     <script type="text/template" id="info-window-template">

@@ -12,6 +12,12 @@
         
         initialize: function(opts) {
             var view = this;
+            // set child classes
+            view.childClasses = [
+                gv.BookTitleView,
+                gv.PageControlView,
+                gv.TimeMapView
+            ];
             // listen for state changes
             state.bind('change:bookid', function() {
                 view.clear();
@@ -75,18 +81,22 @@
         updatePage: function() {
             var view = this,
                 book = view.model,
-                pageId = state.get('pageid');
+                pages = book.pages,
+                pageId = state.get('pageid'),
+                oldPage;
             // we're still loading, come back later
-            if (!book.pages.length) {
-                book.pages.bind('reset', view.openPage, view);
+            if (!pages.length) {
+                pages.bind('reset', view.openPage, view);
                 return;
             }
             // get the relevant page
-            var page = pageId && book.pages.get(pageId) || 
-                book.pages.first();
+            var page = pageId && pages.get(pageId) || 
+                pages.first();
             // another page is open; close it
             if (view.pageView) {
                 view.pageView.close();
+                // grab the old page for comparison
+                oldPage = view.pageView.model;
             }
             // make a new page view if necessary
             if (!page.view) {
@@ -99,7 +109,10 @@
             // page view has been created; show
             else {
                 view.pageView = page.view;
-                page.view.open();
+                page.view.open(
+                    // figure out left/right
+                    oldPage && pages.indexOf(oldPage) > pages.indexOf(page)
+                );
             }
         }
         
