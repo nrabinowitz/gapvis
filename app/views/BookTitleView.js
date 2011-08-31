@@ -29,7 +29,6 @@
         },
         
         uiGoToSummary: function() {
-            console.log('here');
             state.set({ 'topview': BookSummaryView });
         }
     });

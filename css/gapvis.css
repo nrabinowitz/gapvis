@@ -54,6 +54,13 @@ div.single-page .img img {
 div#page-control-view {
     width: 400px;
 }
+div#place-freq-bars-view {
+    background: #FFF;
+    border: 1px solid #CCC;
+    width: 400px;
+    height: 500px;
+    padding: 1.5em 1em;
+}
 
 /* specific text styles */
 header h1 a {
@@ -99,6 +106,9 @@ span#prev {
     margin-right: 15px;
 }
 div#nextprev{
+    float: right;
+}
+span.goto-reading {
     float: right;
 }
 

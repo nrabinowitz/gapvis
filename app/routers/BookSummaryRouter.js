@@ -7,10 +7,11 @@
         BookSummaryRouter;
     
     BookSummaryRouter = gv.Router.extend({
+        topview: BookSummaryView,
     
         initialize: function() {
             // listen for state changes
-            state.bind('change:bookid',this.updateRoute, this);
+            state.bind('change:bookid',this.updateViewRoute, this);
         },
 
         routes: {

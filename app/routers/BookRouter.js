@@ -7,12 +7,13 @@
         BookRouter;
     
     BookRouter = gv.Router.extend({
+        topview: BookReadingView,
     
         initialize: function() {
             // listen for state changes
-            state.bind('change:bookid',this.updateRoute, this);
-            state.bind('change:pageid', this.updateRoute, this);
-            state.bind('change:placeid', this.updateRoute, this);
+            state.bind('change:bookid',this.updateViewRoute, this);
+            state.bind('change:pageid', this.updateViewRoute, this);
+            state.bind('change:placeid', this.updateViewRoute, this);
         },
 
         routes: {

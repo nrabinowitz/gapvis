@@ -15,6 +15,13 @@
         // update the url based on the current state
         updateRoute: function() {
             this.navigate(this.getRoute());
+        },
+        
+        // update the url if this router's view is the top view
+        updateViewRoute: function() {
+            if (this.topview && this.topview == gv.state.get('topview')) {
+                this.updateRoute();
+            }
         }
         
     });

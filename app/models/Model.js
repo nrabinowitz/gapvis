@@ -25,7 +25,7 @@
         
     gv.Collection = Backbone.Collection.extend({
     
-        // fetch list without overwriting existing objects (copied from )
+        // fetch list without overwriting existing objects (copied from fetch())
         fetchNew: function(options) {
             options = options || {};
             var collection = this,
@@ -44,7 +44,11 @@
         
         getOrCreate: function(modelId) {
             var model = this.get(modelId);
-            return model ? model :  new this.model({ id: modelId});
+            if (!model) {
+                model = new this.model({ id: modelId});
+                this.add(model);
+            }
+            return model;
         }
         
     });

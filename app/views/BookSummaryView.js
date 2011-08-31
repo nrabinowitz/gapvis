@@ -13,7 +13,8 @@
             var view = this;
             // set child classes
             view.childClasses = [
-                gv.BookTitleView
+                gv.BookTitleView,
+                gv.PlaceFrequencyBarsView
             ];
             // super initialization kicks off model fetch
             gv.BookView.prototype.initialize.call(this);
