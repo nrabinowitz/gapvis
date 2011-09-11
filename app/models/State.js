@@ -42,9 +42,6 @@
     
     // add parameters
     state.params = {
-        bookid: param(parseInt),
-        pageid: param(parseInt),
-        placeid: param(parseInt),
         mapzoom: param(parseInt),
         mapcenter: param(tmParams.center.fromString, tmParams.center.toString)
     };

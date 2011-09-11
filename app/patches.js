@@ -1,5 +1,5 @@
 //-----------------------------------
-// Monkey patches :(
+// Monkey patches
 
 // Throws an annoying error otherwise
 SimileAjax.History.enabled = false;

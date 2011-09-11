@@ -20,7 +20,7 @@
         },
         
         isFullyLoaded: function() {
-            return !!this.get('ocr');
+            return !!this.get('text');
         }
     });
     

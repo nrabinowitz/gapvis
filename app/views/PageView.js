@@ -42,7 +42,7 @@
         renderPageView: function() {
             var pageView = state.get('pageview');
             // render
-            this.$('.ocr').toggle(pageView == 'text');
+            this.$('.text').toggle(pageView == 'text');
             this.$('.img').toggle(pageView == 'image');
         },
         

@@ -15,8 +15,6 @@
                 view.clear();
                 view.updateBook();
             });
-            // instantiate book
-            this.updateBook();
         },
         
         updateViews: function() {
@@ -51,6 +49,7 @@
         
         open: function() {
             $(this.el).show('slide', {direction: 'right' }, 500);
+            this.updateBook();
         },
         
         close: function() {
@@ -66,21 +65,24 @@
             if (!view.model || view.model.id != bookId) {
                 book = view.model = gv.books.getOrCreate(bookId);
             }
+            function update() {
+                if (!state.get('pageid')) {
+                    state.set({ pageid: book.firstId() });
+                }
+                view.updateViews().render();
+            }
             if (!book.isFullyLoaded()) {
                 book.fetch({ 
                     success: function() {
                         book.initCollections();
-                        if (!state.get('pageid')) {
-                            state.set({ pageid: book.firstId() });
-                        }
-                        view.updateViews().render();
+                        update();
                     },
                     error: function() {
                         console.log('Error fetching book ' + book.id)
                     }
                 });
             } else {
-                view.updateViews().render();
+                update();
             }
         }
         

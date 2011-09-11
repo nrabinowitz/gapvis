@@ -39,12 +39,6 @@
             this.open(view);
         },
         
-        // 
-        renderPermalink: function() {
-            var router = this.options.router;
-            $('#permalink').attr('href', router.getPermalink());
-        },
-        
         // close the current view and open a new one
         open: function(view) {
             if (view) {

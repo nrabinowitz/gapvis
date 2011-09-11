@@ -20,7 +20,7 @@ div.topview {
     display: none;
     position: absolute;
     width: 95%;
-    height: 85%;
+    height: 700px;
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
@@ -82,6 +82,9 @@ a:link, a:visited, #book-list li {
     color: steelblue;
     cursor: pointer;
 }
+#book-list li {
+    margin-bottom: .5em;
+}
 
 div.book-title-view h2 {
     margin: 0;
@@ -114,13 +117,10 @@ span.goto-reading {
 
 /* timemap styles. */
 div#timelinecontainer{
-    width: 100%;
-    height: 200px;
     position: relative;
 }
 div#timeline{
-    width: 100%;
-    height: 100%;
+    height: 200px;
     font-size: 12px;
     background: #CCCCCC;
 }

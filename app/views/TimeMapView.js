@@ -197,7 +197,7 @@
                 labelUtils = view.labelUtils = new LabelUtils(
                     bandInfo, book.labels(), function() { return false; }
                 );
-                
+            
             // custom info window function
             function openPlaceWindow() {
                 var item = this,
@@ -205,6 +205,27 @@
                 // ugh - order matters here
                 state.set({ pageid: opts.page.id });
                 state.set({ placeid: opts.place.id });
+            }
+            
+            // create a new loader class for progressive loading of in-memory items
+            function InMemoryProgressiveLoader(options) {
+                var loader = new TimeMap.loaders.basic(options),
+                    baseLoadFunction = loader.load;
+                // this is a little circuitous, but works with the existing prog loader
+                loader.opts = { url: [] };
+                loader.load = function(dataset, callback) {
+                    // loader.opts.url has been set to [startId, endId] by prog loader
+                    var ids = loader.opts.url;
+                    loader.data = book.timemapItems(ids[0], ids[1]);
+                    baseLoadFunction.call(loader, dataset, callback);
+                }
+                return loader;
+            }
+            function implFormatUrl(url, start, end) {
+                return [
+                    labelUtils.dateToLabel(start),
+                    labelUtils.dateToLabel(end)
+                ];
             }
             
             // set center and zoom if available
@@ -226,21 +247,51 @@
                     {
                         id: "places",
                         theme: TimeMapTheme.createCircleTheme(),
-                        type: "basic",
+                        type: "progressive",
+                        type: "progressive",
                         options: {
-                            items: book.timemapItems(),
-                            transformFunction: function(item) {
-                                item.start = labelUtils.getLabelIndex(item.options.page.id) + ' AD';
-                                item.options.theme = colorScale(item.options.place.get('frequency'));
-                                return item;
-                            }
+                            start: labelUtils.getStartDate(),
+                            // cutoff dates for data
+                            dataMinDate: labelUtils.getStartDate(),
+                            dataMaxDate: labelUtils.getEndDate(),
+                            // 30 yrs in milliseconds
+                            interval: 946684806845,   
+                            // function to turn date into string appropriate for service
+                            formatUrl: implFormatUrl,
+                            // custom loader
+                            loader: new InMemoryProgressiveLoader({
+                                // standard loader options
+                                transformFunction: function(item) {
+                                    var theme = colorScale(item.options.place.get('frequency')),
+                                        opts = item.options,
+                                        size = 18,
+                                        color = theme.color,
+                                        gmaps = google.maps;
+                                    // set start
+                                    item.start = labelUtils.getLabelIndex(item.options.page.id) + ' AD';
+                                    // set theme
+                                    opts.theme = theme;
+                                    // set marker images
+                                    opts.markerImages = ['ff', 'cc', '99', '66', '33']
+                                        .map(function(alpha) {
+                                            var url = TimeMapTheme.getCircleUrl(size, color, alpha);
+                                            return new gmaps.MarkerImage(
+                                                url,
+                                                new gmaps.Size(size, size),
+                                                undefined,
+                                                new gmaps.Point(size/2, size/2)
+                                            );
+                                        });
+                                    return item;
+                                }
+                            })
                         }
                     }
                 ],
                 bands: bandInfo
             });
             // the load is synchronous, so we have to call after TimeMap.init()
-            view.updateTimeline();
+            view.scrollTo(state.get('pageid') || view.model.firstId());
             view.updateMapTypeId();
             
             // set the map to our custom style
@@ -266,25 +317,6 @@
                 state.set({ maptypeid: gmap.getMapTypeId() });
             });
             
-            // set up icon images
-            tm.eachItem(function(item) {
-                var opts = item.opts,
-                    theme = opts.theme,
-                    size = 18,
-                    color = theme.color,
-                    gmaps = google.maps;
-                opts.markerImages = ['ff', 'cc', '99', '66', '33']
-                    .map(function(alpha) {
-                        var url = TimeMapTheme.getCircleUrl(size, color, alpha);
-                        return new gmaps.MarkerImage(
-                            url,
-                            new gmaps.Size(size, size),
-                            undefined,
-                            new gmaps.Point(size/2, size/2)
-                        );
-                    });
-            });
-            
             // set up fade filter
             tm.addFilter("map", function(item) {
                 var topband = tm.timeline.getBand(0),
@@ -303,6 +335,7 @@
             });
             // run filter immediately to update images
             tm.filter('map');
+            tm.timeline.layout();
             
             return this;
         },
@@ -318,7 +351,7 @@
         
         updateTimeline: function() {
             var view = this;
-            view.scrollTo(state.get('pageid') || view.model.firstId());
+            view.scrollTo(state.get('pageid') || view.model.firstId(), true);
         },
         
         updateMapZoom: function() {
@@ -375,22 +408,26 @@
         },
         
         // go to a specific page
-        scrollTo: function(pageId) {
+        scrollTo: function(pageId, animate) {
             var view = this,
                 d = this.labelUtils.labelToDate(pageId);
             // stop anything that's running
             if (view.animation) {
                 view.animation.stop();
             }
-            // insert our variable into the closure. Ugly? Very.
-            SimileAjax.Graphics.createAnimation = function(f, from, to, duration, cont) {
-                view.animation = new SimileAjax.Graphics._Animation(f, from, to, duration, function() {
-                    view.animation = null;
-                });
-                return view.animation;
-            };
-            // run
-            view.tm.scrollToDate(d, false, true);
+            if (animate) {
+                // insert our variable into the closure. Ugly? Very.
+                SimileAjax.Graphics.createAnimation = function(f, from, to, duration, cont) {
+                    view.animation = new SimileAjax.Graphics._Animation(f, from, to, duration, function() {
+                        view.animation = null;
+                    });
+                    return view.animation;
+                };
+                // run
+                view.tm.scrollToDate(d, false, true);
+            } else {
+                view.tm.scrollToDate(d);
+            }
         },
         
         // UI Event Handlers

@@ -48,7 +48,7 @@
         },
         
         isFullyLoaded: function() {
-            return this.pages.length && this.places.length;
+            return !!(this.pages.length && this.places.length);
         },
         
         // array of page labels for timemap
@@ -57,27 +57,31 @@
         },
         
         // array of items for timemap
-        timemapItems: function() {
+        timemapItems: function(startId, endId) {
             var book = this,
-                items = [];
-            this.pages.each(function(page) {
-                var places = page.get('places');
-                places.forEach(function(placeId) {
-                    var place = book.places.get(placeId),
-                        ll = place.get('ll');
-                    items.push({
-                        title: place.get('title'),
-                        point: {
-                            lat: ll[0],
-                            lon: ll[1]
-                        },
-                        options: {
-                            place: place,
-                            page: page
-                        }
+                items = [],
+                pages = book.pages,
+                startIndex = startId ? pages.indexOf(pages.get(startId)) : 0,
+                endIndex = endId ? pages.indexOf(pages.get(endId)) : pages.length - 1;
+            pages.models.slice(startIndex, endIndex)
+                .forEach(function(page) {
+                    var places = page.get('places');
+                    places.forEach(function(placeId) {
+                        var place = book.places.get(placeId),
+                            ll = place.get('ll');
+                        items.push({
+                            title: place.get('title'),
+                            point: {
+                                lat: ll[0],
+                                lon: ll[1]
+                            },
+                            options: {
+                                place: place,
+                                page: page
+                            }
+                        });
                     });
                 });
-            });
             return items;
         },
         
