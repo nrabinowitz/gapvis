@@ -12,6 +12,11 @@ h1, h2, h3, h4 {
 header {
     margin: 10px 20px;
 }
+footer {
+    margin: 750px 20px 10px 20px;
+    font-size: .8em;
+    color: #999;
+}
 
 div.topview {
     background: #eee;
@@ -33,9 +38,13 @@ div#timemap-view {
     border: 1px solid #CCC;
 }
 div#page-view {
+    position: relative;
     overflow: hidden;
+    height: 550px;
 }
 div.single-page {
+    position: absolute;
+    top: 0;
     background: #FFF;
     border: 1px solid #CCC;
     height: 500px;
@@ -53,6 +62,8 @@ div.single-page .img img {
 }
 div#page-control-view {
     width: 400px;
+    position: absolute;
+    top: 670px;
 }
 div#place-freq-bars-view {
     background: #FFF;

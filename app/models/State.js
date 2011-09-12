@@ -26,6 +26,16 @@
             o = {};
             o[key] = this.deserialize(key, value);
             this.set(o);
+        },
+        // clear all data relating to the current book
+        clearBookState: function(silent) {
+            var s = this,
+                opts = silent ? {silent:true} : {};
+            _(_.keys(s.attributes))
+                .without('topview','bookid','pageview')
+                .forEach(function(k) {
+                    s.unset(k, opts)
+                });
         }
     });
     

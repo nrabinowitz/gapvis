@@ -12,8 +12,9 @@
             var view = this;
             // listen for state changes
             state.bind('change:bookid', function() {
-                view.clear();
-                view.updateBook();
+                if ($(view.el).is(':visible')) {
+                    view.updateBook();
+                }
             });
         },
         
@@ -32,19 +33,22 @@
         // Render functions
         
         render: function() {
+            var view = this;
             // render all children
-            this.children.forEach(function(child) {
+            view.children.forEach(function(child) {
                 child.render();
             });
-            return this;
+            view.rendered = true;
+            return view;
         },
         
         clear: function() {
             // delete contents of all children
-            view.children.forEach(function(child) {
+            this.children.forEach(function(child) {
                 child.clear();
             });
             $('page-view').empty();
+            this.$('div.book-title-view').empty();
         },
         
         open: function() {
@@ -61,14 +65,20 @@
         updateBook: function() {
             var view = this,
                 bookId = state.get('bookid'),
-                book;
-            if (!view.model || view.model.id != bookId) {
+                book = view.model;
+            if (!book || book.id != bookId) {
                 book = view.model = gv.books.getOrCreate(bookId);
             }
             function update() {
+                // set the page id if not set
                 if (!state.get('pageid')) {
                     state.set({ pageid: book.firstId() });
                 }
+                // clear out previously rendered content
+                if (view.rendered) {
+                    view.clear();
+                }
+                // create child views and render
                 view.updateViews().render();
             }
             if (!book.isFullyLoaded()) {

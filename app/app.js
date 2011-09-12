@@ -21,6 +21,13 @@
  - Routers are responsible for:
     - setting state depending on route
     - setting route depending on state
+    
+ Process of opening a view:
+ - URL router or UI event sets state.topview to the requested view class
+ - State fires topview:change
+ - AppView receives event, closes other views, calls view.open()
+ - view clears previous content if necessary
+ - view either renders, or fetches data and renders in the callback
 */
 
 /**

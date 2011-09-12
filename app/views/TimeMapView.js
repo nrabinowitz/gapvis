@@ -121,11 +121,12 @@
         renderNextPrevControl: function() {
             var book = this.model,
                 pageId = state.get('pageid'),
-                placeId = state.get('placeid');
-            this.prev = book.prevPlaceRef(pageId, placeId);
-            this.next = book.nextPlaceRef(pageId, placeId);
-            this.$('.prev').toggleClass('on', !!this.prev);
-            this.$('.next').toggleClass('on', !!this.next);
+                placeId = state.get('placeid'),
+                prev = this.prev = book.prevPlaceRef(pageId, placeId);
+                next = this.next = book.nextPlaceRef(pageId, placeId);
+            this.$('.prev').toggleClass('on', !!prev);
+            this.$('.next').toggleClass('on', !!next);
+            this.$('.controls').toggle(!!(prev || next));
         },
         
         getPoint: function() {

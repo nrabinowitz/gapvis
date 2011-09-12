@@ -19,7 +19,7 @@
         <header>
             <h1><a href="#">GapVis</a></h1>
         </header>
-        <div id="app-view" role="main">
+        <div id="app-view" role="main" class="clearfix">
         
             <!-- Homepage -->
             <div id="index-view" class="topview">
@@ -62,7 +62,7 @@
 
         </div>
         <footer>
-
+            GapVis (c) 2011 Nick Rabinowitz / Google Ancient Places Project. <a href="https://github.com/nrabinowitz/gapvis">Code hosted on GitHub</a>
         </footer>
     </div>
 
@@ -98,9 +98,11 @@
         <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
         <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
         <p>
-            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>:
-            <span class="control prev">&lt;&lt; prev</span> | 
-            <span class="control next">next &gt;&gt;</span>
+            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %><span class="controls">:
+            
+                <span class="control prev">&lt;&lt; prev</span> | 
+                <span class="control next">next &gt;&gt;</span>
+            </span>
         </p>
     </script>
 
