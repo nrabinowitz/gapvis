@@ -20,11 +20,7 @@
         initialize: function() {
             var book = this,
                 // create collections
-                places = book.places = new gv.PlaceList({
-                    comparator: function(place) {
-                        return place.get('frequency')
-                    }
-                }),
+                places = book.places = new gv.PlaceList(),
                 pages = book.pages = new gv.PageList();
             // set backreferences
             places.book = book;
@@ -44,7 +40,8 @@
                         freq = place.get('frequency');
                     place.set({ frequency: freq+1 })
                 });
-            })
+            });
+            places.sort();
         },
         
         isFullyLoaded: function() {
@@ -143,7 +140,8 @@
     // Collection: BookList
     gv.BookList = Collection.extend({
         model: Book,
-        url: API_ROOT +  '/books.json'
+        url: API_ROOT +  '/books.json',
+        comparator: function(book) { return book.get('title') }
     });
     
 }(gv));

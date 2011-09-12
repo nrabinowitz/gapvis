@@ -22,7 +22,10 @@
     // Collection: PlaceList
     gv.PlaceList = Collection.extend({
         model: Place,
-        url: API_ROOT + '/place'
+        url: API_ROOT + '/place',
+        comparator: function(place) {
+            return -place.get('frequency')
+        }
     });
     
 }(gv));

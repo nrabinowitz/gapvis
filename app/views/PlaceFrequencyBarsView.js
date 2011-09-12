@@ -11,11 +11,12 @@
         
         render: function() {
             var bh = 12,
-                w = 350,
+                w = 250,
+                lw = 100,
                 spacing = 2,
                 color = 'steelblue';
                 
-            var data = this.model.places.models.slice(0,20),
+            var data = this.model.places.models,
                 frequency = function(d) { return d.get('frequency') },
                 max = d3.max(data, frequency),
                 x = d3.scale.linear()
@@ -25,11 +26,13 @@
                 bw = function(d) { return x(frequency(d)) };
         
             var svg = d3.select(this.el)
-              .append('svg:svg');
+              .append('svg:svg')
+              .style('height', (bh + spacing) * data.length + 10);
               
             svg.selectAll('rect')
                 .data(data)
               .enter().append('svg:rect')
+                .attr('x', lw)
                 .attr('y', y)
                 .attr('height', bh)
                 .attr('width', bw)
@@ -39,11 +42,13 @@
                 .data(data)
               .enter().append('svg:text')
                 .attr('class', 'title')
-                .style('fill', 'white')
+                .style('fill', 'black')
                 .style('font-size', '10px')
+                .attr('x', lw - 8)
                 .attr('y', y)
                 .attr("dx", 3)
                 .attr("dy", ".9em")
+                .attr('text-anchor', 'end')
                 .text(function(d) { return d.get('title') });
             
             svg.selectAll('text.freq')
@@ -52,7 +57,7 @@
                 .attr('class', 'freq')
                 .style('fill', 'black')
                 .style('font-size', '10px')
-                .attr('x', bw)
+                .attr('x', function(d) { return bw(d) + lw })
                 .attr('y', y)
                 .attr("dx", 3)
                 .attr("dy", ".9em")
