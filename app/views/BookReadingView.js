@@ -49,15 +49,15 @@
                 oldPage = view.pageView.model;
             }
             // make a new page view if necessary
-            if (!page.view && !view._appendingPage) {
+            if (!page.view) {
+                // XXX: need to fix this so that it can be cancelled
+                // by a subsequent request before it's done loading;
+                // maybe just starting the page hidden would do it?
                 page.bind('change', function() {
                     $('#page-view').append(page.view.render().el);
-                    delete view._appendingPage;
                     view.updatePage();
                 });
                 new gv.PageView({ model: page });
-                // make sure we're not doing this more than once
-                view._appendingPage = true;
             } 
             // page view has been created; show
             else {

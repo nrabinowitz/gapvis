@@ -53,6 +53,7 @@ div.single-page {
     margin-bottom: 1em;
     font-size: 1.2em;
     padding: 1.5em 1em;
+    display: none;
 }
 div.single-page .img {
     display: none;
