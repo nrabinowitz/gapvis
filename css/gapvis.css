@@ -127,6 +127,7 @@ div#nextprev{
     float: right;
 }
 span.goto-reading {
+    font-size: 2em;
     float: right;
 }
 

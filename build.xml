@@ -18,27 +18,20 @@
     
     <!-- Build Targets -->
     <target name="build-dev"
-            depends="start-build-dev,
+            depends="start-build,
                      build-js-dev, 
                      build-css-dev,
-                     finish-build-dev"/>
+                     finish-build"/>
             
     <target name="build-production"/>
             
     <!-- Core Targets -->
     <target name="start-build">
         <mkdir dir="${build.dir}"/>
-    </target>
-    
-    <target name="clean-build">
-        <delete dir="${build.dir}" />
+        <copy file="${index.template}" tofile="${index.build}"/>
     </target>
     
     <!-- Dev Targets -->
-    <target name="start-build-dev" depends="start-build">
-        <echo>Starting dev build</echo>
-        <copy file="${index.template}" tofile="${index.build}"/>
-    </target>
     
     <target name="build-js-dev">
         <echo>Creating tags for dev JS files</echo>
@@ -68,10 +61,9 @@
         <replace file="${index.build}" token="${placeholder.css}" value=""/>
     </target>
     
-    <target name="finish-build-dev">
-        <echo>Finishing dev build</echo>
+    <target name="finish-build">
         <copy file="${index.build}" tofile="${index.target}"/>
-        <ant target="clean-build"/>
+        <delete dir="${build.dir}" />
     </target>
     
 </project>
