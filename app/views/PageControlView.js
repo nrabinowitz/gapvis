@@ -29,6 +29,7 @@
             // render
             $('#prev').toggleClass('on', !!this.prev);
             $('#next').toggleClass('on', !!this.next);
+            $('#page-id').html(pageId);
         },
         
         renderPageView: function() {

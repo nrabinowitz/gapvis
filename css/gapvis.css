@@ -120,7 +120,7 @@ span.control.on {
     color: steelblue;
     cursor: pointer;
 }
-span#prev {
+span#prev, span#page-id {
     margin-right: 15px;
 }
 div#nextprev{
