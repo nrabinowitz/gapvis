@@ -50,9 +50,6 @@
             }
             // make a new page view if necessary
             if (!page.view) {
-                // XXX: need to fix this so that it can be cancelled
-                // by a subsequent request before it's done loading;
-                // maybe just starting the page hidden would do it?
                 page.bind('change', function() {
                     $('#page-view').append(page.view.render().el);
                     view.updatePage();
