@@ -15,7 +15,7 @@ SimileAjax.Graphics._Animation.prototype.stop = function() {
 
 mxn.LatLonPoint.prototype.roughlyEquals = function(otherPoint, zoom) {
     function roughly(f) {
-        return f.toFixed(~~(zoom/2))
+        return parseFloat(f).toFixed(~~(zoom/2))
     }
     return roughly(this.lat) == roughly(otherPoint.lat) 
         && roughly(this.lon)== roughly(otherPoint.lon);
