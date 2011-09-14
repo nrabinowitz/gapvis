@@ -171,16 +171,16 @@
             view.template = $('#timemap-template').html();
             view.infoWindowView = new InfoWindowView({ model: view.model });
             // listen for state changes
-            state.bind('change:pageid', this.updateTimeline, this);
-            state.bind('change:mapzoom', this.updateMapZoom, this);
-            state.bind('change:mapcenter', this.updateMapCenter, this);
-            state.bind('change:maptypeid', this.updateMapTypeId, this);
-            state.bind('change:autoplay', this.updateAutoplay, this);
-            state.bind('change:autoplay', this.renderAutoplayControls, this);
+            view.bindState('change:pageid', this.updateTimeline, this);
+            view.bindState('change:mapzoom', this.updateMapZoom, this);
+            view.bindState('change:mapcenter', this.updateMapCenter, this);
+            view.bindState('change:maptypeid', this.updateMapTypeId, this);
+            view.bindState('change:autoplay', this.updateAutoplay, this);
+            view.bindState('change:autoplay', this.renderAutoplayControls, this);
             // cancel autoplay on other UI events
-            state.bind('change:topview', this.stopAutoplay, this);
-            state.bind('change:placeid', this.stopAutoplay, this);
-            state.bind('change:pageid', this.stopAutoplay, this);
+            view.bindState('change:topview', this.stopAutoplay, this);
+            view.bindState('change:placeid', this.stopAutoplay, this);
+            view.bindState('change:pageid', this.stopAutoplay, this);
         },
         
         render: function() {

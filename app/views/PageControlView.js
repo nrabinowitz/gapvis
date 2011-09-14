@@ -41,6 +41,7 @@
         
         clear: function() {
             $('#prev, #next').removeClass('on');
+            this.unbindEvents();
         },
         
         // UI Event Handlers - update state
