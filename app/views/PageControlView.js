@@ -11,8 +11,8 @@
         
         initialize: function(opts) {
             // listen for state changes
-            state.bind('change:pageid', this.renderNextPrev, this);
-            state.bind('change:pageview', this.renderPageView, this);
+            this.bindState('change:pageid', this.renderNextPrev, this);
+            this.bindState('change:pageview', this.renderPageView, this);
         },
         
         render: function() {
@@ -41,6 +41,7 @@
         
         clear: function() {
             $('#prev, #next').removeClass('on');
+            this.unbindState();
             this.unbindEvents();
         },
         

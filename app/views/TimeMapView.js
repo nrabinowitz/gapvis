@@ -70,9 +70,9 @@
         initialize: function(opts) {
             this.template = _.template($('#info-window-template').html());
             // listen for state changes
-            state.bind('change:placeid', this.render, this);
-            state.bind('change:pageid', this.renderNextPrevControl, this);
-            state.bind('change:mapzoom', this.renderZoomControl, this);
+            this.bindState('change:placeid', this.render, this);
+            this.bindState('change:pageid', this.renderNextPrevControl, this);
+            this.bindState('change:mapzoom', this.renderZoomControl, this);
         },
         
         // render and update functions
