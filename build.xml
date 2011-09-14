@@ -15,6 +15,20 @@
     <property name="index.build" value="${build.dir}/index.html" />
     <property name="index.target" value="index.html" />
     
+    <!-- define git macro -->
+    <macrodef name="git">
+        <attribute name="command" />
+        <attribute name="dir" default="" />
+        <element name="args" optional="true" />
+        <sequential>
+            <echo message="git @{command}" />
+            <exec executable="${git.exe}" dir="@{dir}">
+                <arg value="@{command}" />
+                <args/>
+            </exec>
+        </sequential>
+    </macrodef>
+    
     
     <!-- Build Targets -->
     <target name="build-dev"
@@ -29,6 +43,11 @@
     <target name="start-build">
         <mkdir dir="${build.dir}"/>
         <copy file="${index.template}" tofile="${index.build}"/>
+    </target>
+    
+    <target name="finish-build">
+        <copy file="${index.build}" tofile="${index.target}"/>
+        <delete dir="${build.dir}" />
     </target>
     
     <!-- Dev Targets -->
@@ -61,9 +80,23 @@
         <replace file="${index.build}" token="${placeholder.css}" value=""/>
     </target>
     
-    <target name="finish-build">
-        <copy file="${index.build}" tofile="${index.target}"/>
-        <delete dir="${build.dir}" />
+    <target name="deploy">
+        <git command="checkout">
+            <args>
+                <arg value="gh-pages"/>
+            </args>
+        </git>
+        <git command="merge">
+            <args>
+                <arg value="master"/>
+            </args>
+        </git>
+        <git command="push"/>
+        <git command="checkout">
+            <args>
+                <arg value="master"/>
+            </args>
+        </git>
     </target>
     
 </project>
