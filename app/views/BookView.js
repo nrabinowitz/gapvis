@@ -68,31 +68,31 @@
                 book = view.model;
             if (!book || book.id != bookId) {
                 book = view.model = gv.books.getOrCreate(bookId);
-            }
-            function update() {
-                // set the page id if not set
-                if (!state.get('pageid')) {
-                    state.set({ pageid: book.firstId() });
-                }
-                // clear out previously rendered content
-                if (view.rendered) {
-                    view.clear();
-                }
-                // create child views and render
-                view.updateViews().render();
-            }
-            if (!book.isFullyLoaded()) {
-                book.fetch({ 
-                    success: function() {
-                        book.initCollections();
-                        update();
-                    },
-                    error: function() {
-                        console.log('Error fetching book ' + book.id)
+                function update() {
+                    // set the page id if not set
+                    if (!state.get('pageid')) {
+                        state.set({ pageid: book.firstId() });
                     }
-                });
-            } else {
-                update();
+                    // clear out previously rendered content
+                    if (view.rendered) {
+                        view.clear();
+                    }
+                    // create child views and render
+                    view.updateViews().render();
+                }
+                if (!book.isFullyLoaded()) {
+                    book.fetch({ 
+                        success: function() {
+                            book.initCollections();
+                            update();
+                        },
+                        error: function() {
+                            console.log('Error fetching book ' + book.id)
+                        }
+                    });
+                } else {
+                    update();
+                }
             }
         }
         
