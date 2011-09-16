@@ -18,7 +18,7 @@
                 hicolor = 'orange';
                 
             var book = this.model,
-                places = book.places.models.slice(0, 30),
+                places = book.places.models, //.slice(0, 30),
                 buckets = 50,
                 frequency = function(d) { return d.get('frequency') },
                 max = d3.max(places, frequency),
@@ -30,20 +30,38 @@
                 
             $(this.el).append('<h3>Top Places</h3>');
         
+			// create svg container
             var svg = d3.select(this.el)
               .append('svg:svg')
-              .style('height', (bh + spacing) * places.length + 10);
-            
-            /*  
-            svg.selectAll('rect')
-                .data(places)
-              .enter().append('svg:rect')
-                .attr('x', lw)
-                .attr('y', y)
-                .attr('height', bh)
-                .attr('width', bw)
-                .style('fill', color);
-            */
+				.style('height', (bh + spacing) * places.length + 10)
+				// delegated handler: click
+				.on('click', function() {
+					var $target = $(d3.event.target);
+					if ($target.is('rect')) {
+						var pageId = pages.at(~~((pages.length * $target.data('idx'))/buckets)).id;
+						state.set({
+							placeid: $target.data('placeid'),
+							pageid: pageId,
+							topview: gv.BookReadingView
+						});
+					}
+				})
+				// delegated handler: mouseover
+				.on('mouseover', function() {
+					var $target = $(d3.event.target);
+					if ($target.is('rect')) {
+						d3.select(d3.event.target)
+							.style('fill', hicolor)
+					}
+				})
+				// delegated handler: mouseout
+				.on('mouseout', function() {
+					var $target = $(d3.event.target);
+					if ($target.is('rect')) {
+						d3.select(d3.event.target)
+							.style('fill', color)
+					}
+				});
             
             var pages = book.pages,
                 sidx = d3.scale.quantize()
@@ -87,31 +105,30 @@
                 .style('stroke', '#999')
                 .style('stroke-width', .5);
                 
+			console.time('spark');
             spark.each(function(place) {
                 d3.select(this).selectAll('rect')
                     .data(function(d) { return d.get('sparkData') })
-                  .enter().append('svg:rect')
-                    .attr('y', function(d) { return bh - sy(d) })
-                    .attr('x', function(d,i) { return sx(i) + lw })
-                    .attr('width', w/buckets)
-                    .attr('height', sy)
-                    .style('fill', color)
-                    .style('cursor', 'pointer')
-                    .on('mouseover', function() {
-                        d3.select(this).style('fill', hicolor)
-                    })
-                    .on('mouseout', function() {
-                        d3.select(this).style('fill', color)
-                    })
-                    .on('click', function(d,i) {
-                        var pageId = pages.at(~~((pages.length*i)/buckets)).id;
-                        state.set({
-                            placeid: place.id,
-                            pageid: pageId,
-                            topview: gv.BookReadingView
-                        })
-                    });
+                  .enter().append('svg:rect').each(function(d, i) {
+					if (d) {
+						var height = Math.max(2, sy(d))
+						d3.select(this)
+							.attr('y', bh - height)
+							.attr('x', sx(i) + lw)
+							.attr('width', w/buckets)
+							.attr('height', height)
+							.style('fill', color)
+							.style('cursor', 'pointer')
+							.each(function(d) {
+								$(this).data({
+									placeid: place.id,
+									idx: i
+								})
+							});
+					}
+				  });
             });
+			console.timeEnd('spark');
                 
             svg.selectAll('text.title')
                 .data(places)
