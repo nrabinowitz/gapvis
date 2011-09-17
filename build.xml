@@ -11,9 +11,14 @@
     <!-- get properties -->
     <property file="build.properties" />
     <property name="build.dir" value="build" />
+    <property name="target.dir" value="." />
     <property name="index.template" value="index.tmpl.html" />
     <property name="index.build" value="${build.dir}/index.html" />
     <property name="index.target" value="index.html" />
+    
+    <property name="js.concat" value="scripts-all.js" />
+    <property name="js.concat.build" value="${build.dir}/${js.concat}" />
+    <property name="js.concat.target" value="${target.dir}/${js.concat}" />
     
     <!-- define git macro -->
     <macrodef name="git">
@@ -37,7 +42,11 @@
                      build-css-dev,
                      finish-build"/>
             
-    <target name="build-production"/>
+    <target name="build-production"
+            depends="start-build,
+                     build-js-production, 
+                     build-css-production,
+                     finish-build"/>
             
     <!-- Core Targets -->
     <target name="start-build">
@@ -80,6 +89,69 @@
         <replace file="${index.build}" token="${placeholder.css}" value=""/>
     </target>
     
+    <!-- Production Targets -->
+    
+    <target name="js.minify.concat">
+        <echo>Minifying and concatenating JS files</echo>
+        <!-- Add compressed libs -->
+        <for list="${js.lib.min}" param="file" trim="true">
+            <sequential>
+                <echo>Adding @{file} to ${js.concat.file}</echo>
+                <!-- add to file -->
+                <concat destfile="${js.concat.build}" append="yes">
+                    <fileset file="@{file}"/>
+                </concat>
+            </sequential>
+        </for>
+        <!-- Compress and add extensions and apps -->
+        <for list="${js.libext}, ${js.files.app}" param="file" trim="true">
+            <sequential>
+                <echo>Compressing @{file}</echo>
+                <!-- compress -->
+                <java jar="${yuicompressor.jar}" fork="true" failonerror="true">
+                    <arg line=" --line-break 4000 -o @{file}.min.tmp @{file}"/>
+                </java>
+                <!-- add to file -->
+                <concat destfile="${js.concat.build}" append="yes">
+                    <fileset file="@{file}.min.tmp"/>
+                </concat>
+                <!-- clean up -->
+                <delete file="@{file}.min.tmp"/>
+            </sequential>
+        </for>
+    </target>
+    
+    <target name="build-js-production" depends="js.minify.concat">
+        <echo>Creating tags for production JS files</echo>
+        <!-- Move script file to production -->
+        <copy file="${js.concat.build}" tofile="${js.concat.target}"/>
+        <!-- Put in script files -->
+        <for list="${js.lib.nomunge}, ${js.concat.target}" param="file.url" trim="true">
+            <sequential>
+                <replace file="${index.build}" 
+                    token="${placeholder.js}"
+                    value="&lt;script type=&quot;text/javascript&quot; src=&quot;@{file.url}&quot;&gt;&lt;/script&gt;${placeholder.js}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.js}" value=""/>
+    </target>
+    
+    <target name="build-css-production">
+        <echo>Creating tags for production CSS files</echo>
+        <!-- Put in css files -->
+        <for list="${css.files}" param="file.url" trim="true">
+            <sequential>
+                <replace file="${index.build}" 
+                    token="${placeholder.css}"
+                    value="&lt;link rel=&quot;stylesheet&quot; href=&quot;@{file.url}&quot;&gt;${placeholder.css}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.css}" value=""/>
+    </target>
+    
+    <!-- Deploy to GitHub Pages -->
     <target name="deploy">
         <git command="checkout">
             <args>
