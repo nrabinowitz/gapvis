@@ -9,17 +9,30 @@
     gv.PlaceFrequencyBarsView = View.extend({
         el: '#place-freq-bars-view',
         
+        settings: {
+            buckets: 50,
+            color: 'steelblue',
+            hicolor: 'orange'
+        },
+        
+        initialize: function(opts) {
+            _.extend(this.settings, this.options);
+        },
+        
         render: function() {
+            var singlePlace = !!this.options.place;
+        
             var bh = 12,
                 w = 250,
-                lw = 100,
-                spacing = 3,
-                color = 'steelblue',
-                hicolor = 'orange';
+                lw = singlePlace ? 0 : 100,
+                spacing = 3;
                 
             var book = this.model,
-                places = book.places.models, //.slice(0, 30),
-                buckets = 50,
+                places = singlePlace ? [this.options.place] : book.places.models,
+                settings = this.settings,
+                buckets = settings.buckets,
+                color = settings.color,
+                hicolor = settings.hicolor,
                 frequency = function(d) { return d.get('frequency') },
                 max = d3.max(places, frequency),
                 x = d3.scale.linear()
@@ -27,13 +40,15 @@
                     .range([0, w]),
                 y = function(d, i) { return i * (bh + spacing) },
                 bw = function(d) { return x(frequency(d)) };
-                
-            $(this.el).append('<h3>Top Places</h3>');
+            
+            if (!singlePlace) {
+                $(this.el).append('<h3>Top Places</h3>');
+            }
         
             // create svg container
             var svg = d3.select(this.el)
               .append('svg:svg')
-                .style('height', (bh + spacing) * places.length + 10)
+                .style('height', (bh + spacing) * places.length + (singlePlace ? 0 : 10))
                 // delegated handler: click
                 .on('click', function() {
                     var target = d3.event.target,
@@ -102,12 +117,14 @@
                     .domain([0, sparkMax])
                     .range([0, bh]);
             
+            // sparkline container
             var spark = svg.selectAll('g.spark')
                 .data(places)
               .enter().append('svg:g')
                 .attr('class', 'spark')
                 .attr("transform", function(d, i) { return "translate(0," + y(d,i) + ")"; });
             
+            // baseline
             spark.append('svg:line')
                 .attr('x1', lw)
                 .attr('x2', lw + w)
@@ -116,6 +133,7 @@
                 .style('stroke', '#999')
                 .style('stroke-width', .5);
                 
+            // bars
             spark.selectAll('rect')
                 .data(function(d) { return d.get('sparkData') })
               .enter().append('svg:rect')
@@ -131,35 +149,57 @@
                             .style('cursor', 'pointer');
                     }
                 });
-                
-            svg.selectAll('text.title')
-                .data(places)
-              .enter().append('svg:text')
-                .attr('class', 'title')
-                .style('fill', 'black')
-                .style('font-size', '10px')
-                .attr('x', lw - 8)
-                .attr('y', y)
-                .attr("dx", 3)
-                .attr("dy", ".9em")
-                .attr('text-anchor', 'end')
-                .text(function(d) { return d.get('title') });
             
-            svg.selectAll('text.freq')
-                .data(places)
-              .enter().append('svg:text')
-                .attr('class', 'freq')
-                .style('fill', 'black')
-                .style('font-size', '10px')
-                .attr('x', lw + w)
-                .attr('y', y)
-                .attr("dx", 3)
-                .attr("dy", ".9em")
-                .text(frequency);
+            // leave out labels for single place
+            if (!singlePlace) {
+                // place title
+                svg.selectAll('text.title')
+                    .data(places)
+                  .enter().append('svg:text')
+                    .attr('class', 'title')
+                    .style('fill', 'black')
+                    .style('font-size', '10px')
+                    .attr('x', lw - 8)
+                    .attr('y', y)
+                    .attr("dx", 3)
+                    .attr("dy", ".9em")
+                    .attr('text-anchor', 'end')
+                    .text(function(d) { return d.get('title') });
                 
+                // frequency label
+                svg.selectAll('text.freq')
+                    .data(places)
+                  .enter().append('svg:text')
+                    .attr('class', 'freq')
+                    .style('fill', 'black')
+                    .style('font-size', '10px')
+                    .attr('x', lw + w)
+                    .attr('y', y)
+                    .attr("dx", 3)
+                    .attr("dy", ".9em")
+                    .text(frequency);
+            }
               
             return this;
         },
+        
+        // highlight the current page
+        updateHighlight: function() {
+            var pages = this.model.pages,
+                settings = this.settings,
+                pageId = state.get('pageid'),
+                sidx = d3.scale.quantize()
+                    .domain([0, pages.length])
+                    .range(d3.range(0, settings.buckets));
+                    
+            // let's assume we're in single-page view 
+            if (pageId) {
+                // XXX: not working yet
+                var i = pages.indexOf(pages.get(pageId));
+                d3.select($('rect:eq(' + sidx(i) + ')', this.el)[0])
+                    .attr('fill', settings.hicolor);
+            }
+        }
         
     });
     
