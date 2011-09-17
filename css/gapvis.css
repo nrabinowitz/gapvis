@@ -182,10 +182,14 @@ div.timeline-event-label {
     margin: 3px 0px 0px 3px;
 }
 div.infowindow {
-    height: 7em;
+    height: 8em;
+    width: 280px;
 }
 div.infowindow  h3 {
-    margin: 0;
+    margin: 0 0 1em 0;
+}
+div.infowindow p {
+    margin: 0 0 1em 0;
 }
 div.infowindow  span.zoom {
     font-size: .6em;

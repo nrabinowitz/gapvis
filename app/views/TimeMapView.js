@@ -4,7 +4,6 @@
 (function(gv) {
     var View = gv.View,
         state = gv.state,
-        InfoWindowView,
         // map styles
         novisibility = [{ visibility: "off" }],
         mapStyle = [
@@ -62,106 +61,6 @@
         // colors for frequency scale
         scaleColors = ["090066", "6b0051", "ce003c", "cc0020", "ee0000"];
     
-    // View: InfoWindowView (content for the map infowindow)
-    InfoWindowView = View.extend({
-        tagName: 'div',
-        className: 'infowindow',
-        
-        initialize: function(opts) {
-            this.template = _.template($('#info-window-template').html());
-            // listen for state changes
-            this.bindState('change:placeid', this.render, this);
-            this.bindState('change:pageid', this.renderNextPrevControl, this);
-            this.bindState('change:mapzoom', this.renderZoomControl, this);
-        },
-        
-        // render and update functions
-        
-        render: function() {
-            var book = this.model,
-                map = this.map,
-                placeId = state.get('placeid'),
-                place;
-            // if no map or place has been set, give up
-            if (!map || !placeId) {
-                return;
-            }
-            // get the place
-            place = book.places.get(placeId);
-            // if the place isn't fully loaded, do so
-            if (!place.isFullyLoaded()) {
-                var view = this;
-                place.bind('change', function() {
-                    view.render();
-                });
-                place.fetch();
-            } else {
-                // create content
-                $(this.el).html(this.template(place.toJSON()));
-                this.renderZoomControl();
-                this.renderNextPrevControl();
-                // open bubble
-                map.openBubble(this.getPoint(), this.el);
-                // set a handler to unset place if close is clicked
-                function handler() {
-                    if (state.get('placeid') == placeId) {
-                        state.unset('placeid');
-                    }
-                    map.closeInfoBubble.removeHandler(handler);
-                }
-                map.closeInfoBubble.addHandler(handler);
-            }
-            return this;
-        },
-        
-        renderZoomControl: function() {
-            this.$('.zoom').toggleClass('on', state.get('mapzoom') < 12);
-        },
-        
-        renderNextPrevControl: function() {
-            var book = this.model,
-                pageId = state.get('pageid'),
-                placeId = state.get('placeid'),
-                prev = this.prev = book.prevPlaceRef(pageId, placeId);
-                next = this.next = book.nextPlaceRef(pageId, placeId);
-            this.$('.prev').toggleClass('on', !!prev);
-            this.$('.next').toggleClass('on', !!next);
-            this.$('.controls').toggle(!!(prev || next));
-        },
-        
-        getPoint: function() {
-            var placeId = state.get('placeid'),
-                place = this.model.places.get(placeId),
-                ll = place.get('ll');
-            return new mxn.LatLonPoint(ll[0], ll[1]);
-        },
-        
-        // UI Event Handlers - update state
-        
-        events: {
-            'click span.zoom.on': 'uiZoom',
-            'click span.next.on': 'uiNext',
-            'click span.prev.on': 'uiPrev'
-        },
-        
-        uiZoom: function() {
-            var zoom = state.get('mapzoom');
-            zoom = Math.min(zoom+2, 12);
-            state.set({ 
-                mapzoom: zoom, 
-                mapcenter: this.getPoint()
-            });
-        },
-        
-        uiNext: function() {
-            state.set({ pageid: this.next });
-        },
-        
-        uiPrev: function() {
-            state.set({ pageid: this.prev });
-        }
-    });
-    
     // View: TimemapView
     gv.TimeMapView = View.extend({
         el: '#timemap-view',
@@ -169,7 +68,7 @@
         initialize: function() {
             var view = this;
             view.template = $('#timemap-template').html();
-            view.infoWindowView = new InfoWindowView({ model: view.model });
+            view.infoWindowView = new gv.InfoWindowView({ model: view.model });
             // listen for state changes
             view.bindState('change:pageid', this.updateTimeline, this);
             view.bindState('change:mapzoom', this.updateMapZoom, this);
