@@ -167,9 +167,14 @@
         </git>
         <!-- Build production and commit -->
         <ant target="build-production"/>
+        <git command="add">
+            <args>
+                <arg value="index.html"/>
+                <arg value="${js.concat.target}"/>
+            </args>
+        </git>
         <git command="commit">
             <args>
-                <arg value="-a"/>
                 <arg value="-m 'Latest production build'"/>
             </args>
         </git>
