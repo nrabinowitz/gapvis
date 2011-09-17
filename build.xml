@@ -55,7 +55,7 @@
     <target name="build-js-dev">
         <echo>Creating tags for dev JS files</echo>
         <!-- Put in script files -->
-        <for list="${js.files}" param="file.url" trim="true">
+        <for list="${js.files.dev}" param="file.url" trim="true">
             <sequential>
                 <replace file="${index.build}" 
                     token="${placeholder.js}"
