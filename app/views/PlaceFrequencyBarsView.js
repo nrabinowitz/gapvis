@@ -30,38 +30,40 @@
                 
             $(this.el).append('<h3>Top Places</h3>');
         
-			// create svg container
+            // create svg container
             var svg = d3.select(this.el)
               .append('svg:svg')
-				.style('height', (bh + spacing) * places.length + 10)
-				// delegated handler: click
-				.on('click', function() {
-					var $target = $(d3.event.target);
-					if ($target.is('rect')) {
-						var pageId = pages.at(~~((pages.length * $target.data('idx'))/buckets)).id;
-						state.set({
-							placeid: $target.data('placeid'),
-							pageid: pageId,
-							topview: gv.BookReadingView
-						});
-					}
-				})
-				// delegated handler: mouseover
-				.on('mouseover', function() {
-					var $target = $(d3.event.target);
-					if ($target.is('rect')) {
-						d3.select(d3.event.target)
-							.style('fill', hicolor)
-					}
-				})
-				// delegated handler: mouseout
-				.on('mouseout', function() {
-					var $target = $(d3.event.target);
-					if ($target.is('rect')) {
-						d3.select(d3.event.target)
-							.style('fill', color)
-					}
-				});
+                .style('height', (bh + spacing) * places.length + 10)
+                // delegated handler: click
+                .on('click', function() {
+                    var target = d3.event.target,
+                        data = target.__data__,
+                        pdata = target.parentNode.__data__;
+                    if ($(target).is('rect')) {
+                        var pageId = pages.at(~~((pages.length * data.idx)/buckets)).id;
+                        state.set({
+                            placeid: pdata.id,
+                            pageid: pageId,
+                            topview: gv.BookReadingView
+                        });
+                    }
+                })
+                // delegated handler: mouseover
+                .on('mouseover', function() {
+                    var $target = $(d3.event.target);
+                    if ($target.is('rect')) {
+                        d3.select(d3.event.target)
+                            .style('fill', hicolor)
+                    }
+                })
+                // delegated handler: mouseout
+                .on('mouseout', function() {
+                    var $target = $(d3.event.target);
+                    if ($target.is('rect')) {
+                        d3.select(d3.event.target)
+                            .style('fill', color)
+                    }
+                });
             
             var pages = book.pages,
                 sidx = d3.scale.quantize()
@@ -71,22 +73,31 @@
                     .domain([0, buckets])
                     .range([0, w]);
                     
-                places.forEach(function(place) {
-                    if (!place.get('sparkData')) {
-                        // make the sparkline data
-                        var sdata = d3.range(0, buckets).map(d3.functor(0));
-                        pages.each(function(p, pi) {
-                            var pplaces = p.get('places'),
-                                pidx = sidx(pi);
-                            if (pplaces && pplaces.indexOf(place.id) >= 0) {
-                                sdata[pidx]++;
+            // create and cache spark data
+            places.forEach(function(place) {
+                if (!place.get('sparkData')) {
+                    // make the sparkline data
+                    var sdata = d3.range(0, buckets)
+                        .map(function(d,i) {
+                            return {
+                                count: 0,
+                                idx: i
                             }
                         });
-                        place.set({ sparkData: sdata });
-                    }
-                });
+                    pages.each(function(p, pi) {
+                        var pplaces = p.get('places'),
+                            pidx = sidx(pi);
+                        if (pplaces && pplaces.indexOf(place.id) >= 0) {
+                            sdata[pidx].count++;
+                        }
+                    });
+                    place.set({ sparkData: sdata });
+                }
+            });
                 
-                sparkMax = d3.max(places, function(d) { return d3.max(d.get('sparkData')) }),
+            var sparkMax = d3.max(places, function(d) { 
+                    return d3.max(d.get('sparkData'), function(sd) { return sd.count }) 
+                }),
                 sy = d3.scale.linear()
                     .domain([0, sparkMax])
                     .range([0, bh]);
@@ -105,30 +116,21 @@
                 .style('stroke', '#999')
                 .style('stroke-width', .5);
                 
-			console.time('spark');
-            spark.each(function(place) {
-                d3.select(this).selectAll('rect')
-                    .data(function(d) { return d.get('sparkData') })
-                  .enter().append('svg:rect').each(function(d, i) {
-					if (d) {
-						var height = Math.max(2, sy(d))
-						d3.select(this)
-							.attr('y', bh - height)
-							.attr('x', sx(i) + lw)
-							.attr('width', w/buckets)
-							.attr('height', height)
-							.style('fill', color)
-							.style('cursor', 'pointer')
-							.each(function(d) {
-								$(this).data({
-									placeid: place.id,
-									idx: i
-								})
-							});
-					}
-				  });
-            });
-			console.timeEnd('spark');
+            spark.selectAll('rect')
+                .data(function(d) { return d.get('sparkData') })
+              .enter().append('svg:rect')
+                .each(function(d, i) {
+                    if (d.count) {
+                        var height = Math.max(2, sy(d.count))
+                        d3.select(this)
+                            .attr('y', bh - height)
+                            .attr('x', sx(i) + lw)
+                            .attr('width', w/buckets)
+                            .attr('height', height)
+                            .style('fill', color)
+                            .style('cursor', 'pointer');
+                    }
+                });
                 
             svg.selectAll('text.title')
                 .data(places)
