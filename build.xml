@@ -153,17 +153,32 @@
     
     <!-- Deploy to GitHub Pages -->
     <target name="deploy">
+        <!-- Checkout pages branch -->
         <git command="checkout">
             <args>
                 <arg value="gh-pages"/>
             </args>
         </git>
+        <!-- Merge changes -->
         <git command="merge">
             <args>
                 <arg value="master"/>
             </args>
         </git>
-        <git command="push"/>
+        <!-- Build production and commit -->
+        <ant target="build-production"/>
+        <git command="commit">
+            <args>
+                <arg value="-a"/>
+                <arg value="-m 'Latest production build'"/>
+            </args>
+        </git>
+        <git command="push">
+            <args>
+                <arg value="origin"/>
+                <arg value="gh-pages"/>
+            </args>
+        </git>
         <git command="checkout">
             <args>
                 <arg value="master"/>
