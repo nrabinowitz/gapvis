@@ -1,22 +1,28 @@
 //-----------------------------------
 // Monkey patches
 
-// Throws an annoying error otherwise
-SimileAjax.History.enabled = false;
+(function(window) {
+    var SimileAjax = window.SimileAjax;
 
-// allow animations to be stopped
-SimileAjax.Graphics._Animation.prototype.run = function() {
-    var a = this;
-    a.timeoutId = window.setTimeout(function() { a.step(); }, 50);
-};
-SimileAjax.Graphics._Animation.prototype.stop = function() {
-    window.clearTimeout(this.timeoutId);
-};
+    // Throws an annoying error otherwise
+    SimileAjax.History.enabled = false;
 
-mxn.LatLonPoint.prototype.roughlyEquals = function(otherPoint, zoom) {
-    function roughly(f) {
-        return parseFloat(f).toFixed(~~(zoom/2))
-    }
-    return roughly(this.lat) == roughly(otherPoint.lat) 
-        && roughly(this.lon)== roughly(otherPoint.lon);
-};
+    // allow animations to be stopped
+    SimileAjax.Graphics._Animation.prototype.run = function() {
+        var a = this;
+        a.timeoutId = window.setTimeout(function() { a.step(); }, 50);
+    };
+    SimileAjax.Graphics._Animation.prototype.stop = function() {
+        window.clearTimeout(this.timeoutId);
+    };
+
+    // add a loose point matching method
+    mxn.LatLonPoint.prototype.roughlyEquals = function(otherPoint, zoom) {
+        function roughly(f) {
+            return parseFloat(f).toFixed(~~(zoom/2))
+        }
+        return roughly(this.lat) == roughly(otherPoint.lat) 
+            && roughly(this.lon)== roughly(otherPoint.lon);
+    };
+
+}(this));
