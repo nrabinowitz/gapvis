@@ -82,6 +82,11 @@
             view.bindState('change:pageid', this.stopAutoplay, this);
         },
         
+        clear: function() {
+            this.infoWindowView.clear();
+            View.prototype.clear.call(this);
+        },
+        
         render: function() {
             $(this.el).html(this.template);
             

@@ -19,6 +19,11 @@
             this.bindState('change:mapzoom', this.renderZoomControl, this);
         },
         
+        clear: function() {
+            this.freqBars && this.freqBars.clear();
+            View.prototype.clear.call(this);
+        },
+        
         // render and update functions
         
         render: function() {
