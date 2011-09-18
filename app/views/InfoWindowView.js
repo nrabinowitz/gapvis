@@ -15,6 +15,7 @@
             // listen for state changes
             this.bindState('change:placeid', this.render, this);
             this.bindState('change:pageid', this.renderNextPrevControl, this);
+            this.bindState('change:pageid', this.renderBarHighlight, this);
             this.bindState('change:mapzoom', this.renderZoomControl, this);
         },
         
