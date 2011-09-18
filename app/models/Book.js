@@ -44,6 +44,10 @@
             places.sort();
         },
         
+        onReady: function() {
+            this.initCollections();
+        },
+        
         isFullyLoaded: function() {
             return !!(this.pages.length && this.places.length);
         },

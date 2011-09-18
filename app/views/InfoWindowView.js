@@ -27,8 +27,9 @@
         // render and update functions
         
         render: function() {
-            var book = this.model,
-                map = this.map,
+            var view = this,
+                book = view.model,
+                map = view.map,
                 placeId = state.get('placeid'),
                 place;
             // if no map or place has been set, give up
@@ -38,28 +39,22 @@
             // get the place
             place = book.places.get(placeId);
             // if the place isn't fully loaded, do so
-            if (!place.isFullyLoaded()) {
-                var view = this;
-                place.bind('change', function() {
-                    view.render();
-                });
-                place.fetch();
-            } else {
+            place.ready(function() {
                 // create content
-                $(this.el).html(this.template(place.toJSON()));
+                $(view.el).html(view.template(place.toJSON()));
                 // add frequency bars
-                var freqBars = this.freqBars = new gv.PlaceFrequencyBarsView({
+                var freqBars = view.freqBars = new gv.PlaceFrequencyBarsView({
                     model: book,
                     place: place,
-                    el: this.$('div.frequency-bars')[0]
+                    el: view.$('div.frequency-bars')[0]
                 });
                 // render sub-elements
                 freqBars.render();
-                this.renderBarHighlight();
-                this.renderZoomControl();
-                this.renderNextPrevControl();
+                view.renderBarHighlight();
+                view.renderZoomControl();
+                view.renderNextPrevControl();
                 // open bubble
-                map.openBubble(this.getPoint(), this.el);
+                map.openBubble(view.getPoint(), view.el);
                 // set a handler to unset place if close is clicked
                 function handler() {
                     if (state.get('placeid') == placeId) {
@@ -68,7 +63,7 @@
                     map.closeInfoBubble.removeHandler(handler);
                 }
                 map.closeInfoBubble.addHandler(handler);
-            }
+            });
             return this;
         },
         
@@ -101,9 +96,10 @@
         // UI Event Handlers - update state
         
         events: {
-            'click span.zoom.on': 'uiZoom',
-            'click span.next.on': 'uiNext',
-            'click span.prev.on': 'uiPrev'
+            'click span.zoom.on':       'uiZoom',
+            'click span.next.on':       'uiNext',
+            'click span.prev.on':       'uiPrev',
+            'click span.goto-place':    'uiGoToPlace'
         },
         
         uiZoom: function() {
@@ -121,6 +117,10 @@
         
         uiPrev: function() {
             state.set({ pageid: this.prev });
+        },
+        
+        uiGoToPlace: function() {
+            state.set({ 'topview': gv.BookPlaceView });
         }
     });
     

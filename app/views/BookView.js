@@ -68,7 +68,7 @@
                 book = view.model;
             if (!book || book.id != bookId) {
                 book = view.model = gv.books.getOrCreate(bookId);
-                function update() {
+                book.ready(function() {
                     // set the page id if not set
                     if (!state.get('pageid')) {
                         state.set({ pageid: book.firstId() });
@@ -79,20 +79,7 @@
                     }
                     // create child views and render
                     view.updateViews().render();
-                }
-                if (!book.isFullyLoaded()) {
-                    book.fetch({ 
-                        success: function() {
-                            book.initCollections();
-                            update();
-                        },
-                        error: function() {
-                            console.log('Error fetching book ' + book.id)
-                        }
-                    });
-                } else {
-                    update();
-                }
+                });
             }
         }
         

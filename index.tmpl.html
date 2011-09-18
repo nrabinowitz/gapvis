@@ -61,6 +61,13 @@
                 </div>
                 <div id="timemap-view"></div>
             </div>
+            
+            <!-- Book Place View -->
+            <div id="book-place-view" class="topview clearfix">
+                <a href="#" class="permalink">Permalink</a>
+                <div class="book-title-view"></div>
+                <div id="place-summary-view"></div>
+            </div>
 
         </div>
         <footer>
@@ -98,7 +105,7 @@
     
     <script type="text/template" id="info-window-template">
         <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
-        <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
+        <p><span class="control on goto-place">View Details &gt;&gt;</span><p>
         <div class="frequency-bars"></div>
         <p>
             <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %><span class="controls">:
@@ -106,6 +113,15 @@
                 <span class="control prev">&lt;&lt; prev</span> | 
                 <span class="control next">next &gt;&gt;</span>
             </span>
+        </p>
+    </script>
+    
+    <script type="text/template" id="place-summary-template">
+        <h3><%= title %></h3>
+        <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
+        <div class="frequency-bars"></div>
+        <p>
+            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
         </p>
     </script>
 

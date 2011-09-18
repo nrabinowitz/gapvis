@@ -1,0 +1,55 @@
+/*
+ * TimeMap View
+ */
+(function(gv) {
+    var View = gv.View,
+        state = gv.state;
+    
+    // View: InfoWindowView (content for the map infowindow)
+    gv.PlaceSummaryView = View.extend({
+        el: '#place-summary-view',
+        
+        initialize: function(opts) {
+            this.template = _.template($('#place-summary-template').html());
+        },
+        
+        clear: function() {
+            this.freqBars && this.freqBars.clear();
+            View.prototype.clear.call(this);
+        },
+        
+        // render and update functions
+        
+        render: function() {
+            var view = this,
+                book = view.model,
+                placeId = state.get('placeid'),
+                place;
+            // if no map or place has been set, give up
+            if (!map || !placeId) {
+                return;
+            }
+            // get the place
+            place = book.places.get(placeId);
+            place.ready(function() {
+                // create content
+                $(view.el).html(view.template(place.toJSON()));
+                // add frequency bars
+                var freqBars = view.freqBars = new gv.PlaceFrequencyBarsView({
+                    model: book,
+                    place: place,
+                    el: view.$('div.frequency-bars')[0]
+                });
+                // render sub-elements
+                freqBars.render();
+                view.renderBarHighlight();
+            });
+            return this;
+        },
+        
+        renderBarHighlight: function() {
+            this.freqBars.updateHighlight();
+        }
+    });
+    
+}(gv));
