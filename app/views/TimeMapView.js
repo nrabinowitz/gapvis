@@ -59,7 +59,10 @@
             })
         ],
         // colors for frequency scale
-        scaleColors = ["090066", "6b0051", "ce003c", "cc0020", "ee0000"];
+        scaleColors = ["090066", "6b0051", "ce003c", "cc0020", "ee0000"],
+        colorThemes = scaleColors.map(function(color) {
+            return TimeMapTheme.createCircleTheme({ color: color })
+        });
     
     // View: TimemapView
     gv.TimeMapView = View.extend({
@@ -89,7 +92,7 @@
         
         layout: function() {
             $(this.el).height(
-                this.topViewHeight() * .8
+                this.topViewHeight() * .8 - 29
             );
         },
         
@@ -102,13 +105,17 @@
                 // create themes by frequency
                 colorScale = d3.scale.quantize()
                     .domain([1, book.places.first().get('frequency')])
-                    .range(scaleColors.map(function(color) {
-                        return TimeMapTheme.createCircleTheme({ color: color })
-                    })),
+                    .range(colorThemes),
                 // add custom labeller
                 labelUtils = view.labelUtils = new LabelUtils(
                     bandInfo, book.labels(), function() { return false; }
                 );
+            
+            // make legend
+            colorThemes.forEach(function(theme) {
+                var img = theme.eventIcon;
+                this.$('span.images').append('<img src="' + img + '">');
+            });
             
             // custom info window function
             function openPlaceWindow() {

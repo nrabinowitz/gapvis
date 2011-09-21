@@ -22,12 +22,18 @@
                     topPlaces: book.places.toJSON().slice(0,4)
                 });
             $(this.el).html(this.template(context));
+            this.$('button.goto-reading').button({
+                icons: {
+                    secondary: 'ui-icon-triangle-1-e'
+                }
+            });
         },
         
         // UI Event Handlers - update state
         
         events: {
-            'click .place':    'uiPlaceClick'
+            'click span.place':             'uiPlaceClick',
+            'click button.goto-reading':    'uiGoToReading'
         },
         
         uiPlaceClick: function(e) {
@@ -36,6 +42,10 @@
                 state.setSerialized('placeid', placeId);
                 state.set({ topview: gv.BookPlaceView });
             }
+        },
+        
+        uiGoToReading: function() {
+            state.set({ 'topview': gv.BookReadingView });
         }
     });
     

@@ -20,16 +20,6 @@
             ];
             // super initialization kicks off model fetch
             gv.BookView.prototype.initialize.call(this);
-        },
-        
-        // UI event handlers
-        
-        events: {
-            "click .goto-reading": "uiGoToReading"
-        },
-        
-        uiGoToReading: function() {
-            state.set({ 'topview': gv.BookReadingView });
         }
         
     });
