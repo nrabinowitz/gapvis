@@ -169,6 +169,7 @@
         <ant target="build-production"/>
         <git command="add">
             <args>
+                <arg value="-f"/>
                 <arg value="index.html"/>
                 <arg value="${js.concat.target}"/>
             </args>
