@@ -26,7 +26,7 @@
                 placeId = state.get('placeid'),
                 place;
             // if no map or place has been set, give up
-            if (!map || !placeId) {
+            if (!placeId) {
                 return;
             }
             // get the place

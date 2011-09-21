@@ -125,7 +125,12 @@
     </script>
     
     <script type="text/template" id="navigation-view-template">
-        <button>Test</button>
+        <span class="nav-buttons">
+            <input type="radio" id="nav-summary-<%= cid %>" name="nav-buttons-<%= cid %>" /><label for="nav-summary-<%= cid %>">Book Summary</label>
+            <input type="radio" id="nav-reading-<%= cid %>" name="nav-buttons-<%= cid %>" /><label for="nav-reading-<%= cid %>">Reading View</label>
+            <input type="radio" id="nav-place-<%= cid %>" name="nav-buttons-<%= cid %>" /><label for="nav-place-<%= cid %>">Place Detail</label>
+        </span>
+        <a class="permalink" href="#">Permalink</a>
     </script>
 
 </body>
