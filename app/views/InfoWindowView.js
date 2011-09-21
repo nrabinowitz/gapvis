@@ -83,7 +83,9 @@
         },
         
         renderBarHighlight: function() {
-            this.freqBars.updateHighlight();
+            if (this.freqBars) {
+                this.freqBars.updateHighlight();
+            }
         },
         
         getPoint: function() {

@@ -42,6 +42,10 @@
                 var view = new BookListView({ model:book });
                 $list.append(view.render().el);
             })
+        },
+        
+        open: function() {
+            $(this.el).show();
         }
     });
     

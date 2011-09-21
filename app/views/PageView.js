@@ -30,10 +30,17 @@
             });
         },
         
+        layout: function() {
+            $(this.el).height(
+                ($(window).height() - 110) * .8 - 75
+            )
+        },
+        
         render: function() {
             var view = this;
             $(view.el)
                 .html(view.template(view.model.toJSON()));
+            view.bindingLayout();
             view.renderPageView();
             view.renderPlaceHighlight();
             return view;

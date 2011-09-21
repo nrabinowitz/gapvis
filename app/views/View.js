@@ -1,7 +1,7 @@
 /*
  * Core setup for views
  */
-(function(gv) {
+(function(gv, window) {
     var state = gv.state;
 
     // default view
@@ -41,7 +41,34 @@
             $(this.el).empty();
             this.unbindState();
             this.unbindEvents();
+            this.unbindResize();
+        },
+        // bind layout() to window resize, with timeout
+        bindResize: function() {
+            var view = this,
+                resizeTimerId;
+            view._resizeHandler = function() {
+                if (!resizeTimerId) {
+                    resizeTimerId = window.setTimeout(function() {
+                        resizeTimerId = null;
+                        view.layout();
+                    }, 200);
+                }
+            };
+            $(window).resize(view._resizeHandler);
+        },
+        unbindResize: function() {
+            if (view._resizeHandler) {
+                $(window).unbind('resize', view._resizeHandler);
+            }
+        },
+        // override in subclasses
+        layout: $.noop,
+        // common pattern support
+        bindingLayout: function() {
+            this.layout();
+            this.bindResize();
         }
     });
     
-}(gv));
+}(gv, this));

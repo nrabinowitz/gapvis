@@ -38,6 +38,7 @@
             view.children.forEach(function(child) {
                 child.render();
             });
+            view.layout();
             view.rendered = true;
             return view;
         },

@@ -87,8 +87,14 @@
             View.prototype.clear.call(this);
         },
         
+        layout: function() {
+            // not thrilled with this
+            $('#timemap-view').height(($(window).height() - 110) * .8);
+        },
+        
         render: function() {
             $(this.el).html(this.template);
+            this.bindingLayout();
             
             var view = this,
                 book = view.model,
@@ -195,6 +201,7 @@
                 ],
                 bands: bandInfo
             });
+            
             // the load is synchronous, so we have to call after TimeMap.init()
             view.scrollTo(state.get('pageid') || view.model.firstId());
             view.updateMapTypeId();
