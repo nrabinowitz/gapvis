@@ -29,6 +29,9 @@
                 .appendTo(this.options.parent.$('div.navigation-view'));
             // button it
             this.$('.nav-buttons').buttonset();
+            $('#nav-summary-' + this.cid).button('option', 'icons', {primary:'ui-icon-star'});
+            $('#nav-reading-' + this.cid).button('option', 'icons', {primary:'ui-icon-note'});
+            $('#nav-place-' + this.cid).button('option', 'icons', {primary:'ui-icon-pin-s'});
             this.$('.permalink').button({
                 icons: {
                     primary: "ui-icon-link"
@@ -67,7 +70,7 @@
         
         uiGoToView: function(evt) {
             // get view from id
-            var id = $(evt.target).attr('id').split('-').slice(0,2).join('-'),
+            var id = $(evt.target).attr('data-view-id'),
                 nav = _(this.navViews).find(function(n) {
                     return n.id == id;
                 });

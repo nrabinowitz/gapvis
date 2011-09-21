@@ -21,7 +21,7 @@
         
         layout: function() {
             $(this.el).height(
-                this.topViewHeight() * .8
+                this.topViewHeight() * .8 - 35
             );
         },
         

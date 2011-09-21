@@ -71,7 +71,7 @@
             if (placeId) {
                 state.setSerialized('placeid', placeId);
             }
-        },
+        }
         
     });
     

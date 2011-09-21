@@ -40,9 +40,10 @@ div.topview {
 }
 div.navigation-view {
     float: right;
-    width: 380px;
+    width: 410px;
     margin-left: 20px;
     font-size: .8em;
+    text-align: right;
 }
 
 /* book reading view */
@@ -89,7 +90,7 @@ div#page-control-view {
 
 /* book summary view */
 div#place-freq-bars-view {
-    position: relative;
+    float: right;
     width: 400px;
     background: #FFF;
     border: 1px solid #CCC;
@@ -98,6 +99,9 @@ div#place-freq-bars-view {
 }
 div#place-freq-bars-view svg {
     width: 380px;
+}
+div#book-summary-text-view {
+    margin-right: 450px;
 }
 
 /* specific text styles */
