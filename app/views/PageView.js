@@ -20,20 +20,22 @@
             // set backreference
             page.view = view;
             // load page
-            page.fetch({
-                success: function() {
-                    view.render();
-                },
-                error: function() {
-                    console.log('Error fetching page ' + view.model.id)
-                }
+            page.ready(function() {
+                view.render();
             });
+        },
+        
+        layout: function() {
+            $(this.el)
+                .height(this.topViewHeight() * .8 - 75)
+                .width(this.topViewWidth() * .4 - 45)
         },
         
         render: function() {
             var view = this;
             $(view.el)
                 .html(view.template(view.model.toJSON()));
+            view.bindingLayout();
             view.renderPageView();
             view.renderPlaceHighlight();
             return view;
@@ -69,7 +71,7 @@
             if (placeId) {
                 state.setSerialized('placeid', placeId);
             }
-        },
+        }
         
     });
     

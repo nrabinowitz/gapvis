@@ -1,54 +1,75 @@
 /* GapVis styles. */
 
-body {
+html, body {
     font-family: Georgia, Garamond, serif;
+    overflow: hidden;
 }
 h1, h2, h3, h4 {
     font-style: italic;
     color: steelblue;
 }
 
-/* structure */
+/* header */
 header {
-    margin: 10px 20px;
+    padding: 10px 20px 0 20px;
+    height: 40px;
+}
+header h1 {
+    margin: 0;
 }
 footer {
-    margin: 750px 20px 10px 20px;
+    position: absolute;
+    bottom: 0;
+    padding: 10px 20px;
     font-size: .8em;
     color: #999;
 }
 
+/* top view */
 div.topview {
+    position: absolute;
     background: #eee;
-    margin: 0 20px 30px 20px;
+    top: 50px;
+    bottom: 30px;
+    right: 20px;
+    left: 20px;
     padding: 15px;
     display: none;
-    position: absolute;
-    width: 95%;
-    height: 700px;
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
+div.navigation-view {
+    float: right;
+    width: 410px;
+    margin-left: 20px;
+    font-size: .8em;
+    text-align: right;
+}
+
+/* book reading view */
 div#reading-pane {
-    width: 450px;
+    position: relative;
+    width: 40%;
+    height: 80%;
     float: left;
 }
 div#timemap-view {
-    margin-left: 450px; 
+    position: relative;
+    margin-left: 40%; 
+    height: 80%;
     border: 1px solid #CCC;
 }
 div#page-view {
     position: relative;
     overflow: hidden;
-    height: 550px;
+    height: 100%;
 }
 div.single-page {
     position: absolute;
     top: 0;
+    bottom: 20px;
     background: #FFF;
     border: 1px solid #CCC;
-    height: 500px;
-    width: 400px;
     overflow: auto;
     margin-bottom: 1em;
     font-size: 1.2em;
@@ -59,31 +80,41 @@ div.single-page .img {
     display: none;
 }
 div.single-page .img img {
-    width: 350px;
+    width: 100%;
 }
 div#page-control-view {
-    width: 400px;
+    width: 95%;
     position: absolute;
-    top: 670px;
+    bottom: 0;
 }
+
+/* book summary view */
 div#place-freq-bars-view {
+    float: right;
+    width: 400px;
     background: #FFF;
     border: 1px solid #CCC;
-    width: 400px;
-    height: 500px;
     padding: 1.5em 1em;
     overflow: auto;
 }
 div#place-freq-bars-view svg {
     width: 380px;
 }
+div#book-summary-text-view {
+    margin-right: 450px;
+}
+
+/* book place view */
+div#place-summary-view {
+    width: 400px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    padding: 1.5em 1em;
+}
 
 /* specific text styles */
 header h1 a {
     text-decoration: none;
-}
-a.permalink {
-    float: right;
 }
 span.place {
     color: steelblue;
@@ -136,14 +167,28 @@ span.goto-reading {
 }
 
 /* timemap styles. */
-div#timelinecontainer{
+div#timeline-container{
     position: relative;
+    height: 35%;
+    width: 100%;
 }
 div#timeline{
-    height: 200px;
     font-size: 12px;
+    height: 100%;
+    width: 100%;
     background: #CCCCCC;
 }
+div#map-container {
+    width: 100%;
+    height: 65%;
+}
+div#map {
+    width: 100%;
+    height: 100%;
+    background: #EEEEEE;
+}
+
+/* timeline controls */
 div#timeline-controls {
     position: absolute;
     top: 0;
@@ -169,18 +214,11 @@ div#timeline-controls div#timeline-play {
 div#timeline-controls div#timeline-stop {
     background-image: url(../images/stop.png);
 }
-div#mapcontainer {
-    width: 100%;
-    height: 350px;
-}
-div#map {
-    width: 100%;
-    height: 100%;
-    background: #EEEEEE;
-}
 div.timeline-event-label {
     margin: 3px 0px 0px 3px;
 }
+
+/* info window styles */
 div.infowindow {
     height: 8em;
     width: 280px;

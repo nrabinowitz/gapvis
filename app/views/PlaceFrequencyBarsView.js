@@ -19,8 +19,18 @@
             _.extend(this.settings, this.options);
         },
         
+        layout: function() {
+            $(this.el).height(
+                this.topViewHeight() * .8 - 35
+            );
+        },
+        
         render: function() {
             var singlePlace = !!this.options.place;
+            
+            if (!singlePlace) {
+                this.bindingLayout();
+            }
         
             var bh = 12,
                 w = 250,
@@ -74,7 +84,7 @@
                 // delegated handler: mouseout
                 .on('mouseout', function() {
                     var $target = $(d3.event.target);
-                    if ($target.is('rect')) {
+                    if ($target.is('rect') && !$target.is('.selected')) {
                         d3.select(d3.event.target)
                             .style('fill', color)
                     }
@@ -192,12 +202,18 @@
                     .domain([0, pages.length])
                     .range(d3.range(0, settings.buckets));
                     
+            // clear existing highlights
+            d3.select(this.el)
+              .selectAll('rect')
+                .attr('class', '')
+                .style('fill', settings.color);
+                
             // let's assume we're in single-page view 
             if (pageId) {
-                // XXX: not working yet
                 var i = pages.indexOf(pages.get(pageId));
-                d3.select($('rect:eq(' + sidx(i) + ')', this.el)[0])
-                    .attr('fill', settings.hicolor);
+                d3.select($('rect:eq(' + (sidx(i)+1) + ')', this.el)[0])
+                    .attr('class', 'selected')
+                    .style('fill', settings.hicolor);
             }
         }
         

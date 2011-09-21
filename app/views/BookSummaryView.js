@@ -13,7 +13,9 @@
             var view = this;
             // set child classes
             view.childClasses = [
+                gv.NavigationView,
                 gv.BookTitleView,
+                gv.BookSummaryTextView,
                 gv.PlaceFrequencyBarsView
             ];
             // super initialization kicks off model fetch
