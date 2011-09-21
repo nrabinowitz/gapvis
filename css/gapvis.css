@@ -38,6 +38,9 @@ div.topview {
     -moz-border-radius: 15px;
     border-radius: 15px;
 }
+div.navigation-view {
+    float: right;
+}
 
 /* book reading view */
 div#reading-pane {
@@ -63,7 +66,6 @@ div.single-page {
     bottom: 20px;
     background: #FFF;
     border: 1px solid #CCC;
-    width: 90%;
     overflow: auto;
     margin-bottom: 1em;
     font-size: 1.2em;
@@ -85,8 +87,7 @@ div#page-control-view {
 /* book summary view */
 div#place-freq-bars-view {
     position: relative;
-    width: 45%;
-    height: 72%;
+    width: 400px;
     background: #FFF;
     border: 1px solid #CCC;
     padding: 1.5em 1em;
@@ -99,9 +100,6 @@ div#place-freq-bars-view svg {
 /* specific text styles */
 header h1 a {
     text-decoration: none;
-}
-a.permalink {
-    float: right;
 }
 span.place {
     color: steelblue;

@@ -19,8 +19,18 @@
             _.extend(this.settings, this.options);
         },
         
+        layout: function() {
+            $(this.el).height(
+                this.topViewHeight() * .8
+            );
+        },
+        
         render: function() {
             var singlePlace = !!this.options.place;
+            
+            if (!singlePlace) {
+                this.bindingLayout();
+            }
         
             var bh = 12,
                 w = 250,

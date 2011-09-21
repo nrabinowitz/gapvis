@@ -10,8 +10,6 @@
     gv.AppView = View.extend({
     
         initialize: function() {
-            // initiatialize permalink
-            new gv.PermalinkView();
             // listen for state changes
             state.bind('change:topview', this.updateView, this);
             state.bind('change:bookid', function() {

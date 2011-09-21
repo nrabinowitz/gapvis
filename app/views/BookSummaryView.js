@@ -13,6 +13,7 @@
             var view = this;
             // set child classes
             view.childClasses = [
+                gv.NavigationView,
                 gv.BookTitleView,
                 gv.PlaceFrequencyBarsView
             ];

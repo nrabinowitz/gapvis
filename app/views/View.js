@@ -44,23 +44,26 @@
             this.unbindResize();
         },
         // bind layout() to window resize, with timeout
-        bindResize: function() {
+        _resizeHandlers: [],
+        bindResize: function(f) {
             var view = this,
-                resizeTimerId;
-            view._resizeHandler = function() {
-                if (!resizeTimerId) {
-                    resizeTimerId = window.setTimeout(function() {
-                        resizeTimerId = null;
-                        view.layout();
-                    }, 200);
-                }
-            };
-            $(window).resize(view._resizeHandler);
+                callback = f || function() { view.layout() },
+                resizeTimerId,
+                handler = function() {
+                    if (!resizeTimerId) {
+                        resizeTimerId = window.setTimeout(function() {
+                            resizeTimerId = null;
+                            view.layout();
+                        }, 200);
+                    }
+                };
+            view._resizeHandlers.push(handler);
+            $(window).resize(handler);
         },
         unbindResize: function() {
-            if (view._resizeHandler) {
-                $(window).unbind('resize', view._resizeHandler);
-            }
+            this._resizeHandlers.forEach(function(h) {
+                $(window).unbind('resize', h);
+            });
         },
         // override in subclasses
         layout: $.noop,
@@ -68,6 +71,13 @@
         bindingLayout: function() {
             this.layout();
             this.bindResize();
+        },
+        // top view size
+        topViewHeight: function() {
+            return $(window).height() - 110;
+        },
+        topViewWidth: function() {
+            return $(window).width() - 70;
         }
     });
     

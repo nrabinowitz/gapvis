@@ -88,8 +88,9 @@
         },
         
         layout: function() {
-            // not thrilled with this
-            $('#timemap-view').height(($(window).height() - 110) * .8);
+            $(this.el).height(
+                this.topViewHeight() * .8
+            );
         },
         
         render: function() {

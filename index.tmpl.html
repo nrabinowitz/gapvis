@@ -31,6 +31,7 @@
             
             <!-- Book Overview -->
             <div id="book-summary-view" class="topview clearfix">
+                <div class="navigation-view"></div>
                 <div class="book-title-view"></div>
                 <span class="goto-reading control on">Go to Reading View &gt;&gt;<br><br>
                     <span style="font-size: 12px; color: #000">(the interface here will eventually be more elegant, I swear)</span>
@@ -40,7 +41,7 @@
             
             <!-- Book Reading View -->
             <div id="book-view" class="topview clearfix">
-                <a href="#" class="permalink">Permalink</a>
+                <div class="navigation-view"></div>
                 <div class="book-title-view"></div>
                 <div id="reading-pane">
                     <div id="page-view"></div>
@@ -62,7 +63,7 @@
             
             <!-- Book Place View -->
             <div id="book-place-view" class="topview clearfix">
-                <a href="#" class="permalink">Permalink</a>
+                <div class="navigation-view"></div>
                 <div class="book-title-view"></div>
                 <div id="place-summary-view"></div>
             </div>
@@ -121,6 +122,10 @@
         <p>
             <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
         </p>
+    </script>
+    
+    <script type="text/template" id="navigation-view-template">
+        <button>Test</button>
     </script>
 
 </body>
