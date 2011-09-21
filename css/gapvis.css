@@ -104,6 +104,14 @@ div#book-summary-text-view {
     margin-right: 450px;
 }
 
+/* book place view */
+div#place-summary-view {
+    width: 400px;
+    background: #FFF;
+    border: 1px solid #CCC;
+    padding: 1.5em 1em;
+}
+
 /* specific text styles */
 header h1 a {
     text-decoration: none;
