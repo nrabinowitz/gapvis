@@ -102,6 +102,9 @@ div#place-freq-bars-view svg {
 div#book-summary-text-view, div#book-wordcloud-view {
     margin-right: 450px;
 }
+div#book-wordcloud-view span {
+    color: #900;
+}
 
 /* book place view */
 div#place-summary-view {

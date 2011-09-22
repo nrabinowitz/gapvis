@@ -16,7 +16,7 @@
                 book = view.model;
             $(view.el).append('<h3>Most Frequent Words</h3>');
             book.wordsReady(function() {
-                var words = book.get('words').slice();
+                var words = book.get('words').slice(0, 100);
                     max = words[0][1],
                     min = words[words.length-1][1],
                     emScale = d3.scale.linear()
