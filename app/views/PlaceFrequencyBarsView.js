@@ -64,12 +64,20 @@
                     var target = d3.event.target,
                         data = target.__data__,
                         pdata = target.parentNode.__data__;
+                    // bar click
                     if ($(target).is('rect')) {
                         var pageId = pages.at(~~((pages.length * data.idx)/buckets)).id;
                         state.set({
                             placeid: pdata.id,
                             pageid: pageId,
                             topview: gv.BookReadingView
+                        });
+                    }
+                    // label click
+                    if ($(target).is('text.title')) {
+                        state.set({
+                            placeid: pdata.id,
+                            topview: gv.BookPlaceView
                         });
                     }
                 })
@@ -163,17 +171,13 @@
             // leave out labels for single place
             if (!singlePlace) {
                 // place title
-                svg.selectAll('text.title')
-                    .data(places)
-                  .enter().append('svg:text')
+                spark.append('svg:text')
                     .attr('class', 'title')
                     .style('fill', 'black')
-                    .style('font-size', '10px')
                     .attr('x', lw - 8)
-                    .attr('y', y)
+                    .attr('y', 0)
                     .attr("dx", 3)
-                    .attr("dy", ".9em")
-                    .attr('text-anchor', 'end')
+                    .attr("dy", "1em")
                     .text(function(d) { return d.get('title') });
                 
                 // frequency label

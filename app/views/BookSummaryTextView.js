@@ -21,7 +21,9 @@
                     pageCount: book.pages.length,
                     topPlaces: book.places.toJSON().slice(0,4)
                 });
+            // fill in template
             $(this.el).html(this.template(context));
+            // buttonize reading link
             this.$('button.goto-reading').button({
                 icons: {
                     secondary: 'ui-icon-triangle-1-e'

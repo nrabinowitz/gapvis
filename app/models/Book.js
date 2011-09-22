@@ -52,6 +52,27 @@
             return !!(this.pages.length && this.places.length);
         },
         
+        // get word counts, asynchronously
+        wordsReady: function(callback) {
+            var book = this,
+                url = API_ROOT + '/book/' + this.id + '/words.json';
+            if (!book.get('words')) {
+                $.ajax({
+                    url: url, 
+                    success: function(words) {
+                        book.set({ words: words });
+                        callback();
+                    },
+                    error: function() {
+                        console.error('Problem retrieving words from ' + url)
+                    },
+                    dataType: 'json'
+                });
+            } else {
+                callback();
+            }
+        },
+        
         // array of page labels for timemap
         labels: function() {
             return this.pages.map(function(p) { return p.id });

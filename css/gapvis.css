@@ -99,8 +99,16 @@ div#place-freq-bars-view {
 div#place-freq-bars-view svg {
     width: 380px;
 }
-div#book-summary-text-view {
+div#place-freq-bars-view text.title {
+    text-anchor: end;
+    font-size: 10px;
+    cursor: pointer;
+}
+div#book-summary-text-view, div#book-wordcloud-view {
     margin-right: 450px;
+}
+div#book-wordcloud-view span {
+    color: #900;
 }
 
 /* book place view */
