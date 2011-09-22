@@ -16,6 +16,7 @@
                 gv.NavigationView,
                 gv.BookTitleView,
                 gv.BookSummaryTextView,
+                gv.BookWordCloudView,
                 gv.PlaceFrequencyBarsView
             ];
             // super initialization kicks off model fetch
