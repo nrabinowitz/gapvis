@@ -112,11 +112,15 @@ div#book-wordcloud-view span {
 }
 
 /* book place view */
-div#place-summary-view {
+div#place-summary-container {
     width: 400px;
     background: #FFF;
     border: 1px solid #CCC;
     padding: 1.5em 1em;
+}
+#related-places-view p {
+    margin: 0 0 .5em 0;
+    font-size: .88em;
 }
 
 /* specific text styles */

@@ -9,6 +9,7 @@
     gv.BookView = View.extend({
         
         initialize: function(opts) {
+            console.log('(BookView) initializing');
             var view = this;
             // listen for state changes
             state.bind('change:bookid', function() {
@@ -19,6 +20,7 @@
         },
         
         updateViews: function() {
+            console.log('(BookView) updating child views');
             var view = this,
                 book = view.model;
             view.children = view.childClasses.map(function(cls) {
@@ -33,6 +35,7 @@
         // Render functions
         
         render: function() {
+            console.log('(BookView) rendering');
             var view = this;
             // render all children
             view.children.forEach(function(child) {
@@ -48,7 +51,7 @@
             this.children.forEach(function(child) {
                 child.clear();
             });
-            $('page-view').empty();
+            this.$('#page-view').empty();
             this.$('div.book-title-view').empty();
         },
         
