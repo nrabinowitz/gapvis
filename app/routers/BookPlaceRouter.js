@@ -12,6 +12,7 @@
         initialize: function() {
             // listen for state changes
             state.bind('change:bookid',this.updateViewRoute, this);
+            state.bind('change:placeid',this.updateViewRoute, this);
         },
 
         routes: {

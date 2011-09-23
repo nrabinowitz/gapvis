@@ -14,13 +14,16 @@
             $(this.el).hide();
         },
         // bind/unbind state listeners
-        _stateHandlers: [],
         bindState: function(event, handler, context) {
+            // create handler array if necessary
+            if (!this._stateHandlers) {
+                this._stateHandlers = [];
+            }
             state.bind(event, handler, context);
             this._stateHandlers.push({ event: event, handler: handler });
         },
         unbindState: function() {
-            this._stateHandlers.forEach(function(h) {
+            (this._stateHandlers || []).forEach(function(h) {
                 state.unbind(h.event, h.handler);
             });
         },
@@ -44,8 +47,11 @@
             this.unbindResize();
         },
         // bind layout() to window resize, with timeout
-        _resizeHandlers: [],
         bindResize: function(f) {
+            // create handler array if necessary
+            if (!this._resizeHandlers) {
+                this._resizeHandlers = [];
+            }
             var view = this,
                 callback = f || function() { view.layout() },
                 resizeTimerId,
@@ -61,7 +67,7 @@
             $(window).resize(handler);
         },
         unbindResize: function() {
-            this._resizeHandlers.forEach(function(h) {
+            (this._resizeHandlers || []).forEach(function(h) {
                 $(window).unbind('resize', h);
             });
         },

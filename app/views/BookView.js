@@ -48,7 +48,7 @@
             this.children.forEach(function(child) {
                 child.clear();
             });
-            $('page-view').empty();
+            this.$('#page-view').empty();
             this.$('div.book-title-view').empty();
         },
         

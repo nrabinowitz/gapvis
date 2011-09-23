@@ -10,6 +10,7 @@
         el: '#book-summary-view',
         
         initialize: function(opts) {
+            console.log('(BookSummaryView) initializing');
             var view = this;
             // set child classes
             view.childClasses = [
