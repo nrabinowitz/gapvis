@@ -10,7 +10,6 @@
         el: '#book-place-view',
         
         initialize: function(opts) {
-            console.log('(BookPlaceView) initializing');
             var view = this;
             // set child classes
             view.childClasses = [
@@ -20,17 +19,12 @@
                 gv.RelatedPlacesView
             ];
             // bind state
-            this.bindState('change:placeid', function() {
-                console.log('handler called');
-                view.refresh();
-            });
+            this.bindState('change:placeid', this.refresh, this);
             // super initialization kicks off model fetch
             gv.BookView.prototype.initialize.call(this);
         },
         
         refresh: function() {
-            console.log('(BookPlaceView) refreshing');
-            // XXX - this is killing all the event bindings :(
             this.children.forEach(function(child) {
                 child.clear();
             });

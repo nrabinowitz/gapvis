@@ -10,7 +10,6 @@
         el: '#book-view',
         
         initialize: function(opts) {
-            console.log('(BookReadingView) initializing');
             var view = this;
             // set child classes
             view.childClasses = [
@@ -26,7 +25,6 @@
         },
         
         render: function() {
-            console.log('(BookReadingView) rendering');
             gv.BookView.prototype.render.call(this);
             this.updatePage();
         },
