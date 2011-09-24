@@ -5,8 +5,10 @@ html, body {
     overflow: hidden;
 }
 h1, h2, h3, h4 {
-    font-style: italic;
     color: steelblue;
+}
+h1 {
+    font-style: italic;
 }
 
 /* header */
@@ -124,7 +126,8 @@ div#place-summary-container {
 }
 
 /* specific text styles */
-header h1 a {
+header h1 a:link, header h1 a:visited {
+    color: steelblue;
     text-decoration: none;
 }
 span.place {

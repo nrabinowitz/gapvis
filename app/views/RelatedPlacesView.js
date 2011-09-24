@@ -23,7 +23,7 @@
             place.ready(function() {
                 var related = place.related(book);
                 // create content
-                $(view.el).append('<h3>Related Places</h3>');
+                $(view.el).append('<h3>Top Related Places</h3>');
                 related.slice(0,8).forEach(function(r) {
                     $('<p><span class="place" data-place-id="' + 
                         r.place.id + '">' + r.place.get('title') +

@@ -10,14 +10,12 @@
         el: '#book-summary-view',
         
         initialize: function(opts) {
-            console.log('(BookSummaryView) initializing');
             var view = this;
             // set child classes
             view.childClasses = [
                 gv.NavigationView,
                 gv.BookTitleView,
                 gv.BookSummaryTextView,
-                gv.BookWordCloudView,
                 gv.PlaceFrequencyBarsView
             ];
             // super initialization kicks off model fetch
