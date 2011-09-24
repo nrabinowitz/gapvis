@@ -76,74 +76,7 @@
         </footer>
     </div>
 
-    <!-- Templates -->
-    
-    <script type="text/template" id="book-title-template">
-        <h2 class="book-title"><%= title %></h2>
-        <p><em>By <%= author %></em></p>
-        <p>
-        Published <%= printed %>, <%= pages.length %> pages &middot;
-        <a href="<%= uri %>">View on Google Books</a></p>
-    </script>
-
-    <script type="text/template" id="timemap-template">
-        <div id="map-container">
-          <div id="map"></div>
-        </div>
-        <div id="timeline-container">
-          <div id="timeline"></div>
-          <div id="timeline-controls">
-            <div id="timeline-play" class="ir on">Play</div>
-            <div id="timeline-stop" class="ir">Stop</div>
-          </div>
-        </div>
-        <div id="timemap-legend-container">Least referenced <span class="images"></span> Most referenced</div>
-    </script>
-    
-    <script type="text/template" id="page-template">
-        <div class="text"><%= text %></div>
-        <div class="img"><img src="<%= image %>"></div>
-    </script>
-    
-    <script type="text/template" id="info-window-template">
-        <h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
-        <p><span class="control on goto-place">View Details &gt;&gt;</span><p>
-        <div class="frequency-bars"></div>
-        <p>
-            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %><span class="controls">:
-            
-                <span class="control prev">&lt;&lt; prev</span> | 
-                <span class="control next">next &gt;&gt;</span>
-            </span>
-        </p>
-    </script>
-    
-    <script type="text/template" id="place-summary-template">
-        <h3><%= title %></h3>
-        <p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
-        <div class="frequency-bars"></div>
-        <p>
-            <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
-        </p>
-    </script>
-    
-    <script type="text/template" id="navigation-view-template">
-        <span class="nav-buttons">
-            <input type="radio" id="nav-summary-<%= cid %>" data-view-id="nav-summary" name="nav-buttons-<%= cid %>" /><label for="nav-summary-<%= cid %>">Book Summary</label>
-            <input type="radio" id="nav-reading-<%= cid %>" data-view-id="nav-reading" name="nav-buttons-<%= cid %>" /><label for="nav-reading-<%= cid %>">Reading View</label>
-            <input type="radio" id="nav-place-<%= cid %>" data-view-id="nav-place" name="nav-buttons-<%= cid %>" /><label for="nav-place-<%= cid %>">Place Detail</label>
-        </span>
-        <a class="permalink" href="#">Permalink</a>
-    </script>
-    
-    <script type="text/template" id="book-summary-text-template">
-        <p>
-            The Google Books version of "<%= title %>", by <%= author %>, was published in <%= printed %> by <%= publisher %>. It is <%= pageCount %> pages long and references <%= places.length %> identified ancient places. 
-            
-            The place most frequently referenced is <span class="place" data-place-id="<%= topPlaces[0].id %>"><%= topPlaces[0].title %></span>, followed by <span class="place" data-place-id="<%= topPlaces[1].id %>"><%= topPlaces[1].title %></span>, <span class="place" data-place-id="<%= topPlaces[2].id %>"><%= topPlaces[2].title %></span>, and <span class="place" data-place-id="<%= topPlaces[3].id %>"><%= topPlaces[3].title %></span>.
-        </p>
-        <p><button class="goto-reading">Go to Reading View</button></p>
-    </script>
+    <!-- TEMPLATES -->
 
 </body>
 </html>

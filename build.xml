@@ -40,15 +40,17 @@
             depends="start-build,
                      build-js-dev, 
                      build-css-dev,
+                     build-templates,
                      finish-build"/>
             
     <target name="build-production"
             depends="start-build,
                      build-js-production, 
                      build-css-production,
+                     build-templates,
                      finish-build"/>
             
-    <!-- Core Targets -->
+    <!-- Shared Targets -->
     <target name="start-build">
         <mkdir dir="${build.dir}"/>
         <copy file="${index.template}" tofile="${index.build}"/>
@@ -57,6 +59,26 @@
     <target name="finish-build">
         <copy file="${index.build}" tofile="${index.target}"/>
         <delete dir="${build.dir}" />
+    </target>
+    
+    <target name="build-templates">
+        <echo>Inserting template code</echo>
+        <!-- Put in template files -->
+        <for list="${js.app.templates}" param="file" trim="true">
+            <sequential>
+                <!-- Get file contents and name -->
+                <local name="template.contents"/>
+                <loadfile property="template.contents" srcFile="@{file}"/>
+                <local name="template.id"/>
+                <basename property="template.id" file="@{file}" suffix=".html"/>
+                <!-- insert at placeholder -->
+                <replace file="${index.build}" 
+                    token="${placeholder.templates}"
+                    value="&lt;script type=&quot;text/template&quot; id=&quot;${template.id}&quot;&gt;${template.contents}&lt;/script&gt;${placeholder.templates}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.templates}" value=""/>
     </target>
     
     <!-- Dev Targets -->
