@@ -4,44 +4,11 @@
 (function(gv) {
     var View = gv.View,
         state = gv.state,
+        settings = gv.settings,
         // map styles
-        novisibility = [{ visibility: "off" }],
-        mapStyle = [
-            {
-                elementType: "labels",
-                stylers: novisibility
-            },{
-                featureType: "administrative",
-                elementType: "geometry",
-                stylers: novisibility
-            },{
-                featureType: "road",
-                elementType: "geometry",
-                stylers: novisibility
-            },{
-                featureType: "transit",
-                elementType: "geometry",
-                stylers: novisibility
-            },{
-                featureType: "poi",
-                elementType: "geometry",
-                stylers: novisibility
-            },{
-                featureType: "water",
-                stylers: [
-                    { hue: "#0033ff" },
-                    { saturation: 82 },
-                    { lightness: 95 }
-                ]
-            },{
-                featureType: "landscape",
-                stylers: [
-                    { hue: "#80ff00" },
-                    { saturation: 15 },
-                    { lightness: -20 }
-                ]
-            }
-        ],
+        mapStyle = settings.mapStyle,
+        scaleColors = settings.scaleColors,
+        colorThemes = settings.colorThemes,
         // band info
         bandInfo = [
             Timeline.createBandInfo({
@@ -57,12 +24,7 @@
                 overview:       true,
                 eventSource:    false
             })
-        ],
-        // colors for frequency scale
-        scaleColors = ["090066", "6b0051", "ce003c", "cc0020", "ee0000"],
-        colorThemes = scaleColors.map(function(color) {
-            return TimeMapTheme.createCircleTheme({ color: color })
-        });
+        ];
     
     // View: TimemapView
     gv.TimeMapView = View.extend({

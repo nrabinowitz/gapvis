@@ -4,7 +4,7 @@
 (function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
-        API_ROOT = gv.API_ROOT,
+        API_ROOT = gv.settings.API_ROOT,
         Book;
        
     // Model: Book

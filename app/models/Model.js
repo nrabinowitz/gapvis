@@ -2,8 +2,6 @@
  * Core setup for models
  */
 (function(gv) {
-    gv.API_ROOT = 'stub_api';
-    
     // set up default model
     gv.Model = Backbone.Model.extend({
     
