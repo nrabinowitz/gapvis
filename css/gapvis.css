@@ -106,11 +106,14 @@ div#place-freq-bars-view text.title {
     font-size: 10px;
     cursor: pointer;
 }
-div#book-summary-text-view, div#book-wordcloud-view {
+div#book-summary-text-view {
     margin-right: 450px;
 }
-div#book-wordcloud-view span {
-    color: #900;
+div#book-summary-map-view {
+    position: relative;
+    background: #fff;
+    margin-right: 450px;
+    border: 1px solid #CCC;
 }
 
 /* book place view */

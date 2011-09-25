@@ -31,7 +31,7 @@
                 stylers: [
                     { hue: "#0033ff" },
                     { saturation: 82 },
-                    { lightness: 85 }
+                    { lightness: 95 }
                 ]
             },{
                 featureType: "landscape",
