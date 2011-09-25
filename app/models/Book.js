@@ -107,6 +107,21 @@
             return items;
         },
         
+        // bounding box for places, returned as {s,w,n,e}
+        bounds: function() {
+            // get mins/maxes for bounding box
+            var lat = function(ll) { return ll[0] },
+                lon = function(ll) { return ll[1] },
+                points = _(this.places.pluck('ll'));
+                
+            return {
+                s: lat(points.min(lat)),
+                w: lon(points.min(lon)),
+                n: lat(points.max(lat)),
+                e: lon(points.max(lon))
+            }
+        },
+        
         // next/prev ids
         nextPrevId: function(pageId, prev) {
             var pages = this.pages,

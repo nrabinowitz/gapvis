@@ -3,7 +3,12 @@
  */
 (function(gv) {
     var View = gv.View,
-        state = gv.state;
+        state = gv.state,
+        settings = gv.settings,
+        // map styles
+        mapStyle = settings.mapStyle,
+        scaleColors = settings.scaleColors,
+        colorThemes = settings.colorThemes;
     
     // View: BookSummaryTextView (text content for the book summary)
     gv.BookSummaryMapView = View.extend({
