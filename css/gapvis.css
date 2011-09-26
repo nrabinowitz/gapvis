@@ -5,8 +5,10 @@ html, body {
     overflow: hidden;
 }
 h1, h2, h3, h4 {
-    font-style: italic;
     color: steelblue;
+}
+h1 {
+    font-style: italic;
 }
 
 /* header */
@@ -104,11 +106,14 @@ div#place-freq-bars-view text.title {
     font-size: 10px;
     cursor: pointer;
 }
-div#book-summary-text-view, div#book-wordcloud-view {
+div#book-summary-text-view {
     margin-right: 450px;
 }
-div#book-wordcloud-view span {
-    color: #900;
+div#book-summary-map-view {
+    position: relative;
+    background: #fff;
+    margin-right: 450px;
+    border: 1px solid #CCC;
 }
 
 /* book place view */
@@ -124,7 +129,8 @@ div#place-summary-container {
 }
 
 /* specific text styles */
-header h1 a {
+header h1 a:link, header h1 a:visited {
+    color: steelblue;
     text-decoration: none;
 }
 span.place {
