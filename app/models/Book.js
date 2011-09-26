@@ -122,6 +122,16 @@
             }
         },
         
+        // return a google maps API bounding box
+        gmapBounds: function() {
+            var gmaps = google.maps,
+                placeBounds = this.bounds();
+            return new gmaps.LatLngBounds(
+                new gmaps.LatLng(placeBounds.s, placeBounds.w),
+                new gmaps.LatLng(placeBounds.n, placeBounds.e)
+            );
+        },
+        
         // next/prev ids
         nextPrevId: function(pageId, prev) {
             var pages = this.pages,

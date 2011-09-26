@@ -112,17 +112,7 @@
             // set center and zoom if available
             var mapCenter = state.get('mapcenter'),
                 mapZoom = state.get('mapzoom'),
-                placeBounds,
-                mapBounds;
-                
-            // otherwise, set center and zoom based on all points
-            if (!(mapCenter && mapZoom)) {
-                placeBounds = book.bounds();
-                mapBounds = new google.maps.LatLngBounds(
-                    new google.maps.LatLng(placeBounds.s, placeBounds.w),
-                    new google.maps.LatLng(placeBounds.n, placeBounds.e)
-                );
-            }
+                mapBounds = !(mapCenter && mapZoom) ? book.gmapBounds() : null;
             
             var tm = this.tm = TimeMap.init({
                 mapId: "map",
