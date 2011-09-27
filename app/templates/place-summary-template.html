@@ -1,6 +1,10 @@
 <h3><%= title %></h3>
-<p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
 <div class="frequency-bars"></div>
 <p>
     <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
 </p>
+<h4>External Resources</h4>
+<ul>
+    <li><a href="<%= uri %>" target="_blank">Place page on Pleiades</a></li>
+    <li><a href="http://pelagios.dme.ait.ac.at/graph-explorer/?pleiadesID=<%= id %>" target="_blank">Pelagios Graph Explorer</a></li>
+</ul>

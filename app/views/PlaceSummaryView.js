@@ -18,9 +18,17 @@
             View.prototype.clear.call(this);
         },
         
+        layout: function() {
+            $('#place-summary-container').height(
+                this.topViewHeight() - $('#book-place-view .book-title-view').height() - 50
+            );
+        },
+        
         // render and update functions
         
         render: function() {
+            this.bindingLayout();
+            
             var view = this,
                 book = view.model,
                 placeId = state.get('placeid'),

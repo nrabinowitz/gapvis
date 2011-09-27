@@ -54,7 +54,10 @@
         // google maps style settings
         mapStyle: mapStyle,
         scaleColors: scaleColors,
-        colorThemes: colorThemes
+        colorThemes: colorThemes,
+        
+        // number of related places to show
+        relatedCount: 8
     };
     
 })(gv);

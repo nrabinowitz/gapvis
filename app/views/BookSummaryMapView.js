@@ -45,8 +45,7 @@
             gmap.fitBounds(bounds);
             
             book.places.each(function(place) {
-                var ll = place.get('ll'),
-                    theme = colorScale(place.get('frequency')),
+                var theme = colorScale(place.get('frequency')),
                     w = 10,
                     c = w/2,
                     icon = TimeMapTheme.getCircleUrl(w, theme.color, '99');
@@ -60,7 +59,7 @@
                             anchor,
                             size
                         ),
-                        position: new gmaps.LatLng(ll[0], ll[1]), 
+                        position: place.gmapLatLng(), 
                         map: gmap, 
                         title: place.get('title')
                     });
@@ -70,8 +69,6 @@
                     state.set({ topview: gv.BookPlaceView });
                 });
             });
-            
-            console.log(colorThemes[0]);
             
         },
     });

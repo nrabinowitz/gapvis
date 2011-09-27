@@ -21,10 +21,10 @@
             // get the place
             place = book.places.get(placeId);
             place.ready(function() {
-                var related = place.related(book);
+                var related = place.related(book).slice(0, gv.settings.relatedCount);
                 // create content
-                $(view.el).append('<h3>Top Related Places</h3>');
-                related.slice(0,8).forEach(function(r) {
+                $(view.el).append('<h4>Top Related Places</h4>');
+                related.forEach(function(r) {
                     $('<p><span class="place" data-place-id="' + 
                         r.place.id + '">' + r.place.get('title') +
                         '</span> (' + r.count + ')</p>').appendTo(view.el);

@@ -52,7 +52,7 @@
                 bw = function(d) { return x(frequency(d)) };
             
             if (!singlePlace) {
-                $(this.el).append('<h3>Top Places</h3>');
+                $(this.el).append('<h3>Most-Referenced Places</h3>');
             }
         
             // create svg container
