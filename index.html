@@ -33,9 +33,9 @@
             <div id="book-summary-view" class="topview clearfix">
                 <div class="navigation-view"></div>
                 <div class="book-title-view"></div>
-                <div id="place-freq-bars-view"></div>
+                <div id="place-freq-bars-view" class="panel"></div>
                 <div id="book-summary-text-view"></div>
-                <div id="book-summary-map-view"></div>
+                <div id="book-summary-map-view" class="panel"></div>
             </div>
             
             <!-- Book Reading View -->
@@ -57,17 +57,19 @@
                         </div>
                     </div>
                 </div>
-                <div id="timemap-view"></div>
+                <div id="timemap-view" class="panel"></div>
             </div>
             
             <!-- Book Place View -->
             <div id="book-place-view" class="topview clearfix">
                 <div class="navigation-view"></div>
                 <div class="book-title-view"></div>
-                <div id="place-summary-container">
+                <div id="place-summary-container" class="panel">
                     <div id="place-summary-view"></div>
                     <div id="related-places-view"></div>
                 </div>
+                <div id="place-map-view" class="panel"></div>
+                <div id="place-flickr-view" class="panel"></div>
             </div>
 
         </div>
@@ -88,11 +90,15 @@
     Published <%= printed %>, <%= pages.length %> pages &middot;
     <a href="<%= uri %>">View on Google Books</a>
 </p></script><script type="text/template" id="place-summary-template"><h3><%= title %></h3>
-<p><a href="<%= uri %>" target="_blank">Pleiades Link</a><p>
 <div class="frequency-bars"></div>
 <p>
     <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
-</p></script><script type="text/template" id="info-window-template"><h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
+</p>
+<h4>External Resources</h4>
+<ul>
+    <li><a href="<%= uri %>" target="_blank">Place page on Pleiades</a></li>
+    <li><a href="http://pelagios.dme.ait.ac.at/graph-explorer/?pleiadesID=<%= id %>" target="_blank">Pelagios Graph Explorer</a></li>
+</ul></script><script type="text/template" id="info-window-template"><h3><%= title %> <span class="zoom control on">(Zoom In)</span></h3>
 <p><span class="control on goto-place">View Details &gt;&gt;</span><p>
 <div class="frequency-bars"></div>
 <p>
