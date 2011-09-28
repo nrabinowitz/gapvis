@@ -20,7 +20,7 @@
                 this.topViewHeight() - $('#book-place-view .book-title-view').height() - 160
             )
             .width(
-                this.topViewWidth() - 395
+                this.topViewWidth() - 389
             );
         },
         
@@ -93,8 +93,10 @@
                     });
                 }
                 
-                // add markers
+                // add markers for current place
                 addMarker(place);
+                
+                // add markers and lines for related places
                 related.forEach(function(r) {
                     // add polyline
                     new gmaps.Polyline({

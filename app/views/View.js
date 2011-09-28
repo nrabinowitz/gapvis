@@ -56,12 +56,14 @@
                 callback = f || function() { view.layout() },
                 resizeTimerId,
                 handler = function() {
+                    /* 
                     if (!resizeTimerId) {
                         resizeTimerId = window.setTimeout(function() {
                             resizeTimerId = null;
-                            view.layout();
+                            callback();
                         }, 200);
-                    }
+                    } */
+                    callback();
                 };
             view._resizeHandlers.push(handler);
             $(window).resize(handler);

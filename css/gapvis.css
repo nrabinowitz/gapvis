@@ -63,6 +63,10 @@ div.navigation-view {
     margin-left: 20px;
     text-align: right;
 }
+div.panel {
+    background: #FFF;
+    border: 1px solid #CCC;
+}
 
 /* book reading view */
 div#reading-pane {
@@ -75,7 +79,6 @@ div#timemap-view {
     position: relative;
     margin-left: 40%; 
     height: 80%;
-    border: 1px solid #CCC;
 }
 div#page-view {
     position: relative;
@@ -86,8 +89,6 @@ div.single-page {
     position: absolute;
     top: 0;
     bottom: 20px;
-    background: #FFF;
-    border: 1px solid #CCC;
     overflow: auto;
     margin-bottom: 1em;
     font-size: 1.2em;
@@ -110,8 +111,6 @@ div#page-control-view {
 div#place-freq-bars-view {
     float: right;
     width: 400px;
-    background: #FFF;
-    border: 1px solid #CCC;
     padding: 1.5em 1em;
     overflow: auto;
 }
@@ -131,8 +130,6 @@ div#book-summary-text-view {
 div#place-summary-container {
     float: left;
     width: 350px;
-    background: #FFF;
-    border: 1px solid #CCC;
     padding: 15px 10px;
     margin-right: 15px;
     overflow: auto;
@@ -152,15 +149,13 @@ div#place-summary-container h4 {
 }
 div#place-map-view {
     position: relative;
-    background: #fff;
-    margin-right: 420px;
-    border: 1px solid #CCC;
+    margin-left: 385px;
 }
 div#place-flickr-view {
     position: relative;
-    background: #fff;
-    margin: 15px 0 0 420px;
-    border: 1px solid #CCC;
+    padding: 15px 10px;
+    height: 93px;
+    margin: 15px 0 0 387px;
 }
 
 /* specific text styles */

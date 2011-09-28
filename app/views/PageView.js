@@ -8,7 +8,7 @@
     // View: PageView (page content)
     gv.PageView = View.extend({
         tagName: 'div',
-        className: 'single-page',
+        className: 'single-page panel',
         
         initialize: function() {
             var view = this,
