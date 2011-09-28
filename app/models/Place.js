@@ -51,6 +51,11 @@
                 place.set(o);
             }
             return related;
+        },
+        
+        gmapLatLng: function() {
+            var ll = this.get('ll');
+            return new google.maps.LatLng(ll[0], ll[1]);
         }
     });
     

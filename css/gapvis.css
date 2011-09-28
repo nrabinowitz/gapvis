@@ -4,11 +4,28 @@ html, body {
     font-family: Georgia, Garamond, serif;
     overflow: hidden;
 }
+
 h1, h2, h3, h4 {
-    color: steelblue;
+    color: #555;
+}
+h4 {
+    font-style: italic;
 }
 h1 {
     font-style: italic;
+}
+ul {
+    margin: 0 0 1em 0;
+    padding: 0 0 0 1.5em;
+}
+li {
+    margin: 0 0 .5em 0;
+}
+a:link, a:visited {
+    color: steelblue;
+}
+a:hover, a:active {
+    color: orange;
 }
 
 /* header */
@@ -46,6 +63,10 @@ div.navigation-view {
     margin-left: 20px;
     text-align: right;
 }
+div.panel {
+    background: #FFF;
+    border: 1px solid #CCC;
+}
 
 /* book reading view */
 div#reading-pane {
@@ -58,7 +79,6 @@ div#timemap-view {
     position: relative;
     margin-left: 40%; 
     height: 80%;
-    border: 1px solid #CCC;
 }
 div#page-view {
     position: relative;
@@ -69,8 +89,6 @@ div.single-page {
     position: absolute;
     top: 0;
     bottom: 20px;
-    background: #FFF;
-    border: 1px solid #CCC;
     overflow: auto;
     margin-bottom: 1em;
     font-size: 1.2em;
@@ -93,8 +111,6 @@ div#page-control-view {
 div#place-freq-bars-view {
     float: right;
     width: 400px;
-    background: #FFF;
-    border: 1px solid #CCC;
     padding: 1.5em 1em;
     overflow: auto;
 }
@@ -109,23 +125,37 @@ div#place-freq-bars-view text.title {
 div#book-summary-text-view {
     margin-right: 450px;
 }
-div#book-summary-map-view {
-    position: relative;
-    background: #fff;
-    margin-right: 450px;
-    border: 1px solid #CCC;
-}
 
 /* book place view */
 div#place-summary-container {
-    width: 400px;
-    background: #FFF;
-    border: 1px solid #CCC;
-    padding: 1.5em 1em;
+    float: left;
+    width: 350px;
+    padding: 15px 10px;
+    margin-right: 15px;
+    overflow: auto;
+}
+div#place-summary-container p {
+    margin: 0 0 .5em 0;
+}
+div#place-summary-container h4 {
+    margin: 1.5em 0 .5em 0;
+}
+#place-freq-bars-view h3,
+#place-summary-container h3 {
+    margin: 0 0 .5em 0;
 }
 #related-places-view p {
-    margin: 0 0 .5em 0;
     font-size: .88em;
+}
+div#place-map-view {
+    position: relative;
+    margin-left: 385px;
+}
+div#place-flickr-view {
+    position: relative;
+    padding: 15px 10px;
+    height: 93px;
+    margin: 15px 0 0 387px;
 }
 
 /* specific text styles */
@@ -138,16 +168,16 @@ span.place {
     cursor: pointer;
     font-weight: bold;
 }
+span.place:hover {
+    color: orange;
+}
 span.place.hi {
     background: yellow;
 }
 
-a:link, a:visited, #book-list li {
+#book-list li {
     color: steelblue;
     cursor: pointer;
-}
-#book-list li {
-    margin-bottom: .5em;
 }
 
 div.book-title-view h2 {
@@ -159,9 +189,6 @@ div.book-title-view h2.on {
 div.book-title-view p {
     margin-top: 0;
 }
-#place-freq-bars-view h3 {
-    margin: 0 0 .5em 0;
-}
 
 /* page control buttons */
 span.control {
@@ -171,6 +198,9 @@ span.control {
 span.control.on {
     color: steelblue;
     cursor: pointer;
+}
+span.control.on:hover {
+    color: orange;
 }
 span#prev, span#page-id {
     margin-right: 15px;
