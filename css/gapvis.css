@@ -157,6 +157,22 @@ div#place-flickr-view {
     height: 93px;
     margin: 15px 0 0 387px;
 }
+div#place-flickr-view h4 {
+    margin: 0 0 5px 0;
+    display: inline-block;
+}
+span.flickr-link {
+    display: none;
+}
+div#place-flickr-view div.photos {
+    width: 100%;
+    height: 75px;
+    overflow: hidden;
+}
+div.flickr-photo {
+    float: left;
+    margin: 0 10px 10px 0;
+}
 
 /* specific text styles */
 header h1 a:link, header h1 a:visited {

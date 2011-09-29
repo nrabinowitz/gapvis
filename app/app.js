@@ -13,6 +13,9 @@
     - instantiating sub-views
     - listening for state changes
     - listening for model changes
+    render:
+    - adjusting the layout of their container boxes
+    - creating their content
     events:
     - listening for ui events, updating state
     ui methods:
