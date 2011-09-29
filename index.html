@@ -69,7 +69,10 @@
                     <div id="related-places-view"></div>
                 </div>
                 <div id="place-map-view" class="panel"></div>
-                <div id="place-flickr-view" class="panel"></div>
+                <div id="place-flickr-view" class="panel">
+                    <h4>Photos from Flickr</h4> <span class="flickr-link">&middot <a href="" target="_blank">View on Flickr &gt;&gt;</a></span>
+                    <div class="photos"></div>
+                </div>
             </div>
 
         </div>
@@ -122,7 +125,9 @@
     <input type="radio" id="nav-reading-<%= cid %>" data-view-id="nav-reading" name="nav-buttons-<%= cid %>" /><label for="nav-reading-<%= cid %>">Reading View</label>
     <input type="radio" id="nav-place-<%= cid %>" data-view-id="nav-place" name="nav-buttons-<%= cid %>" /><label for="nav-place-<%= cid %>">Place Detail</label>
 </span>
-<a class="permalink" href="#">Permalink</a></script>
+<a class="permalink" href="#">Permalink</a></script><script type="text/template" id="flickr-photo-template"><div class="flickr-photo">
+    <a href="<%= link %>" title="<%= title %>" target="_blank"><img src="<%= src %>" alt="<%= title %>"></a>
+</div></script>
 
 </body>
 </html>
