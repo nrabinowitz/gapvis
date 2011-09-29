@@ -17,7 +17,8 @@
                 gv.BookTitleView,
                 gv.PlaceSummaryView,
                 gv.RelatedPlacesView,
-                gv.BookPlaceMapView
+                gv.BookPlaceMapView,
+                gv.BookPlaceFlickrView
             ];
             // bind state
             this.bindState('change:placeid', this.refresh, this);

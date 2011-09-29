@@ -110,13 +110,13 @@
                     });
                     // add marker
                     addMarker(r.place, r.place.get('title') + ': ' + 
-                        r.count + ' coreference' + 
+                        r.count + ' co-reference' + 
                         (r.count > 1 ? 's' : ''));
                 });
             
             });
             
-        },
+        }
     });
     
 }(gv));
