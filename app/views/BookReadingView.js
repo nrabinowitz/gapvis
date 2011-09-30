@@ -16,7 +16,8 @@
                 gv.NavigationView,
                 gv.BookTitleView,
                 gv.PageControlView,
-                gv.TimeMapView
+                gv.TimeMapView,
+                gv.ChangeLinkView
             ];
             // listen for state changes
             state.bind('change:pageid', view.updatePage, view);

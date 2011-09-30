@@ -332,3 +332,14 @@ div.pagenum {
 #page-nav-view div.haspoi {
     background: yellow;
 }
+
+/* edit reference form */
+#change-this-link {
+    position: absolute;
+    display: none;
+}
+#change-this-link button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

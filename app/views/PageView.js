@@ -63,7 +63,8 @@
         // UI Event Handlers - update state
         
         events: {
-            'click .place':    'uiPlaceClick'
+            'click .place':     'uiPlaceClick',
+            'mouseover .place': 'uiShowChangeLink'
         },
         
         uiPlaceClick: function(e) {
@@ -71,6 +72,23 @@
             if (placeId) {
                 state.setSerialized('placeid', placeId);
             }
+        },
+        
+        uiShowChangeLink: function(e) {
+            var $placeSpan = $(e.target),
+                placeId = $placeSpan.attr('data-place-id'),
+                offset = $placeSpan.offset();
+            // set the place to edit in the state
+            state.set({ changingplaceid: placeId });
+            // show the link
+            $('#change-this-link')
+                .width($placeSpan.width() + 45)
+                .height($placeSpan.height() + 10)
+                .css({
+                    top: offset.top - 10,
+                    left: offset.left - 10
+                })
+                .show();
         }
         
     });
