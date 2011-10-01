@@ -16,9 +16,9 @@
                 gv.NavigationView,
                 gv.BookTitleView,
                 gv.PageControlView,
-                gv.TimeMapView,
-                gv.ChangeLinkView
+                gv.TimeMapView
             ];
+            this.changeLink = new gv.ChangeLinkView();
             // listen for state changes
             state.bind('change:pageid', view.updatePage, view);
             // super initialization kicks off model fetch
@@ -28,6 +28,12 @@
         render: function() {
             gv.BookView.prototype.render.call(this);
             this.updatePage();
+        },
+        
+        clear: function() {
+            gv.BookView.prototype.clear.call(this);
+            this.changeLink.clear();
+            $('#page-view').empty();
         },
         
         updatePage: function() {
@@ -66,6 +72,34 @@
                     oldPage && pages.indexOf(oldPage) > pages.indexOf(page)
                 );
             }
+        },
+        
+        // UI events
+        
+        events: {
+            'mouseover #page-view span.place':  'uiShowChangeLink',
+            'mouseleave #page-view span.place': 'uiHideChangeLink'
+        },
+        
+        uiShowChangeLink: function(e) {
+            var $placeSpan = $(e.target),
+                offset = $placeSpan.offset();
+            // set the place to edit in the state
+            state.set({ changelinkid: $placeSpan.attr('data-place-id') });
+            // clear existing timer, if any
+            this.changeLink.clearTimer();
+            // show the link
+            this.changeLink.open(
+                offset.top, 
+                offset.left, 
+                $placeSpan.width(), 
+                $placeSpan.height()
+            );
+        },
+        
+        uiHideChangeLink: function() {
+            // start countdown to close
+            this.changeLink.startTimer();
         }
         
     });

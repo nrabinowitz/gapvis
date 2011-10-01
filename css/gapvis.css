@@ -338,6 +338,12 @@ div.pagenum {
     position: absolute;
     display: none;
 }
+#change-this-hover {
+    position: absolute;
+    z-index: -1000;
+    background: #c00;
+    opacity: .5;
+}
 #change-this-link button {
     position: absolute;
     bottom: 0;
