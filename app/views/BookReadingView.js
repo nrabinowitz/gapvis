@@ -3,7 +3,8 @@
  */
 (function(gv) {
     var View = gv.View,
-        state = gv.state;
+        state = gv.state,
+        _super = gv.BookView.prototype;
     
     // View: BookReadingView (master view for the book reading screen)
     gv.BookReadingView = gv.BookView.extend({
@@ -18,20 +19,25 @@
                 gv.PageControlView,
                 gv.TimeMapView
             ];
-            this.changeLink = new gv.ChangeLinkView();
             // listen for state changes
             state.bind('change:pageid', view.updatePage, view);
             // super initialization kicks off model fetch
-            gv.BookView.prototype.initialize.call(this);
+            _super.initialize.call(this);
         },
         
         render: function() {
-            gv.BookView.prototype.render.call(this);
+            _super.render.call(this);
             this.updatePage();
         },
         
+        updateViews: function() {
+            _super.updateViews.call(this);
+            this.changeLink = new gv.ChangeLinkView({ model: this.model });
+            return this;
+        },
+        
         clear: function() {
-            gv.BookView.prototype.clear.call(this);
+            _super.clear.call(this);
             this.changeLink.clear();
             $('#page-view').empty();
         },

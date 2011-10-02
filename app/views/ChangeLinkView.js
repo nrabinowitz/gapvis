@@ -37,6 +37,14 @@
             this.close();
         },
         
+        // lazy instantiation of form view
+        openForm: function() {
+            if (!this.form) {
+                this.form = new gv.ChangeFormView({ model: this.model });
+            }
+            this.form.open();
+        },
+        
         // UI Event Handlers
         
         events: {
@@ -50,6 +58,7 @@
         },
         
         uiButtonClick: function() {
+            this.openForm();
             this.close();
         },
         
