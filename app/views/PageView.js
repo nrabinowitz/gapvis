@@ -63,7 +63,7 @@
         // UI Event Handlers - update state
         
         events: {
-            'click .place':    'uiPlaceClick'
+            'click .place':     'uiPlaceClick'
         },
         
         uiPlaceClick: function(e) {

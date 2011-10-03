@@ -32,6 +32,22 @@
             });
             // create child views and render
             this.updateViews().render();
+        },
+        
+        // UI Events
+        
+        events: {
+            'click span.change-this':   'uiOpenForm'
+        },
+        
+        uiOpenForm: function() {
+            // set the place to edit in the state
+            state.set({ changelinkid: state.get('placeid') });
+            // instantiate and open form
+            if (!this.form) {
+                this.form = new gv.ChangeFormView({ model: this.model, placeOnly: true });
+            }
+            this.form.open();
         }
         
     });

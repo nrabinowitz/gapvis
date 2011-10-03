@@ -332,3 +332,38 @@ div.pagenum {
 #page-nav-view div.haspoi {
     background: yellow;
 }
+
+/* edit reference form */
+#change-this-link {
+    position: absolute;
+    display: none;
+}
+#change-this-link button {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+#change-this-form {
+    display: none;
+}
+#change-this-form textarea {
+    width: 100%;
+}
+#change-this-form label {
+    display: block;
+    font-weight: bold;
+    margin: .5em 0;
+}
+#change-this-form  span {
+    font-weight: bold;
+    color: steelblue;
+}
+.ui-dialog-titlebar {
+    display:none
+}
+#change-this-form div.msg {
+    color: orange;
+    margin: .5em;
+    font-size: 1.5em;
+    text-align: center;
+}
