@@ -24,8 +24,9 @@
                             // XXX: no success for now?
                         );
                         // hide form and buttons
-                        view.$('form').hide();
-                        $(view.el).siblings('.ui-dialog-buttonpane').hide();
+                        var formEls = view.$('form')
+                            .add($(view.el).siblings('.ui-dialog-buttonpane'));
+                        formEls.hide();
                         // display a message
                         var $msg = $('<div class="msg">Problem submitted - thanks!</div>')
                             .appendTo(view.el);
@@ -33,7 +34,8 @@
                         setTimeout(function() {
                             view.close();
                             $msg.remove();
-                            view.$('form').show()
+                            formEls.show();
+                            view.$('form')
                                 .get(0).reset();
                         }, 2000);
                     },
