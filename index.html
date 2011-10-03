@@ -80,6 +80,26 @@
             GapVis (c) 2011 Nick Rabinowitz / Google Ancient Places Project. <a href="https://github.com/nrabinowitz/gapvis">Code hosted on GitHub</a>
         </footer>
     </div>
+    
+    <div id="change-this-link">
+        <button>Edit this Reference</button>
+    </div>
+    
+    <div id="change-this-form">
+        <p>Is something wrong with this place reference? Let us know, so we can fix it!</p>
+        <p>
+            Reference: <span id="ctf-place-name"></span><span class="pagenum">, 
+            p. <span id="ctf-page-id"></span></span>
+        </p>
+        <form>
+            <label for="ctf-problem">What's wrong here?</label>
+            <div>
+                <textarea id="ctf-problem" name="ctf-problem" rows="5"></textarea>
+            </div>
+            <input type="hidden" name="page-id">
+            <input type="hidden" name="place-id">
+        </form>
+    </div>
 
     <script type="text/template" id="book-summary-text-template"><p>
     The Google Books version of "<%= title %>", by <%= author %>, was published in <%= printed %> by <%= publisher %>. It is <%= pageCount %> pages long and references <%= places.length %> identified ancient places. 
@@ -97,6 +117,7 @@
 <p>
     <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
 </p>
+<div><span class="change-this control on">Report a problem with this record</span></div>
 <h4>External Resources</h4>
 <ul>
     <li><a href="<%= uri %>" target="_blank">Place page on Pleiades</a></li>
