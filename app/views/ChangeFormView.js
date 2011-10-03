@@ -50,16 +50,19 @@
             var placeId = state.get('changelinkid'),
                 pageId = state.get('pageid'),
                 placeName = this.model.places.get(placeId).get('title');
-            // set form values to match state
+            // set form value and span to match state
             this.$('input[name="place-id"]')
                 .val(placeId);
-            this.$('input[name="page-id"]')
-                .val(pageId);
-            // and set the visible spans
             this.$('#ctf-place-name')
                 .html(placeName);
-            this.$('#ctf-page-id')
-                .html(pageId);
+            // set page if appropriate
+            if (!this.options.placeOnly) {
+                this.$('input[name="page-id"]')
+                    .val(pageId);
+                this.$('#ctf-page-id')
+                    .html(pageId);
+            }
+            this.$('span.pagenum').toggle(!this.options.placeOnly);
             // open window
             $(this.el).dialog('open');
         },
