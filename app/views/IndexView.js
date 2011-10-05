@@ -8,15 +8,19 @@
     
     // View: BookListView (item in book index)
     BookListView = View.extend({
-        tagName: 'li',
+        tagName: 'p',
+        
+        initialize: function() {
+            this.template = _.template($('#book-list-template').html());
+        },
         
         render: function() {
-            $(this.el).html(this.model.get('title'));
+            $(this.el).html(this.template(this.model.toJSON()));
             return this;
         },
         
         events: {
-            "click": "uiOpenBook"
+            "click .book-title": "uiOpenBook"
         },
         
         uiOpenBook: function() {
@@ -35,7 +39,17 @@
             books.fetchNew();
         },
         
+        layout: function() {
+            $('#book-list-view, #instructions').height(
+                this.topViewHeight() - 50
+            );
+            $('#instructions').width(
+                this.topViewWidth() - $('#book-list-view').width() - 100
+            );
+        },
+        
         render: function() {
+            this.bindingLayout();
             var $list = this.$("#book-list");
             $list.empty();
             this.model.forEach(function(book) {

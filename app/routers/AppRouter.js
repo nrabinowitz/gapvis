@@ -84,7 +84,8 @@
         
         // the full link, with querystring in state
         getPermalink: function() {
-            return window.location.href + this.getQS();
+            var href = window.location.href.split('?')[0];
+            return href + this.getQS();
         }
 
     });
