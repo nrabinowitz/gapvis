@@ -66,35 +66,45 @@
                 // set bounds
                 gmap.fitBounds(bounds);
                 
-                function addMarker(place, title) {
-                    title = title || place.get('title');
+                function addMarker(place, opts) {
+                    opts = opts || {};
                     var theme = colorScale(place.get('frequency')),
                         w = 18,
                         c = w/2,
-                        icon = TimeMapTheme.getCircleUrl(w, theme.color, '99');
                         size = new gmaps.Size(w, w),
-                        anchor = new gmaps.Point(c, c),
-                        // add marker
-                        marker = new gmaps.Marker({
-                            icon: new gmaps.MarkerImage(
-                                icon,
-                                size,
-                                new gmaps.Point(0,0),
-                                anchor,
-                                size
-                            ),
-                            position: place.gmapLatLng(), 
-                            map: gmap, 
-                            title: title
-                        });
-                    // UI listener
-                    gmaps.event.addListener(marker, 'click', function() {
-                        state.set({ placeid: place.id });
+                        anchor = new gmaps.Point(c, c);
+                        
+                    title = opts.title || place.get('title');
+                    icon = opts.icon || TimeMapTheme.getCircleUrl(w, theme.color, '99');
+                    
+                    // add marker
+                    var marker = new gmaps.Marker({
+                        icon: new gmaps.MarkerImage(
+                            icon,
+                            size,
+                            new gmaps.Point(0,0),
+                            anchor,
+                            size
+                        ),
+                        position: place.gmapLatLng(), 
+                        map: gmap, 
+                        title: title,
+                        clickable: !opts.noclick
                     });
+                    
+                    if (!opts.noclick) {
+                        // UI listener
+                        gmaps.event.addListener(marker, 'click', function() {
+                            state.set({ placeid: place.id });
+                        });
+                    }
                 }
                 
                 // add markers for current place
-                addMarker(place);
+                addMarker(place, { 
+                    icon: 'images/star.png',
+                    noclick: true
+                });
                 
                 // add markers and lines for related places
                 related.forEach(function(r) {
@@ -109,9 +119,11 @@
                         strokeWeight: strokeScale(r.count)
                     });
                     // add marker
-                    addMarker(r.place, r.place.get('title') + ': ' + 
-                        r.count + ' co-reference' + 
-                        (r.count > 1 ? 's' : ''));
+                    addMarker(r.place, {
+                        title: r.place.get('title') + ': ' + 
+                            r.count + ' co-reference' + 
+                            (r.count > 1 ? 's' : '')
+                    });
                 });
             
             });
