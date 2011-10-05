@@ -78,7 +78,8 @@
                     icon = opts.icon || TimeMapTheme.getCircleUrl(w, theme.color, '99');
                     
                     // add marker
-                    var marker = new gmaps.Marker({
+                    var mopts = 
+                        marker = new gmaps.Marker({
                         icon: new gmaps.MarkerImage(
                             icon,
                             size,
@@ -89,7 +90,8 @@
                         position: place.gmapLatLng(), 
                         map: gmap, 
                         title: title,
-                        clickable: !opts.noclick
+                        clickable: !opts.noclick,
+                        zIndex: opts.zIndex
                     });
                     
                     if (!opts.noclick) {
@@ -103,7 +105,8 @@
                 // add markers for current place
                 addMarker(place, { 
                     icon: 'images/star.png',
-                    noclick: true
+                    noclick: true,
+                    zIndex: 1000
                 });
                 
                 // add markers and lines for related places

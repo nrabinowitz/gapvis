@@ -41,6 +41,8 @@
                             photo.src = photo.media.m.replace('_m.jpg', '_s.jpg');
                             view.$('div.photos').append(view.template(photo))
                         });
+                    } else {
+                        view.$('div.photos').append('<p>No photos were found.</p>');
                     }
                 }
             });
