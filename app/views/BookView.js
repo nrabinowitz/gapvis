@@ -51,13 +51,13 @@
             this.$('div.book-title-view').empty();
         },
         
-        open: function() {
-            $(this.el).show('slide', {direction: 'right' }, 500);
+        open: function(fromRight) {
+            $(this.el).show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
             this.updateBook();
         },
         
-        close: function() {
-            $(this.el).hide('slide', {direction: 'right' }, 500);
+        close: function(fromRight) {
+            $(this.el).hide('slide', {direction: (fromRight ? 'left' : 'right') }, 500);
         },
         
         // Model update functions

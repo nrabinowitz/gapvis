@@ -58,8 +58,12 @@
             })
         },
         
-        open: function() {
-            $(this.el).show();
+        open: function(fromRight) {
+            $(this.el).show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
+        },
+        
+        close: function(fromRight) {
+            $(this.el).hide('slide', {direction: (fromRight ? 'left' : 'right') }, 500);
         }
     });
     
