@@ -125,12 +125,12 @@
     </div>
 
     <script type="text/template" id="book-summary-text-template"><p>
-    The Google Books version of "<%= title %>", by <%= author %>, was published in <%= printed %> by <%= publisher %>. It is <%= pageCount %> pages long and references <%= places.length %> identified ancient places. 
+    The Google Books version of "<%= title %>", by <%= author %>, was published in <%= printed %>. It is <%= pageCount %> pages long and references <%= places.length %> identified ancient places. 
     
     The place most frequently referenced is <span class="place" data-place-id="<%= topPlaces[0].id %>"><%= topPlaces[0].title %></span>, followed by <span class="place" data-place-id="<%= topPlaces[1].id %>"><%= topPlaces[1].title %></span>, <span class="place" data-place-id="<%= topPlaces[2].id %>"><%= topPlaces[2].title %></span>, and <span class="place" data-place-id="<%= topPlaces[3].id %>"><%= topPlaces[3].title %></span>.
 </p>
 <p><button class="goto-reading">Go to Reading View</button></p></script><script type="text/template" id="page-template"><div class="text"><%= text %></div>
-<div class="img"><img src="<%= image %>"></div></script><script type="text/template" id="book-title-template"><h2 class="book-title"><%= title %></h2>
+<div class="img"><% if (image) { %><img src="<%= image %>"><% } else { %>(No image available)<% } %></div></script><script type="text/template" id="book-title-template"><h2 class="book-title"><%= title %></h2>
 <p><em>By <%= author %></em></p>
 <p>
     Published <%= printed %>, <%= pages.length %> pages &middot;
