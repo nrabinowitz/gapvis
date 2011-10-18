@@ -28,7 +28,7 @@
     gv.PageList = Collection.extend({
         model: Page,
         url: function() {
-            return API_ROOT +  '/book/' + this.book.id + '/page';
+            return API_ROOT +  '/books/' + this.book.id + '/page';
         }
     });
     
