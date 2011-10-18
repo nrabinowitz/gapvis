@@ -14,7 +14,7 @@
         },
         
         url: function() {
-            return API_ROOT + '/book/' + this.id + '/full.json';
+            return API_ROOT + '/books/' + this.id + '.json';
         },
         
         initialize: function() {
@@ -190,7 +190,7 @@
     // Collection: BookList
     gv.BookList = Collection.extend({
         model: Book,
-        url: API_ROOT +  '/books.json',
+        url: API_ROOT +  '/books/.json',
         comparator: function(book) { return book.get('title') }
     });
     

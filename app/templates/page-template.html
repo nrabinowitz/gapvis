@@ -1,2 +1,2 @@
 <div class="text"><%= text %></div>
-<div class="img"><img src="<%= image %>"></div>
+<div class="img"><% if (image) { %><img src="<%= image %>"><% } else { %>(No image available)<% } %></div>

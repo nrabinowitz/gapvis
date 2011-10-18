@@ -62,7 +62,7 @@
     // Collection: PlaceList
     gv.PlaceList = Collection.extend({
         model: Place,
-        url: API_ROOT + '/place',
+        url: API_ROOT + '/places',
         comparator: function(place) {
             return -place.get('frequency')
         }

@@ -49,7 +49,7 @@
         
     // add settings to namespace
     gv.settings = {
-        API_ROOT: 'stub_api',
+        API_ROOT: 'http://gap.alexandriaarchive.org', //'stub_api',
         
         // google maps style settings
         mapStyle: mapStyle,
