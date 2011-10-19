@@ -19,9 +19,12 @@
                     Submit: function() {
                         // post to the server
                         $.post(
-                            gv.settings.API_ROOT + '/report_issue',
-                            view.$('form').serializeArray()
-                            // XXX: no success for now?
+                            gv.settings.REPORT_URL,
+                            view.$('form').serializeArray(),
+                            function(data) {
+                                // no response checking for now
+                                // console.log(data);
+                            }
                         );
                         // hide form and buttons
                         var formEls = view.$('form')
