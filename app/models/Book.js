@@ -31,11 +31,13 @@
         initCollections: function() {
             var places = this.places,
                 pages = this.pages;
-            places.reset(this.get('places'));
-            pages.reset(this.get('pages'));
+            places.reset(this.get('places').map(Model.stringifyId));
+            pages.reset(this.get('pages').map(Model.stringifyId));
             // calculate frequencies
             pages.each(function(page) {
-                page.get('places').forEach(function(placeId) {
+                var pplaces = page.get('places').map(String);
+                page.set({ places: pplaces });
+                pplaces.forEach(function(placeId) {
                     var place = places.get(placeId),
                         freq = place.get('frequency');
                     place.set({ frequency: freq+1 })
