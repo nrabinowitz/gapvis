@@ -73,4 +73,14 @@
         
     });
     
+    // change Backbone.sync to use JSONP
+    var defaultSync = Backbone.sync;
+    Backbone.sync = function(method, model, options) {
+        options = _.extend({
+            dataType: 'jsonp',
+            cache: true
+        }, options);
+        defaultSync(method, model, options);
+    }
+    
 }(gv));
