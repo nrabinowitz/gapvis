@@ -19,9 +19,6 @@
         save: $.noop,
         destroy: $.noop,
         
-        // enforce string ids
-        parse: stringifyId,
-        
         isFullyLoaded: function() {
             // override in subclasses
             return true;

@@ -27,17 +27,6 @@
             pages.book = book;
         },
         
-        parse: function(data) {
-            data = Model.stringifyId(data);
-            data.places.forEach(Model.stringifyId);
-            data.pages.forEach(function(page) {
-                Model.stringifyId(page);
-                page.places = page.places.map(String);
-            });
-            console.log(data);
-            return data;
-        },
-        
         // reset collections with current data
         initCollections: function() {
             var places = this.places,

@@ -53,6 +53,9 @@
     state = gv.state = new State();
     
     // add parameters
+    state.addParam('bookid', parseInt);
+    state.addParam('pageid', parseInt);
+    state.addParam('placeid', parseInt);
     state.addParam('mapzoom', parseInt);
     state.addParam('mapcenter', tmParams.center.fromString, tmParams.center.toString);
     
