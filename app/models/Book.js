@@ -27,17 +27,25 @@
             pages.book = book;
         },
         
+        parse: function(data) {
+            data = Model.stringifyId(data);
+            data.places.forEach(Model.stringifyId);
+            data.pages.forEach(function(page) {
+                Model.stringifyId(page);
+                page.places.map(String);
+            });
+            return data;
+        },
+        
         // reset collections with current data
         initCollections: function() {
             var places = this.places,
                 pages = this.pages;
-            places.reset(this.get('places').map(Model.stringifyId));
-            pages.reset(this.get('pages').map(Model.stringifyId));
+            places.reset(this.get('places'));
+            pages.reset(this.get('pages'));
             // calculate frequencies
             pages.each(function(page) {
-                var pplaces = page.get('places').map(String);
-                page.set({ places: pplaces });
-                pplaces.forEach(function(placeId) {
+                page.get('places').forEach(function(placeId) {
                     var place = places.get(placeId),
                         freq = place.get('frequency');
                     place.set({ frequency: freq+1 })
