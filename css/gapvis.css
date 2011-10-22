@@ -35,6 +35,10 @@ header {
 }
 header h1 {
     margin: 0;
+    float: left;
+}
+header button {
+    margin: .5em 1.5em;
 }
 footer {
     position: absolute;
