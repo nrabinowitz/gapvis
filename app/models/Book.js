@@ -32,8 +32,9 @@
             data.places.forEach(Model.stringifyId);
             data.pages.forEach(function(page) {
                 Model.stringifyId(page);
-                page.places.map(String);
+                page.places = page.places.map(String);
             });
+            console.log(data);
             return data;
         },
         
