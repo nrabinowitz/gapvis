@@ -29,7 +29,7 @@
             // render
             $('#prev').toggleClass('on', !!this.prev);
             $('#next').toggleClass('on', !!this.next);
-            $('#page-id').html(pageId);
+            $('#page-id').val(pageId);
         },
         
         renderPageView: function() {
@@ -51,7 +51,8 @@
             'click #next.on':       'uiNext',
             'click #prev.on':       'uiPrev',
             'click #showimg.on':    'uiShowImage',
-            'click #showtext.on':   'uiShowText'
+            'click #showtext.on':   'uiShowText',
+            'change #page-id':      'uiJumpToPage'
         },
         
         uiNext: function() {
@@ -68,6 +69,19 @@
         
         uiShowText: function() {
             state.set({ pageview:'text' })
+        },
+        
+        uiJumpToPage: function(e) {
+            var pageId = $(e.target).val();
+            if (pageId && this.model.pages.get(pageId)) {
+                // valid pageId
+                state.set({ scrolljump: true });
+                state.setSerialized('pageid', pageId)
+            } else {
+                // not valid
+                this.renderNextPrev();
+                // XXX: error message?
+            }
         }
     });
     

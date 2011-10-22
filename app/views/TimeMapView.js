@@ -237,8 +237,10 @@
         // UI update functions
         
         updateTimeline: function() {
-            var view = this;
-            view.scrollTo(state.get('pageid') || view.model.firstId(), true);
+            var view = this,
+                animate = !(state.get('scrolljump'));
+            view.scrollTo(state.get('pageid') || view.model.firstId(), animate);
+            state.unset('scrolljump');
         },
         
         updateMapZoom: function() {
@@ -297,7 +299,7 @@
         // go to a specific page
         scrollTo: function(pageId, animate) {
             var view = this,
-                d = this.labelUtils.labelToDate(pageId);
+                d = view.labelUtils.labelToDate(pageId);
             // stop anything that's running
             if (view.animation) {
                 view.animation.stop();

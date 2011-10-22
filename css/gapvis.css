@@ -239,8 +239,12 @@ span.control.on {
 span.control.on:hover {
     color: orange;
 }
-span#prev, span#page-id {
-    margin-right: 15px;
+#page-id {
+    width: 3.5em;
+    text-align: center;
+    font-family: Georgia, Garamond, serif;
+    border: 0;
+    background: transparent;
 }
 div#nextprev{
     float: right;
