@@ -14,8 +14,14 @@
     
     // View: AppView (master view)
     gv.AppView = View.extend({
+        el: 'body',
     
         initialize: function() {
+            // make home button
+            $('#goto-home').button({
+                icons: { primary: "ui-icon-home" },
+                text: false
+            });
             // listen for state changes
             state.bind('change:topview', this.updateView, this);
             state.bind('change:bookid', function() {
@@ -65,6 +71,14 @@
                 this.currentView = view;
                 view.open(fromRight);
             }
+        },
+        
+        events: {
+            'click #goto-home': 'uiGoToHome'
+        },
+        
+        uiGoToHome: function() {
+            state.set({ topview: gv.IndexView });
         }
     
     });
