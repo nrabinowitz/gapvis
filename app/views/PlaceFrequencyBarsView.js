@@ -68,6 +68,7 @@
                     if ($(target).is('rect')) {
                         var pageId = pages.at(~~((pages.length * data.idx)/buckets)).id;
                         state.set({
+                            // scrolljump: true,
                             placeid: pdata.id,
                             pageid: pageId,
                             topview: gv.BookReadingView

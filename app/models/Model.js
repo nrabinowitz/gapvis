@@ -2,6 +2,11 @@
  * Core setup for models
  */
 (function(gv) {
+    function stringifyId(item) {
+        item.id = String(item.id);
+        return item;
+    }
+
     // set up default model
     gv.Model = Backbone.Model.extend({
     
@@ -42,6 +47,8 @@
         }
         
     });
+    // add static utility
+    gv.Model.stringifyId = stringifyId;
         
     gv.Collection = Backbone.Collection.extend({
     

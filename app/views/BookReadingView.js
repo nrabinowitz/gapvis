@@ -48,11 +48,7 @@
                 pages = book.pages,
                 pageId = state.get('pageid'),
                 oldPage;
-            // we're still loading, come back later
-            if (!pages.length) {
-                pages.bind('reset', view.openPage, view);
-                return;
-            }
+                
             // get the relevant page
             var page = pageId && pages.get(pageId) || 
                 pages.first();

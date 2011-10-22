@@ -10,6 +10,9 @@
         defaults: {
             pageview: 'text'
         },
+        initialize: function() {
+            this.params = {};
+        },
         // (de)serialization functions
         deserialize: function(key, value) {
             var params = this.params,
@@ -36,24 +39,24 @@
                 .forEach(function(k) {
                     s.unset(k, opts)
                 });
+        },
+        // add de/serializable state parameters
+        addParam: function(key, deserialize, serialize) {
+            this.params[key] = {
+                deserialize: deserialize || _.identity,
+                serialize: serialize || _.identity
+            }
         }
     });
     
     // initialize the singleton
     state = gv.state = new State();
     
-    // factory for de/serializable state parameters
-    function param(deserialize, serialize) {
-        return {
-            deserialize: deserialize || _.identity,
-            serialize: serialize || _.identity
-        };
-    };
-    
     // add parameters
-    state.params = {
-        mapzoom: param(parseInt),
-        mapcenter: param(tmParams.center.fromString, tmParams.center.toString)
-    };
+    state.addParam('bookid', parseInt);
+    state.addParam('pageid', parseInt);
+    state.addParam('placeid', parseInt);
+    state.addParam('mapzoom', parseInt);
+    state.addParam('mapcenter', tmParams.center.fromString, tmParams.center.toString);
     
 }(gv));
