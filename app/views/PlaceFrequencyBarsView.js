@@ -58,7 +58,7 @@
             // create svg container
             var svg = d3.select(this.el)
               .append('svg:svg')
-                .style('height', (bh + spacing) * places.length + (singlePlace ? 0 : 10))
+                .attr('height', (bh + spacing) * places.length + (singlePlace ? 0 : 10))
                 // delegated handler: click
                 .on('click', function() {
                     var target = d3.event.target,
