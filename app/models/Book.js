@@ -89,7 +89,7 @@
                 endIndex = endId ? pages.indexOf(pages.get(endId)) : pages.length - 1;
             pages.models.slice(startIndex, endIndex)
                 .forEach(function(page) {
-                    var places = page.get('places');
+                    var places = _.uniq(page.get('places'));
                     places.forEach(function(placeId) {
                         var place = book.places.get(placeId),
                             ll = place.get('ll');
