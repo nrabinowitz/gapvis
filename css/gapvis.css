@@ -37,6 +37,12 @@ header h1 {
     margin: 0;
     float: left;
 }
+header h1 span.beta {
+    font-style: normal;
+    font-weight: normal;
+    font-size: .5em;
+    color: #999;
+}
 header button {
     margin: .5em 1.5em;
 }
@@ -247,8 +253,6 @@ span.control.on:hover {
     width: 3.5em;
     text-align: center;
     font-family: Georgia, Garamond, serif;
-    border: 0;
-    background: transparent;
 }
 div#nextprev{
     float: right;
