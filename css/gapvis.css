@@ -90,7 +90,7 @@ div.panel {
     font-style: italic;
 }
 #instructions {
-    margin-left: 45%;
+    float: left;
     width: 45%;
     overflow: auto;
     padding: 0 2em 1em 2em;
