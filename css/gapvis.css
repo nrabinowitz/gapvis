@@ -53,13 +53,16 @@ footer {
     font-size: .8em;
     color: #999;
 }
+footer a:link, footer a:visited {
+    color: #999;
+}
 
 /* top view */
 div.topview {
     position: absolute;
     background: #eee;
     top: 50px;
-    bottom: 30px;
+    bottom: 35px;
     right: 20px;
     left: 20px;
     padding: 15px;
