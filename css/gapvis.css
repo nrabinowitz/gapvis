@@ -43,8 +43,9 @@ header h1 span.beta {
     font-size: .5em;
     color: #999;
 }
-header button {
-    margin: .5em 1.5em;
+header nav {
+    margin: .95em 2em;
+    float: left;
 }
 footer {
     position: absolute;
@@ -211,6 +212,17 @@ div#place-flickr-view div.photos {
 div.flickr-photo {
     float: left;
     margin: 0 10px 10px 0;
+}
+
+/* About Us page */
+#about-us-view {
+    display: block;
+}
+#about-us-view div.content {
+    padding: 1em 2em 2em 2em;
+    height: 85%;
+    overflow: auto;
+    max-width: 600px;
 }
 
 /* specific text styles */
