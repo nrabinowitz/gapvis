@@ -15,7 +15,7 @@
         },
 
         routes: {
-            "book/:bookid":     "summary",
+            "book/:bookid":     "summary"
         },
         
         summary: function(bookId) {

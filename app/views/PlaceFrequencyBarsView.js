@@ -3,10 +3,11 @@
  */
 (function(gv) {
     var View = gv.View,
-        state = gv.state;
+        state = gv.state,
+        PlaceFrequencyBarsView;
     
     // View: BookTitleView (title and metadata)
-    gv.PlaceFrequencyBarsView = View.extend({
+    PlaceFrequencyBarsView = View.extend({
         el: '#place-freq-bars-view',
         
         settings: {
@@ -223,5 +224,17 @@
         }
         
     });
+    
+    // no d3 option
+    if (window.nod3) {
+        PlaceFrequencyBarsView = PlaceFrequencyBarsView.extend({
+            render: function() {
+                // if (!!this.options.place) this.bindingLayout();
+            },
+            updateHighlight: $.noop
+        });
+    }
+    
+    gv.PlaceFrequencyBarsView = PlaceFrequencyBarsView;
     
 }(gv));
