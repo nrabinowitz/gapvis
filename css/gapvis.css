@@ -251,6 +251,10 @@ div.book-title-view h2.on {
 div.book-title-view p {
     margin-top: 0;
 }
+p.warning {
+    font-weight: bold;
+    color: #c00;
+}
 
 /* page control buttons */
 span.control {

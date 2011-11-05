@@ -16,7 +16,7 @@
         },
 
         routes: {
-            "book/:bookid/place/:placeid":     "summary",
+            "book/:bookid/place/:placeid":     "summary"
         },
         
         summary: function(bookId, placeId) {

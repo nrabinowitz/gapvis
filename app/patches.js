@@ -24,5 +24,8 @@
         return roughly(this.lat) == roughly(otherPoint.lat) 
             && roughly(this.lon)== roughly(otherPoint.lon);
     };
+    
+    // d3 won't load in older IE versions
+    if (!window.d3) window.d3 = {};
 
 }(this));

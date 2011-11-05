@@ -191,7 +191,15 @@
     gv.BookList = Collection.extend({
         model: Book,
         url: API_ROOT +  '/books/.json',
-        comparator: function(book) { return book.get('title') }
+        comparator: function(book) {
+            // try for author last name
+            var author = book.get('author')
+                .toLowerCase()
+                .split(/[,(]/)[0]
+                .split(/\s+/)
+                .pop();
+            return author +  book.get('title').toLowerCase(); 
+        }
     });
     
 }(gv));

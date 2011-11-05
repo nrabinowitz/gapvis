@@ -75,7 +75,7 @@
             var book = this.model,
                 pageId = state.get('pageid'),
                 placeId = state.get('placeid'),
-                prev = this.prev = book.prevPlaceRef(pageId, placeId);
+                prev = this.prev = book.prevPlaceRef(pageId, placeId),
                 next = this.next = book.nextPlaceRef(pageId, placeId);
             this.$('.prev').toggleClass('on', !!prev);
             this.$('.next').toggleClass('on', !!next);
