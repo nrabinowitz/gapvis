@@ -14,7 +14,12 @@
         
         // update the url based on the current state
         updateRoute: function() {
-            this.navigate(this.getRoute());
+            var route = this.getRoute();
+            // ping analytics if available
+            if (window._gaq) {
+                _gaq.push(['_trackPageview', location.pathname + '#' + route]);
+            }
+            this.navigate(route);
         },
         
         // update the url if this router's view is the top view
