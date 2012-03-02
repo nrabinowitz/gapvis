@@ -25,7 +25,7 @@
         book: function(bookId, pageId, placeId) {
             // update parameters
             state.setSerialized('bookid', bookId);
-            state.setSerialized('pageid', pageId);
+            state.setSerialized('pageid', pageId || '');
             state.setSerialized('placeid', placeId);
             // update view
             state.set({ topview: BookReadingView });
