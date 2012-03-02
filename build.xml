@@ -48,6 +48,7 @@
                      build-js-production, 
                      build-css-production,
                      build-templates,
+                     build-analytics,
                      finish-build"/>
             
     <!-- Shared Targets -->
@@ -171,6 +172,16 @@
         </for>
         <!-- Clean up placeholder -->
         <replace file="${index.build}" token="${placeholder.css}" value=""/>
+    </target>
+    
+    <target name="build-analytics">
+        <echo>Inserting Google Analytics code</echo>
+        <!-- Get file contents and name -->
+        <loadfile property="template.contents" srcFile="analytics.html"/>
+        <!-- insert at placeholder -->
+        <replace file="${index.build}" 
+            token="${placeholder.analytics}"
+            value="${template.contents}"/>
     </target>
     
     <!-- Deploy to GitHub Pages -->
