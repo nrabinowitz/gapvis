@@ -32,7 +32,11 @@
             var places = this.places,
                 pages = this.pages;
             places.reset(this.get('places'));
-            pages.reset(this.get('pages'));
+            // convert page ids to strings
+            pages.reset(this.get('pages').map(function(p) {
+                p.id = String(p.id);
+                return p;
+            }));
             // calculate frequencies
             pages.each(function(page) {
                 page.get('places').forEach(function(placeId) {
