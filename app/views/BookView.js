@@ -52,6 +52,7 @@
         },
         
         open: function(fromRight) {
+            $(this.el).addClass('loading');
             $(this.el).show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
             this.updateBook();
         },
@@ -78,8 +79,11 @@
                         view.clear();
                     }
                     // create child views and render
+                    $(view.el).removeClass('loading');
                     view.updateViews().render();
                 });
+            } else {
+                $(view.el).removeClass('loading');
             }
         }
         

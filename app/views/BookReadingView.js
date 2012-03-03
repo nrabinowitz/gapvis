@@ -60,8 +60,10 @@
             }
             // make a new page view if necessary
             if (!page.view) {
+                $('#page-view').addClass('loading');
                 page.bind('change', function() {
                     $('#page-view').append(page.view.render().el);
+                    $('#page-view').removeClass('loading');
                     view.updatePage();
                 });
                 new gv.PageView({ model: page });

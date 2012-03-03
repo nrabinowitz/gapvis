@@ -72,6 +72,14 @@ div.topview {
     border-radius: 15px;
     overflow: hidden;
 }
+div.loading {
+    background-image: url(../images/blue-loading.gif);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+div.topview.loading  * {
+    display: none;
+}
 div.navigation-view {
     float: right;
     width: 410px;
@@ -79,7 +87,7 @@ div.navigation-view {
     text-align: right;
 }
 div.panel {
-    background: #FFF;
+    background-color: #FFF;
     border: 1px solid #CCC;
 }
 

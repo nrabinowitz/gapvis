@@ -39,7 +39,11 @@
             }
             // get the place
             place = book.places.get(placeId);
+            if (!place.isFullyLoaded()) {
+                $('#place-summary-container').addClass('loading');
+            }
             place.ready(function() {
+                $('#place-summary-container').removeClass('loading');
                 // create content
                 $(view.el).html(view.template(place.toJSON()));
                 // add frequency bars

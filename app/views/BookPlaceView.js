@@ -3,10 +3,11 @@
  */
 (function(gv) {
     var View = gv.View,
+        BookView = gv.BookView,
         state = gv.state;
     
     // View: BookPlaceView (master view for the book place detail screen)
-    gv.BookPlaceView = gv.BookView.extend({
+    gv.BookPlaceView = BookView.extend({
         el: '#book-place-view',
         
         initialize: function(opts) {
@@ -23,7 +24,7 @@
             // bind state
             this.bindState('change:placeid', this.refresh, this);
             // super initialization kicks off model fetch
-            gv.BookView.prototype.initialize.call(this);
+            BookView.prototype.initialize.call(this);
         },
         
         refresh: function() {
