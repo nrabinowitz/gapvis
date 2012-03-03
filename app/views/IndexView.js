@@ -49,7 +49,11 @@
         },
         
         render: function() {
+            // size the index panel
             this.bindingLayout();
+            // remove the loading image
+            $('#book-list-view').removeClass('loading');
+            // make the book list
             var $list = this.$("#book-list");
             $list.empty();
             this.model.forEach(function(book) {
