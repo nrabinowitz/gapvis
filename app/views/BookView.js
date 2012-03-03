@@ -52,8 +52,10 @@
         },
         
         open: function(fromRight) {
-            $(this.el).addClass('loading');
-            $(this.el).show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
+            $(this.el)
+                .addClass('loading')
+                .height(this.topViewHeight())
+                .show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
             this.updateBook();
         },
         

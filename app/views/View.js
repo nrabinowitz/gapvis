@@ -82,7 +82,7 @@
         },
         // top view size
         topViewHeight: function() {
-            return $(window).height() - 110;
+            return $(window).height() - 115;
         },
         topViewWidth: function() {
             return $(window).width() - 70;

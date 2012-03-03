@@ -63,7 +63,9 @@
         },
         
         open: function(fromRight) {
-            $(this.el).show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
+            $(this.el)
+                .height(this.topViewHeight())
+                .show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
         },
         
         close: function(fromRight) {
