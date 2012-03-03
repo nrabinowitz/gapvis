@@ -51,6 +51,14 @@
                      build-analytics,
                      finish-build"/>
             
+    <target name="deploy"
+            depends="build-production,
+                     deploy-alexandria,
+                     clean-production-build">
+        <!-- and switch back to dev state -->
+        <ant target="build-dev"/>
+    </target>
+            
     <!-- Shared Targets -->
     <target name="start-build">
         <mkdir dir="${build.dir}"/>
@@ -119,7 +127,7 @@
         <!-- Add compressed libs -->
         <for list="${js.lib.min}" param="file" trim="true">
             <sequential>
-                <echo>Adding @{file} to ${js.concat.file}</echo>
+                <echo>Adding @{file} to ${js.concat.build}</echo>
                 <!-- add to file -->
                 <concat destfile="${js.concat.build}" append="yes">
                     <fileset file="@{file}"/>
@@ -184,8 +192,34 @@
             value="${template.contents}"/>
     </target>
     
+    <target name="clean-production-build">
+        <delete file="${index.target}"/>
+        <delete file="${js.concat.target}"/>
+    </target>
+    
+    <target name="deploy-alexandria">
+        <property file="build.secret.properties" />
+        <echo>Deploying to ${alexandria.server}</echo>
+        <ftp server="${alexandria.server}"
+                remotedir="${alexandria.path}"
+                userid="${alexandria.username}"
+                password="${alexandria.password}"
+                depends="yes">
+            <fileset dir="${target.dir}">
+                <include name="css/**"/>
+                <include name="images/**"/>
+                <include name="lib/**"/>
+                <include name="${index.target}"/>
+                <include name="${js.concat}"/>
+                <include name="about.html"/>
+                <include name="LICENSE.txt"/>
+            </fileset>
+        </ftp>
+    </target>
+    
     <!-- Deploy to GitHub Pages -->
-    <target name="deploy">
+    <!-- (This is deprecated - we're pushing to gap.alexandriaarchive.org now) -->
+    <target name="deploy-github">
         <!-- Checkout pages branch -->
         <git command="checkout">
             <args>
