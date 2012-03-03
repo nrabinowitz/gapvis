@@ -24,23 +24,25 @@
             return true;
         },
         
-        // callback for actions to take when fully loaded
-        onReady: $.noop,
-        
         // support for common pattern
         ready: function(loadCallback, immediateCallback) {
             var model = this,
                 immediateCallback = immediateCallback || loadCallback;
             if (!model.isFullyLoaded()) {
-                model.fetch({ 
-                    success: function() {
-                        model.onReady();
-                        loadCallback();
-                    },
-                    error: function() {
-                        console.log('Error fetching model with id ' + model.id)
-                    }
-                });
+                model.bind('ready', loadCallback);
+                // fetch model, avoiding multiple simultaneous calls
+                if (!model._fetching) {
+                    model._fetching = true;
+                    model.fetch({ 
+                        success: function() {
+                            model.trigger('ready');
+                            model._fetching = false;
+                        },
+                        error: function() {
+                            console.log('Error fetching model with id ' + model.id)
+                        }
+                    });
+                }
             } else {
                 immediateCallback();
             }
