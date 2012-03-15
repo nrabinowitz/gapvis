@@ -23,6 +23,8 @@
                 // I think this is an app-level concern
                 state.clearBookState(true);
             });
+            // init message view
+            new gv.MessageView();
         },
         
         cached: function(cls) {

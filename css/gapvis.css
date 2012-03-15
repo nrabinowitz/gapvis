@@ -428,3 +428,21 @@ div.pagenum {
     font-size: 1.5em;
     text-align: center;
 }
+
+/* message view */
+#message-view {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+#message-text {
+    display: inline-block;
+    background: #FAE896;
+    border: 1px solid #F0C36D;
+    padding: .3em 1em;
+    margin-top: .3em;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
