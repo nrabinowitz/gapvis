@@ -10,7 +10,13 @@
         el: '#change-this-form',
         
         initialize: function() {
-            var view = this;
+            var view = this,
+                showSuccess = function() {
+                    state.set({ message: "Your feedback was submitted. Thanks!" });
+                },
+                showError = function() {
+                    state.set({ message: "Something went wrong, and we couldn't submit your feedback. Sorry!" });
+                };
             // init the dialog, but don't open
             $(view.el).dialog({
                 autoOpen: false,
@@ -18,29 +24,19 @@
                 buttons: {
                     Submit: function() {
                         // post to the server
-                        $.post(
-                            gv.settings.REPORT_URL,
-                            view.$('form').serializeArray(),
-                            function(data) {
-                                // no response checking for now
-                                // console.log(data);
-                            }
-                        );
-                        // hide form and buttons
-                        var formEls = view.$('form')
-                            .add($(view.el).siblings('.ui-dialog-buttonpane'));
-                        formEls.hide();
-                        // display a message
-                        var $msg = $('<div class="msg">Problem submitted - thanks!</div>')
-                            .appendTo(view.el);
-                        // and close out in a second or two
-                        setTimeout(function() {
-                            view.close();
-                            $msg.remove();
-                            formEls.show();
-                            view.$('form')
-                                .get(0).reset();
-                        }, 2000);
+                        $.ajax({
+                            type: 'POST',
+                            url: gv.settings.REPORT_URL,
+                            data: view.$('form').serializeArray(),
+                            success: function(data) {
+                                if (data && data.success) showSuccess(); 
+                                else showError();
+                            },
+                            error: showError,
+                            dataType: 'json'
+                        });
+                        // close out
+                        view.close();
                     },
                     Cancel: function() {
                         view.close();
@@ -72,6 +68,7 @@
         
         close: function() {
             $(this.el).dialog('close');
+            this.$('form').get(0).reset();
         }
      
     });
