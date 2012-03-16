@@ -90,7 +90,7 @@
     var defaultSync = Backbone.sync;
     Backbone.sync = function(method, model, options) {
         options = _.extend({
-            dataType: 'jsonp',
+            dataType: gv.settings.API_DATA_TYPE,
             cache: true
         }, options);
         defaultSync(method, model, options);
