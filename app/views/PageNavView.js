@@ -12,15 +12,15 @@
         
         initialize: function() {
             // listen for state changes
-            state.bind('change:pageid', this.renderCurrentPage, this);
-            state.bind('change:placeid', this.renderSelectedPlace, this);
+            state.on('change:pageid', this.renderCurrentPage, this);
+            state.on('change:placeid', this.renderSelectedPlace, this);
         },
         
         render: function() {
             var book = this.model;
             // we're still loading, come back later
             if (!book.pages.length) {
-                book.pages.bind('reset', this.render, this);
+                book.pages.on('reset', this.render, this);
                 return;
             }
             

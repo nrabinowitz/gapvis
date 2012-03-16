@@ -18,8 +18,8 @@
     
         initialize: function() {
             // listen for state changes
-            state.bind('change:topview', this.updateView, this);
-            state.bind('change:bookid', function() {
+            state.on('change:topview', this.updateView, this);
+            state.on('change:bookid', function() {
                 // I think this is an app-level concern
                 state.clearBookState(true);
             });

@@ -11,7 +11,7 @@
         initialize: function(opts) {
             var view = this;
             // listen for state changes
-            state.bind('change:bookid', function() {
+            state.on('change:bookid', function() {
                 if (view.$el.is(':visible')) {
                     view.updateBook();
                 }

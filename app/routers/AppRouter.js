@@ -27,7 +27,7 @@
                 return parts[0];
             };
             // listen for state changes
-            state.bind('change:topview', this.updateRoute, this);
+            state.on('change:topview', this.updateRoute, this);
         },
         
         // get the router for the current top view

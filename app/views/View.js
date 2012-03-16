@@ -19,12 +19,12 @@
             if (!this._stateHandlers) {
                 this._stateHandlers = [];
             }
-            state.bind(event, handler, context);
+            state.on(event, handler, context);
             this._stateHandlers.push({ event: event, handler: handler });
         },
         unbindState: function() {
             (this._stateHandlers || []).forEach(function(h) {
-                state.unbind(h.event, h.handler);
+                state.off(h.event, h.handler);
             });
         },
         // unbind UI event handlers
@@ -70,7 +70,7 @@
         },
         unbindResize: function() {
             (this._resizeHandlers || []).forEach(function(h) {
-                $(window).unbind('resize', h);
+                $(window).off('resize', h);
             });
         },
         // override in subclasses

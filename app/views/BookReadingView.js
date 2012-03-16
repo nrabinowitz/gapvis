@@ -20,7 +20,7 @@
                 gv.TimeMapView
             ];
             // listen for state changes
-            state.bind('change:pageid', view.updatePage, view);
+            state.on('change:pageid', view.updatePage, view);
             // super initialization kicks off model fetch
             _super.initialize.call(this);
         },
@@ -61,7 +61,7 @@
             // make a new page view if necessary
             if (!page.view) {
                 $('#page-view').addClass('loading');
-                page.bind('change', function() {
+                page.on('change', function() {
                     $('#page-view').append(page.view.render().el);
                     $('#page-view').removeClass('loading');
                     view.updatePage();

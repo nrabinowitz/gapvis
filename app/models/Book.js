@@ -25,7 +25,7 @@
             // set backreferences
             places.book = book;
             pages.book = book;
-            book.bind('ready', book.initCollections, book);
+            book.on('ready', book.initCollections, book);
         },
         
         // reset collections with current data

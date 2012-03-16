@@ -11,7 +11,7 @@
         
         initialize: function(opts) {
             // listen for state changes
-            state.bind('change:message', this.showMessage, this);
+            state.on('change:message', this.showMessage, this);
         },
         
         showMessage: function() {

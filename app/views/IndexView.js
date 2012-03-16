@@ -35,7 +35,7 @@
         
         initialize: function() {
             var books = this.model = gv.books;
-            books.bind('reset', this.render, this);
+            books.on('reset', this.render, this);
             books.fetchNew();
         },
         

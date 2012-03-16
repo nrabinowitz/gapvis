@@ -30,7 +30,7 @@
             var model = this,
                 immediateCallback = immediateCallback || loadCallback;
             if (!model.isFullyLoaded()) {
-                model.bind('ready', loadCallback);
+                model.on('ready', loadCallback);
                 // fetch model, avoiding multiple simultaneous calls
                 if (!model._fetching) {
                     model._fetching = true;
