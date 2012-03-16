@@ -16,7 +16,6 @@
         
         showMessage: function() {
             var msg = state.get('message');
-            console.log(msg);
             if (msg) {
                 this.$('#message-text').text(msg);
                 $(this.el).show();

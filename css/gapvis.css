@@ -438,6 +438,7 @@ div.pagenum {
     display: none;
 }
 #message-text {
+    font-weight: bold;
     display: inline-block;
     background: #FAE896;
     border: 1px solid #F0C36D;
