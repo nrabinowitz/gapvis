@@ -12,7 +12,7 @@
             var view = this;
             // listen for state changes
             state.bind('change:bookid', function() {
-                if ($(view.el).is(':visible')) {
+                if (view.$el.is(':visible')) {
                     view.updateBook();
                 }
             });
@@ -81,11 +81,11 @@
                         view.clear();
                     }
                     // create child views and render
-                    $(view.el).removeClass('loading');
+                    view.$el.removeClass('loading');
                     view.updateViews().render();
                 });
             } else {
-                $(view.el).removeClass('loading');
+                view.$el.removeClass('loading');
             }
         }
         

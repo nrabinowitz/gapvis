@@ -65,7 +65,7 @@
                         callback();
                     },
                     error: function() {
-                        console.error('Problem retrieving words from ' + url)
+                        state.set({ message: 'Error: Could not retrieve word counts.' });
                     },
                     dataType: 'json'
                 });
@@ -194,12 +194,12 @@
         url: API_ROOT +  '/books/.json',
         comparator: function(book) {
             // try for author last name
-            var author = book.get('author')
+            var author = (book.get('author') || '')
                 .toLowerCase()
                 .split(/[,(]/)[0]
                 .split(/\s+/)
                 .pop();
-            return author +  book.get('title').toLowerCase(); 
+            return author + book.get('title').toLowerCase(); 
         }
     });
     

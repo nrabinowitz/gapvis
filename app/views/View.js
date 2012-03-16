@@ -36,7 +36,7 @@
                 var match = key.match(eventSplitter),
                     eventName = match[1], 
                     selector = match[2];
-                $(view.el).undelegate(selector, eventName);
+                view.$el.undelegate(selector, eventName);
             });
         },
         // basic clear support

@@ -26,14 +26,14 @@
             if (!placeId) return;
             
             // add loading spinner
-            $(view.el).addClass('loading');
+            view.$el.addClass('loading');
              
             // get Flickr data for this place
             $.ajax({
                 url: FLICKR_URL_BASE.replace('[id]', placeId),
                 dataType: 'jsonp',
                 success: function(data) {
-                    $(view.el).removeClass('loading');
+                    view.$el.removeClass('loading');
                     var photos = data && data.items || [];
                     // XXX hide on fail?
                     if (photos.length) {

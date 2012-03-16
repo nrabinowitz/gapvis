@@ -41,7 +41,7 @@
             // if the place isn't fully loaded, do so
             place.ready(function() {
                 // create content
-                $(view.el).html(view.template(place.toJSON()));
+                view.$el.html(view.template(place.toJSON()));
                 // add frequency bars
                 var freqBars = view.freqBars = new gv.PlaceFrequencyBarsView({
                     model: book,

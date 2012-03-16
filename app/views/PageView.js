@@ -33,7 +33,7 @@
         
         render: function() {
             var view = this;
-            $(view.el)
+            view.$el
                 .html(view.template(view.model.toJSON()));
             view.bindingLayout();
             view.renderPageView();

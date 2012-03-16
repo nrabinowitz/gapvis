@@ -18,7 +18,7 @@
                     state.set({ message: "Something went wrong, and we couldn't submit your feedback. Sorry!" });
                 };
             // init the dialog, but don't open
-            $(view.el).dialog({
+            view.$el.dialog({
                 autoOpen: false,
                 modal: true,
                 buttons: {
