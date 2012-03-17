@@ -49,10 +49,6 @@
         
     // add settings to namespace
     gv.settings = {
-        API_ROOT: 'http://gap.alexandriaarchive.org', //'stub_api',
-        REPORT_URL: 'http://gap.alexandriaarchive.org/report/issue',
-        API_DATA_TYPE: 'jsonp',
-        
         // google maps style settings
         mapStyle: mapStyle,
         scaleColors: scaleColors,
