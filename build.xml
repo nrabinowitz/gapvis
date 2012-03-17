@@ -20,24 +20,11 @@
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
     <property name="js.concat.target" value="${target.dir}/${js.concat}" />
     
-    <!-- define git macro -->
-    <macrodef name="git">
-        <attribute name="command" />
-        <attribute name="dir" default="" />
-        <element name="args" optional="true" />
-        <sequential>
-            <echo message="git @{command}" />
-            <exec executable="${git.exe}" dir="@{dir}">
-                <arg value="@{command}" />
-                <args/>
-            </exec>
-        </sequential>
-    </macrodef>
-    
     
     <!-- Build Targets -->
     <target name="build-dev"
-            depends="start-build,
+            depends="clean-production-build,
+                     start-build,
                      build-js-dev, 
                      build-css-dev,
                      build-templates,
@@ -53,10 +40,14 @@
             
     <target name="deploy"
             depends="build-production,
-                     deploy-alexandria,
-                     clean-production-build">
+                     deploy-alexandria">
         <!-- and switch back to dev state -->
         <ant target="build-dev"/>
+    </target>
+    
+    <target name="serve-dev"
+            depends="build-dev,
+                     start-dev-server">
     </target>
             
     <!-- Shared Targets -->
@@ -135,7 +126,7 @@
             </sequential>
         </for>
         <!-- Compress and add extensions and apps -->
-        <for list="${js.libext}, ${js.files.app}" param="file" trim="true">
+        <for list="${js.files.compress}" param="file" trim="true">
             <sequential>
                 <echo>Compressing @{file}</echo>
                 <!-- compress -->
@@ -197,6 +188,8 @@
         <delete file="${js.concat.target}"/>
     </target>
     
+    <!-- Deployment targets -->
+    
     <target name="deploy-alexandria">
         <property file="build.secret.properties" />
         <echo>Deploying to ${alexandria.server}</echo>
@@ -219,6 +212,21 @@
     
     <!-- Deploy to GitHub Pages -->
     <!-- (This is deprecated - we're pushing to gap.alexandriaarchive.org now) -->
+    
+    <!-- define git macro -->
+    <macrodef name="git">
+        <attribute name="command" />
+        <attribute name="dir" default="" />
+        <element name="args" optional="true" />
+        <sequential>
+            <echo message="git @{command}" />
+            <exec executable="${git.exe}" dir="@{dir}">
+                <arg value="@{command}" />
+                <args/>
+            </exec>
+        </sequential>
+    </macrodef>
+    
     <target name="deploy-github">
         <!-- Checkout pages branch -->
         <git command="checkout">
@@ -257,6 +265,17 @@
                 <arg value="master"/>
             </args>
         </git>
+    </target>
+    
+    <!-- Dev Server targets -->
+    
+    <target name="start-dev-server">
+        <exec executable="cmd.exe">
+            <arg line="/K start node server/dev_server.js ${dev.server.port}" />
+        </exec>
+        <exec executable="cmd.exe">
+            <arg line="/K start http://localhost:${dev.server.port}/index.html" />
+        </exec>
     </target>
     
 </project>
