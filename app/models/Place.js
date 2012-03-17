@@ -9,6 +9,8 @@
        
     // Model: Place
     Place = gv.Place = Model.extend({
+        type: 'place',
+    
         defaults: {
             title: "Untitled Place",
             frequency: 0

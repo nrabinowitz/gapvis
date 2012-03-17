@@ -9,6 +9,8 @@
        
     // Model: Book
     Book = gv.Book = Model.extend({
+        type: 'book',
+        
         defaults: {
             title: "Untitled Book"
         },

@@ -9,6 +9,8 @@
        
     // Model: Page
     Page = gv.Page = Model.extend({
+        type: 'page',
+        
         defaults: {
             places: []
         }, 

@@ -9,7 +9,7 @@
 
     // set up default model
     gv.Model = Backbone.Model.extend({
-        type: 'Model',
+        type: 'model',
     
         // add .json to url
         url: function() {
@@ -40,9 +40,9 @@
                             model._fetching = false;
                         },
                         error: function() {
-                            console.log('here, failing');
-                            state.set({ 
-                                message: 'Error: Could not get data for ' + model.type + ' ' + model.id 
+                            gv.state.set({ 
+                                message: 'Error: Could not get data for the ' + model.type +
+                                    ' with ID ' + model.id 
                             });
                         }
                     });
