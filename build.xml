@@ -44,11 +44,6 @@
         <!-- and switch back to dev state -->
         <ant target="build-dev"/>
     </target>
-    
-    <target name="serve-dev"
-            depends="build-dev,
-                     start-dev-server">
-    </target>
             
     <!-- Shared Targets -->
     <target name="start-build">
@@ -273,6 +268,11 @@
         <exec executable="cmd.exe">
             <arg line="/K start node server/dev_server.js ${dev.server.port}" />
         </exec>
+    </target>
+    
+    <target name="serve-dev"
+            depends="build-dev,
+                     start-dev-server">
         <exec executable="cmd.exe">
             <arg line="/K start http://localhost:${dev.server.port}/index.html" />
         </exec>
