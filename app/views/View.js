@@ -70,7 +70,7 @@
         },
         unbindResize: function() {
             (this._resizeHandlers || []).forEach(function(h) {
-                $(window).off('resize', h);
+                $(window).unbind('resize', h);
             });
         },
         // override in subclasses
