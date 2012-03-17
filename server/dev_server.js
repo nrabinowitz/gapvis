@@ -1,6 +1,7 @@
 var http = require('http'),
     fs = require('fs'),
     path = require('path'),
+    colors = require('colors'),
     httpProxy = require('http-proxy');
     
 var serverPort = process.argv[2] || 8000;
@@ -11,7 +12,7 @@ http.createServer(function (req, res) {
     // proxy API
     if (req.url.indexOf('/api') === 0) {
         req.url = req.url.substr(4);
-        console.log('Proxy: ' + req.url);
+        console.log(('Proxy: ' + req.url).green);
         proxy.proxyRequest(req, res, {
             target: {
                 host: 'gap.alexandriaarchive.org',
@@ -41,4 +42,4 @@ http.createServer(function (req, res) {
     }
 }).listen(serverPort);
 
-console.log('Server started on port ' + serverPort);
+console.log(('Server started on port ' + serverPort).magenta);
