@@ -264,7 +264,7 @@
     
     <!-- Dev Server targets -->
     
-    <target name="start-dev-server">
+    <target name="start-server">
         <exec executable="cmd.exe">
             <arg line="/K start node server/dev_server.js ${dev.server.port}" />
         </exec>
@@ -272,9 +272,17 @@
     
     <target name="serve-dev"
             depends="build-dev,
-                     start-dev-server">
+                     start-server">
         <exec executable="cmd.exe">
             <arg line="/K start http://localhost:${dev.server.port}/index.html" />
+        </exec>
+    </target>
+    
+    <!-- Test targets -->
+    <target name="run-tests" depends="build-dev, start-server">
+        <echo>Running tests</echo>
+        <exec executable="python" failonerror="true">
+            <arg file="tests/test_app.py" />
         </exec>
     </target>
     
