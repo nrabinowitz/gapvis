@@ -12,9 +12,10 @@ class TestIndex(unittest.TestCase):
         self.base_url = "http://localhost:8080/"
         self.verificationErrors = []
     
-    def test_index(self):
+    def test_click_through(self):
         driver = self.driver
         driver.get(self.base_url + "/index.html")
+        # on index page
         self.assertEqual("GapVis: Visual Interface for Reading Ancient Texts", driver.title,
             msg="Couldn't load application")
         self.assertEqual("Overview", driver.find_element_by_css_selector("h2").text,
@@ -24,26 +25,37 @@ class TestIndex(unittest.TestCase):
         self.assertTrue(self.is_element_present(By.XPATH, "//div[@id='book-list']/p[10]"),
             msg="Found fewer than 10 books")
         first_title = driver.find_element_by_xpath("//div[@id='book-list']/p/span").text
+        self.assertTrue(len(first_title) > 5,
+            msg="Title of first book is missing or too short")
         # go to book page
         driver.find_element_by_xpath("//div[@id='book-list']/p/span").click()
         self.assertEqual(first_title, driver.find_element_by_css_selector("h2.book-title").text,
             msg="Book Summary title doesn't match index title")
-
-    
-    def test_book_summary(self):
-        driver = self.driver
-        driver.get(self.base_url + "/index.html#book/2")
-        self.assertEqual("The Works of Cornelius Tacitus: The History", driver.find_element_by_css_selector("h2.book-title").text,
-            msg="Book title missing or incorrect")
-        self.assertEqual("Roma", driver.find_element_by_xpath("//div[@id='book-summary-text-view']/p/span[1]").text,
-            msg="Top frequency place incorrect")
         self.assertTrue(self.is_element_present(By.CSS_SELECTOR, "#place-freq-bars-view > svg"),
             msg="Frequency bars SVG not found")
+        top_freq_place = driver.find_element_by_css_selector("#book-summary-text-view span.place").text
+        self.assertNotEqual('', top_freq_place,
+            msg="Top-frequency place is missing")
+        self.assertEqual(top_freq_place, driver.find_element_by_css_selector("#place-freq-bars-view > svg text").text,
+            msg="Top frequency place in paragraph doesn't match top frequency place in viz")
         self.assertTrue(self.is_element_present(By.CSS_SELECTOR, "label.ui-button.ui-state-active > span.ui-button-text"),
             msg='Book Summary button not active')
-        self.assertRegexpMatches(driver.find_element_by_css_selector("a.permalink").get_attribute("href"), r"index\.html#book/2\?pageview=text$",
+        self.assertRegexpMatches(driver.find_element_by_css_selector("a.permalink").get_attribute("href"), r"index\.html#book/\d+\?pageview=text$",
             msg="permalink not set correctly")
-
+        # go to reading page
+        driver.find_element_by_css_selector("button.goto-reading").click()
+        self.assertEqual(first_title, driver.find_element_by_css_selector("h2.book-title.on").text,
+            msg="Book Reading title doesn't match index title")
+        self.assertNotEqual("", driver.find_element_by_css_selector("#page-view div.text").text,
+            msg="Page text not displayed")
+        first_place = driver.find_element_by_id("label-tl-0-0-e1").text
+        self.assertNotEqual('', first_place,
+            msg="First timeline place is missing")
+        driver.find_element_by_id("label-tl-0-0-e1").click()
+        self.assertTrue(self.is_element_present(By.CSS_SELECTOR, "div.infowindow h3"),
+            msg="Info window did not open")
+        self.assertEqual(first_place, driver.find_element_by_css_selector("div.infowindow h3").text,
+            msg="Info window title doesn't match timeline title")
     
     def is_element_present(self, how, what):
         try: self.driver.find_element(by=how, value=what)
