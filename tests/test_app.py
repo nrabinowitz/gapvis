@@ -54,7 +54,7 @@ class TestIndex(unittest.TestCase):
         driver.find_element_by_id("label-tl-0-0-e1").click()
         self.assertTrue(self.is_element_present(By.CSS_SELECTOR, "div.infowindow h3"),
             msg="Info window did not open")
-        self.assertEqual(first_place, driver.find_element_by_css_selector("div.infowindow h3").text,
+        self.assertTrue(first_place in driver.find_element_by_css_selector("div.infowindow h3").text,
             msg="Info window title doesn't match timeline title")
     
     def is_element_present(self, how, what):
