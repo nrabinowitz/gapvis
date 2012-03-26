@@ -266,7 +266,7 @@
     
     <target name="start-server">
         <exec executable="cmd.exe">
-            <arg line="/K start node server/dev_server.js -p ${dev.server.port} -t ${dev.target.proxytarget}" />
+            <arg line="/K start node ${devserver.js} -p ${dev.server.port} -t ${dev.target.proxytarget}" />
         </exec>
     </target>
     
