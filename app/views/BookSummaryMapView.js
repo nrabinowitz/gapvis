@@ -28,6 +28,7 @@
             this.bindingLayout();
             
             var book = this.model,
+                markers = this.markers = [],
                 gmaps = google.maps,
                 colorScale = d3.scale.quantize()
                     .domain([1, book.places.first().get('frequency')])
@@ -68,6 +69,7 @@
                     state.set({ placeid: place.id });
                     state.set({ topview: gv.BookPlaceView });
                 });
+                markers.push(marker);
             });
             
         }
