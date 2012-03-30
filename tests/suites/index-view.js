@@ -19,7 +19,7 @@ casper
     
 casper
     .describe("Index page > Book Links")
-    .then(function() {
+    .thenOpen(baseUrl, function() {
         this.click('div#book-list p span');
     })
     .then(function() {

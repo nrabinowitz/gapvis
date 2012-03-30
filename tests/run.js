@@ -1,6 +1,8 @@
 // Tests require PhantomJS and Casper.js
 
-var casper = require('casper').create(),
+var casper = require('casper').create({
+        viewportSize: {width: 800, height: 600}
+    }),
     t = casper.test,
     baseUrl = "http://localhost:8080/";
     
@@ -8,10 +10,29 @@ var casper = require('casper').create(),
 casper.describe = function(msg) {
     if (this.started) {
         this.then(function() { t.comment(msg) });
+        // let's clear the page state while we're at it
+        this.thenOpen('about:blank');
     } else {
         t.comment(msg);
     }
     return this;
+};
+
+// extend casper with some client-side events
+casper.mouseEvent = function (event, selector) {
+    return casper.evaluate(function(event, selector) {
+        var elem = $(selector)[0];
+        if (!elem) {
+            console.log("[casper:error] mousedown():  Couldn't find any element matching '" + selector + "' selector");
+            return false;
+        }
+        var evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent(event, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+        return elem.dispatchEvent(evt);
+    }, {
+        event: event, 
+        selector: selector
+    });
 };
     
 // extend the tester with some custom assertions

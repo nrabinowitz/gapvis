@@ -27,7 +27,7 @@ casper
     
 casper
     .describe('Book summary page > Nav button')
-    .then(function() {
+    .thenOpen(summaryUrl, function() {
         this.click('#book-summary-view div.navigation-view label[for^="nav-reading"]');
     })
     .then(function() {

@@ -10,13 +10,6 @@ casper
         t.assertAtBookReadingView();
         t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
             "Book title shown");
-        t.assertEval(function() {
-            window.tm = gv.app.currentView.children[3].tm;
-            return !!window.tm;
-        }, "TimeMap object found");
-        t.assertEval(function() {
-            return window.tm.getItems().length > 0;
-        }, "Some items are loaded on the timemap");
         t.assertPermalink(RegExp(baseUrl + '#book/2/read/-2\\?'),
             "Permalink is correct");
     });
@@ -81,6 +74,14 @@ casper
             'Previous link is disabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+    })
+    .thenOpen(baseUrl + '#book/2/read/385', function() {
+        t.assertInText('#page-view div.text:visible', 'Last Page Text.',
+            'Last page text is shown');
+        t.assertDoesNotExist('#next.on',
+            'Next link is disabled');
+        t.assertExists('#prev.on',
+            'Previous link is enabled');
     });
     
 casper
@@ -111,6 +112,112 @@ casper
             'Show Text link is enabled');
         t.assertDoesNotExist('#showimg.on',
             'Show Image link is disabled');
+        t.assertText('#page-view div.img:visible', '(No image available)',
+            'No image available message shown');
+    })
+    .then(function() {
+        this.click('#next.on');
+    })
+    .then(function() {
+        t.assertVisible('#page-view div.img img', 
+            'Page image is visible (actual file)');
+    });
+    
+casper
+    .describe('Reading View page > Places in Page Text')
+    .thenOpen(baseUrl + '#book/2/read/2')
+    .then(function() {
+        t.assertVisible('#page-view div.text span.place[data-place-id="423025"]',
+            'Roma is shown in the page text');
+        this.click('#page-view div.text span.place[data-place-id="423025"]');
+    })
+    .waitUntilVisible('div.infowindow')
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/2\/423025/, 'Reading route with place correct');
+        t.assertInfoWindow('Roma', 'Roma is selected in info window after click');
+        t.assertVisible('#page-view div.text span.place.hi[data-place-id="423025"]',
+            'Roma is highlighted in the page text');
+    });
+    
+casper
+    .describe('Reading View page > Places in Page Text (Selected Place)')
+    .thenOpen(baseUrl + '#book/2/read/2/423025')
+    .waitUntilVisible('div.infowindow')
+    .waitUntilVisible('div.infowindow')
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/2\/423025/, 'Reading route with place correct');
+        t.assertInfoWindow('Roma', 'Roma is selected in info window after click');
+        t.assertVisible('#page-view div.text span.place.hi[data-place-id="423025"]',
+            'Roma is highlighted in the page text');
+    });
+    
+casper
+    .describe('Reading View page > Timemap')
+    .thenOpen(viewUrl, function() {
+        t.assertEval(function() {
+            window.tm = gv.app.currentView.children[3].tm;
+            return !!window.tm;
+        }, "TimeMap object found");
+        t.assertEval(function() {
+            return window.tm.getItems().length > 0;
+        }, "Some items are loaded on the timemap");
+        t.assertVisible('div.timeline-date-label:contains("-2")',
+            "The first date label is visible");
+        t.assertVisible('#label-tl-0-0-e9',
+            "The ninth event is visible");
+        t.assertText('#label-tl-0-0-e9', 'Roma',
+            "Ninth event label is correct");
+        t.assertNotVisible('div.infowindow',
+            "The info window is closed");
+    })
+    .then(function() {
+        this.mouseEvent('mousedown', '#label-tl-0-0-e9');
+    })
+    .waitUntilVisible('div.infowindow')
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/2\/423025/, 'Route with place correct');
+        t.assertInfoWindow('Roma', 'Roma is selected in info window after click');
+        t.assertExists('div.infowindow svg rect',
+            "Frequency bars shown in info window");
+        t.assertExists('div.infowindow svg rect.selected:nth-child(3)',
+            "Correct frequency bar is selected");
+        t.assertDoesNotExist('div.infowindow span.prev.on',
+            'Infowindow previous link is disabled');
+        t.assertExists('div.infowindow span.next.on',
+            'Infowindow next link is disabled');
+        t.assertVisible('#page-view div.text span.place.hi[data-place-id="423025"]',
+            'Roma is highlighted in the page text');
+    })
+    .then(function() {
+        this.click('div.infowindow span.next.on');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/5\/423025/, 'Route with place and next page correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+        t.assertExists('div.infowindow span.prev.on',
+            'Infowindow previous link is enabled');
+        t.assertExists('div.infowindow span.next.on',
+            'Infowindow next link is disabled');
+        t.assertVisible('#page-view div.text span.place.hi[data-place-id="423025"]',
+            'Roma is highlighted in the page text');
+    })
+    .then(function() {
+        this.click('div.infowindow span.next.on');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/8\/423025/, 'Route with place and next page correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+        t.assertVisible('#page-view div.text span.place.hi[data-place-id="423025"]',
+            'Roma is highlighted in the page text');
+        t.assertExists('div.infowindow svg rect.selected:nth-child(4)',
+            "Correct frequency bar is selected");
+    })
+    .then(function() {
+        this.click('div.infowindow span.prev.on');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/5\/423025/, 'Route with place and next page correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
     });
 
 casper.run(function() {
