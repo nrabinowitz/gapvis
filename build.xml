@@ -295,10 +295,11 @@
     <!-- Test targets -->
     <target name="run-tests" depends="build-dev, start-dev-server">
         <echo>Running tests</echo>
+        <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
             <arg file="${casper.js}" />
             <arg file="tests/run.js" />
-            <arg file="tests/suites" />
+            <arg file="${suite}" />
         </exec>
     </target>
     
