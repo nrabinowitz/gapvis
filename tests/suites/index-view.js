@@ -3,10 +3,9 @@ var t = casper.test,
 
 casper.start();
 
-// Testing index page
 casper
+    .describe("Index page")
     .thenOpen(baseUrl, function() {
-        t.comment("Testing index page");
         t.assertAtIndexView();
         t.assertTitle("GapVis: Visual Interface for Reading Ancient Texts", 
             "Loaded application");
@@ -16,10 +15,10 @@ casper
             "Two books were found");
         t.assertText('div#book-list p span', 'The Works of Cornelius Tacitus: The History',
             "The first book has the right title");
-    })
-    .then(function() {
-        t.comment('Testing book summary page > Links');
-    })
+    });
+    
+casper
+    .describe("Index page > Book Links")
     .then(function() {
         this.click('div#book-list p span');
     })

@@ -1,13 +1,13 @@
 var t = casper.test,
     baseUrl = "http://localhost:8080/",
     summaryUrl = baseUrl + '#book/2';
-
+    
 casper.start();
 
-// Testing book summary page
+// Basic page tests
 casper
+    .describe('Book summary page')
     .thenOpen(summaryUrl, function() {
-        t.comment('Testing book summary page');
         t.assertAtBookSummaryView();
         t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
             "Book title shown");
@@ -21,28 +21,31 @@ casper
             "Top-frequency place is correct (bars)");
         t.assertExists('#book-summary-view div.navigation-view label[for^="nav-summary"].ui-state-active',
             'Book Summary button is active');
-        t.assertEvalEquals(function() { return $('a.permalink').attr('href') }, baseUrl + '#book/2?pageview=text',
+        t.assertPermalink(RegExp(baseUrl + '#book/2\\?'),
             "Permalink is correct");
-    })
-    .then(function() {
-        t.comment('Testing book summary page > Links');
-    })
-    // nav button
+    });
+    
+casper
+    .describe('Book summary page > Nav button')
     .then(function() {
         this.click('#book-summary-view div.navigation-view label[for^="nav-reading"]');
     })
     .then(function() {
         t.assertAtBookReadingView();
-    })
-    // Go to Reading View button
+    });
+    
+casper
+    .describe('Book summary page > Go To Reading View button')
     .thenOpen(summaryUrl, function() {
         t.assertAtBookSummaryView();
         this.click('button.goto-reading');
     })
     .then(function() {
         t.assertAtBookReadingView();
-    })
-    // clicking on a place freq bar
+    });
+
+casper
+    .describe('Book summary page > Freq bars click')
     .thenOpen(summaryUrl, function() {
         t.assertAtBookSummaryView();
         this.click("#place-freq-bars-view > svg rect");
@@ -53,8 +56,10 @@ casper
     .waitUntilVisible('div.infowindow')
     .then(function() {
         t.assertInfoWindow('Roma', 'Roma is selected');
-    })
-    // clicking on a place on the map
+    });
+    
+casper
+    .describe('Book summary page > Map item click')
     .thenOpen(summaryUrl, function() {
         t.assertAtBookSummaryView();
         // this is really ugly

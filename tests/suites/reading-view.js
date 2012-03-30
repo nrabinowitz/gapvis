@@ -4,10 +4,9 @@ var t = casper.test,
 
 casper.start();
     
-// Testing book reading page
 casper
+    .describe('Reading View page')
     .thenOpen(viewUrl, function() {
-        t.comment('Testing book reading page');
         t.assertAtBookReadingView();
         t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
             "Book title shown");
@@ -18,20 +17,100 @@ casper
         t.assertEval(function() {
             return window.tm.getItems().length > 0;
         }, "Some items are loaded on the timemap");
-        var permalink = this.evaluate(function() { return $('a.permalink').attr('href') });
-        t.assertMatch(permalink, RegExp(baseUrl + '#book/2/read/-2\\?'), 
+        t.assertPermalink(RegExp(baseUrl + '#book/2/read/-2\\?'),
             "Permalink is correct");
-        // test page
+    });
+    
+casper
+    .describe('Reading View page > Next/Prev')
+    .thenOpen(viewUrl, function() {
+        t.assertRoute(/^book\/\d+\/read\/-2/, 'Book reading route correct');
+        t.assertInText('#page-view div.text:visible', 'Page Negative Two Text.',
+            'Page -2 text is shown');
+        t.assertDoesNotExist('#prev.on',
+            'Previous link is disabled');
+        t.assertExists('#next.on',
+            'Next link is enabled');
+    })
+    .then(function() {
+        this.click('#next.on');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/1/, 'Book reading route correct');
+        t.assertInText('#page-view div.text:visible', 'Page One Text.',
+            'Page 1 text is shown');
+        t.assertExists('#prev.on',
+            'Previous link is enabled');
+        t.assertExists('#next.on',
+            'Next link is enabled');
+    })
+    .then(function() {
+        this.click('#next.on');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/2/, 'Book reading route correct');
+        t.assertInText('#page-view div.text:visible', 'Page Two Text.',
+            'Page 2 text is shown');
+        t.assertExists('#prev.on',
+            'Previous link is enabled');
+        t.assertExists('#next.on',
+            'Next link is enabled');
+    })
+    .then(function() {
+        this.click('#prev.on');
+    })
+    .wait(300)
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/1/, 'Book reading route correct');
+        t.assertInText('#page-view div.text:visible', 'Page One Text.',
+            'Page 1 text is shown');
+        t.assertExists('#prev.on',
+            'Previous link is enabled');
+        t.assertExists('#next.on',
+            'Next link is enabled');
+    })
+    .then(function() {
+        this.click('#prev.on');
+    })
+    .wait(300)
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/-2/, 'Book reading route correct');
+        t.assertInText('#page-view div.text:visible', 'Page Negative Two Text.',
+            'Page -2 text is shown');
+        t.assertDoesNotExist('#prev.on',
+            'Previous link is disabled');
+        t.assertExists('#next.on',
+            'Next link is enabled');
+    });
+    
+casper
+    .describe('Reading View page > Page View Controls')
+    .thenOpen(viewUrl, function() {
+        t.assertPermalink(/pageview=text/,
+            "Page view setting correct in permalink");
         t.assertVisible('#page-view div.text', 
             'Page text is visible');
         t.assertNotVisible('#page-view div.img', 
             'Page image is not visible');
-        t.assertEval(function() { return $('#page-view div.text').text().trim().length > 0 },
-            'Some page text is shown');
-        t.assertDoesNotExist('#prev.on',
-            'Previous link is disabled');
-        t.assertExists('#next.on',
-            'Previous link is enabled');
+        t.assertDoesNotExist('#showtext.on',
+            'Show Text link is disabled');
+        t.assertExists('#showimg.on',
+            'Show Image link is enabled');
+    })
+    .then(function() {
+        this.click('#showimg.on');
+    })
+    .then(function() {
+        t.assertPermalink(/pageview=image/,
+            "Page view setting correct in permalink");
+        t.assertNotVisible('#page-view div.text', 
+            'Page text is not visible');
+        t.assertVisible('#page-view div.img', 
+            'Page image is visible');
+        t.assertExists('#showtext.on',
+            'Show Text link is enabled');
+        t.assertDoesNotExist('#showimg.on',
+            'Show Image link is disabled');
     });
 
 casper.run(function() {

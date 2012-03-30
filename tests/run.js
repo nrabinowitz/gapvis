@@ -4,11 +4,27 @@ var casper = require('casper').create(),
     t = casper.test,
     baseUrl = "http://localhost:8080/";
     
+// for easier syntax
+casper.describe = function(msg) {
+    if (this.started) {
+        this.then(function() { t.comment(msg) });
+    } else {
+        t.comment(msg);
+    }
+    return this;
+};
+    
 // extend the tester with some custom assertions
 
 t.assertText = function(selector, expected, message) {
-    f = new Function("return $('" + selector + "').first().text().trim()")
+    f = new Function("return $('" + selector + "').first().text().trim()");
     t.assertEvalEquals(f, expected, message);
+}
+
+t.assertInText = function(selector, expected, message) {
+    f = new Function("return $('" + selector + "').first().text().trim()");
+    var text = casper.evaluate(f);
+    t.assert(text.indexOf(expected) >= 0, message);
 }
 
 t.assertVisible = function(selector, message) {
@@ -39,6 +55,11 @@ t.assertInfoWindow = function(expected, message) {
     t.assertVisible('div.infowindow', "Info window is open");
     t.assertText('div.infowindow h3', expected + ' (Zoom In)', message);
 };
+
+t.assertPermalink = function(expected, message) {
+    var permalink = casper.evaluate(function() { return $('a.permalink:visible').attr('href') });
+    t.assertMatch(permalink, expected, message);
+}
 
 // bundled assertions
 
