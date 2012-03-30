@@ -15,6 +15,14 @@ t.assertVisible = function(selector, message) {
     f = new Function("return !!$('" + selector + ":visible').length")
     t.assertEval(f, message);
 }
+t.assertNotVisible = function(selector, message) {
+    f = new Function("return !$('" + selector + ":visible').length")
+    t.assertEval(f, message);
+}
+t.assertDoesNotExist = function(selector, message) {
+    f = new Function("return !$('" + selector + "').length")
+    t.assertEval(f, message);
+}
 
 t.assertRoute = function(expected, message) {
     var getHash = function() {
