@@ -17,23 +17,6 @@ casper.describe = function(msg) {
     }
     return this;
 };
-
-// extend casper with some client-side events
-casper.mouseEvent = function (event, selector) {
-    return casper.evaluate(function(event, selector) {
-        var elem = $(selector)[0];
-        if (!elem) {
-            console.log("[casper:error] mousedown():  Couldn't find any element matching '" + selector + "' selector");
-            return false;
-        }
-        var evt = document.createEvent("MouseEvents");
-        evt.initMouseEvent(event, true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
-        return elem.dispatchEvent(evt);
-    }, {
-        event: event, 
-        selector: selector
-    });
-};
     
 // extend the tester with some custom assertions
 
