@@ -24,6 +24,8 @@ casper
             'Previous link is disabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
+            "Nav form is correct");
     })
     .then(function() {
         this.click('#next.on');
@@ -36,6 +38,8 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
+            "Nav form is correct");
     })
     .then(function() {
         this.click('#next.on');
@@ -48,6 +52,8 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "2",
+            "Nav form is correct");
     })
     .then(function() {
         this.click('#prev.on');
@@ -61,6 +67,8 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
+            "Nav form is correct");
     })
     .then(function() {
         this.click('#prev.on');
@@ -74,6 +82,8 @@ casper
             'Previous link is disabled');
         t.assertExists('#next.on',
             'Next link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
+            "Nav form is correct");
     })
     .thenOpen(baseUrl + '#book/2/read/385', function() {
         t.assertInText('#page-view div.text:visible', 'Last Page Text.',
@@ -82,6 +92,8 @@ casper
             'Next link is disabled');
         t.assertExists('#prev.on',
             'Previous link is enabled');
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "385",
+            "Nav form is correct");
     });
     
 casper
