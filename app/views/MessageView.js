@@ -16,6 +16,7 @@
         
         showMessage: function() {
             var msg = state.get('message');
+            // XXX: this should clear the timeout if !!state.previous('message')
             if (msg) {
                 this.$('#message-text').text(msg);
                 $(this.el).show();
