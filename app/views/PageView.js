@@ -15,8 +15,8 @@
                 page = view.model;
             view.template = _.template($('#page-template').html());
             // listen for state changes
-            state.on('change:pageview', this.renderPageView, this);
-            state.on('change:placeid', this.renderPlaceHighlight, this);
+            this.bindState('change:pageview', this.renderPageView, this);
+            this.bindState('change:placeid', this.renderPlaceHighlight, this);
             // set backreference
             page.view = view;
             // load page

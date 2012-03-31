@@ -288,7 +288,7 @@ casper
     });
     
 casper
-    .describe('Reading View page > Info Window closing')
+    .describe('Reading View page > Info Window closing back/forward')
     .thenOpen(baseUrl + '#book/2/read/2/423025')
     .waitUntilVisible('div.infowindow')
     .then(function() {
@@ -297,11 +297,63 @@ casper
             'Place Details button is active');
     })
     .then(function() {
-        this.closeInfoWindow()
+        this.closeInfoWindow();
     })
     .then(function() {
         t.assertRoute(/^book\/2\/read\/2$/, 'Reading route correct, no place');
-        t.assertDoesNotExist('div.infowindow');
+        t.assertDoesNotExist('div.infowindow',
+            'Info window is closed');
+        t.assertExists('#book-view div.navigation-view label[for^="nav-place"].ui-state-disabled',
+            'Place Details button is disabled');
+    })
+    .back()
+    .waitUntilVisible('div.infowindow', function() {
+        t.pass('Info window re-opens on back');
+    }, function() {
+        t.fail('Info window re-opens on back');
+    })
+    .then(function() {
+        t.assertInfoWindow('Roma', 'Roma is selected in info window');
+        t.assertDoesNotExist('#book-view div.navigation-view label[for^="nav-place"].ui-state-disabled',
+            'Place Details button is active');
+    })
+    .forward()
+    .then(function() {
+        t.assertRoute(/^book\/2\/read\/2$/, 'Reading route correct, no place');
+        t.assertDoesNotExist('div.infowindow',
+            'Info window is closed');
+        t.assertExists('#book-view div.navigation-view label[for^="nav-place"].ui-state-disabled',
+            'Place Details button is disabled');
+    });
+    
+
+casper
+    .describe('Reading View page > Info Window closing - place page interaction')
+    .thenOpen(baseUrl + '#book/2/read/2/423025')
+    .waitUntilVisible('div.infowindow')
+    .then(function() {
+        this.click('div.infowindow span.goto-place');
+    })
+    .then(function() {
+        t.assertAtBookPlaceView();
+    })
+    .back()
+    .then(function() {
+        t.assertAtBookReadingView();
+    })
+    .then(function() {
+        this.closeInfoWindow();
+    })
+    .back()
+    .waitUntilVisible('div.infowindow', function() {
+        t.pass('Info window re-opens on back');
+    }, function() {
+        t.fail('Info window re-opens on back');
+    })
+    .then(function() {
+        t.assertInfoWindow('Roma', 'Roma is selected in info window');
+        t.assertDoesNotExist('#book-view div.navigation-view label[for^="nav-place"].ui-state-disabled',
+            'Place Details button is active');
     });
     
 
