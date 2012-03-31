@@ -36,6 +36,7 @@
                      build-css-production,
                      build-templates,
                      build-analytics,
+                     compress-html,
                      finish-build"/>
             
     <target name="deploy"
@@ -176,6 +177,17 @@
         <replace file="${index.build}" 
             token="${placeholder.analytics}"
             value="${template.contents}"/>
+    </target>
+    
+    <target name="compress-html">
+        <echo>Compressing HTML</echo>
+        <!-- Compress to temp file -->
+        <java jar="${htmlcompressor.jar}" fork="true" failonerror="true">
+            <arg line="--remove-quotes"/>
+            <arg line="-o ${index.build}.tmp ${index.build}"/>
+        </java>
+        <!-- Replace build with compressed -->
+        <copy file="${index.build}.tmp" tofile="${index.build}"/>
     </target>
     
     <target name="clean-production-build">
