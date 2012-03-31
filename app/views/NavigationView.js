@@ -49,6 +49,7 @@
         },
         
         updateNavButtons: function() {
+            console.log('called', '#nav-place-' + this.cid);
             // enable/disable place view
             $('#nav-place-' + this.cid)
                 .button(state.get('placeid') ? 'enable' : 'disable');

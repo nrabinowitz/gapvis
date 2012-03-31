@@ -17,6 +17,20 @@ casper.describe = function(msg) {
     }
     return this;
 };
+
+// are you kidding me?
+casper.closeInfoWindow = function() {
+    this.evaluate(function() {
+        var elem = $('div.infowindow').parent().parent().find('div').first()[0];
+        if (!elem) {
+            console.log('[casper:error] Info window close button not found');
+            return false;
+        }
+        var evt = document.createEvent("MouseEvents");
+            evt.initMouseEvent('click', true, true, window, 1, 1, 1, 1, 1, false, false, false, false, 0, elem);
+            return elem.dispatchEvent(evt);
+    });
+}
     
 // extend the tester with some custom assertions
 
