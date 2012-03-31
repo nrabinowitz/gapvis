@@ -12,6 +12,8 @@ casper
             "Book title shown");
         t.assertPermalink(RegExp(baseUrl + '#book/2/read/-2\\?'),
             "Permalink is correct");
+        t.assertExists('#book-view div.navigation-view label[for^="nav-reading"].ui-state-active',
+            'Reading View button is active');
     });
     
 casper
@@ -83,7 +85,7 @@ casper
         t.assertExists('#prev.on',
             'Previous link is enabled');
     });
-    
+
 casper
     .describe('Reading View page > Page Nav Field')
     .thenOpen(viewUrl, function() {
@@ -108,15 +110,16 @@ casper
         t.assertRoute(/^book\/\d+\/read\/133/, 'Book reading route correct');
     })
     .then(function() {
-        this.evaluate(function() { $('#page-id').val('spam').change() })
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
-            "Nav form won't accept an invalid page");
-        this.evaluate(function() { $('#page-id').val('200').change() })
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
-            "Nav form won't accept an invalid page");
-        this.evaluate(function() { $('#page-id').val('').change() })
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
-            "Nav form won't accept an invalid page");
+        function testNavField(test, expected) {
+            casper.evaluate(function() { $('#page-id').val(test).change() });
+            /* t.assertMessage("Sorry, there isn't a page '" + test + "' in this book",
+                "Nav error message shown"); */
+            t.assertEvalEquals(function() { return $('#page-id').val() }, expected,
+                "Nav form won't accept an invalid page: " + test);
+        }    
+        testNavField('spam', '133');
+        testNavField('200', '133');
+        testNavField('', '133');
     });
     
 casper

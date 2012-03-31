@@ -64,6 +64,8 @@ t.assertRoute = function(expected, message) {
     }
 };
 
+// Assertions about app-specific UI components
+
 t.assertInfoWindow = function(expected, message) {
     t.assertVisible('div.infowindow', "Info window is open");
     t.assertText('div.infowindow h3', expected + ' (Zoom In)', message);
@@ -72,6 +74,17 @@ t.assertInfoWindow = function(expected, message) {
 t.assertPermalink = function(expected, message) {
     var permalink = casper.evaluate(function() { return $('a.permalink:visible').attr('href') });
     t.assertMatch(permalink, expected, message);
+}
+
+t.assertMessage = function(expected, message) {
+    t.assertVisible('#message-text',
+        "Message is shown");
+    var text = casper.evaluate(function() { return $('#message-text').text().trim(); });
+    if (expected instanceof RegExp) {
+        t.assertMatch(text, expected, message);
+    } else {
+        t.assertEquals(text, expected, message);
+    }
 }
 
 // bundled assertions

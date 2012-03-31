@@ -37,7 +37,6 @@ casper
 casper
     .describe('Book summary page > Go To Reading View button')
     .thenOpen(summaryUrl, function() {
-        t.assertAtBookSummaryView();
         this.click('button.goto-reading');
     })
     .then(function() {
@@ -47,7 +46,6 @@ casper
 casper
     .describe('Book summary page > Freq bars click')
     .thenOpen(summaryUrl, function() {
-        t.assertAtBookSummaryView();
         this.click("#place-freq-bars-view > svg rect");
     })
     .then(function() {
@@ -59,9 +57,11 @@ casper
     });
     
 casper
-    .describe('Book summary page > Map item click')
+    .describe('Book summary page > Map items')
     .thenOpen(summaryUrl, function() {
-        t.assertAtBookSummaryView();
+        // this is ugly
+        t.assertEval(function() { return gv.app.currentView.children[3].markers.length > 10; },
+            "Some markers are loaded on the map");
         // this is really ugly
         this.evaluate(function() {
             var marker = gv.app.currentView.children[3].markers[0];
