@@ -30,7 +30,7 @@
                      build-templates,
                      finish-build"/>
             
-    <target name="build-production"
+    <target name="-build-production"
             depends="start-build,
                      build-js-production, 
                      build-css-production,
@@ -38,6 +38,16 @@
                      build-analytics,
                      compress-html,
                      finish-build"/>
+                     
+    <target name="build-production">
+        <property name="js.files.compress" value="${js.files.production}"/>
+        <ant target="-build-production"/>
+    </target>
+                     
+    <target name="build-production-test">
+        <property name="js.files.compress" value="${js.files.production.test}"/>
+        <ant target="-build-production"/>
+    </target>
             
     <target name="deploy"
             depends="build-production,
@@ -303,9 +313,25 @@
             depends="build-dev,
                      start-dev-server,
                      launch-in-browser" />
+                     
+    <target name="serve-production"
+            depends="build-production-test,
+                     start-dev-server,
+                     launch-in-browser" />
     
     <!-- Test targets -->
-    <target name="run-tests" depends="build-dev, start-dev-server">
+    
+    <target name="run-tests"
+            depends="build-dev, 
+                     start-dev-server,
+                     -run-tests"/>
+                     
+    <target name="run-tests-production"
+            depends="build-production-test, 
+                     start-dev-server,
+                     -run-tests"/>
+    
+    <target name="-run-tests" depends="build-dev, start-dev-server">
         <echo>Running tests</echo>
         <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
