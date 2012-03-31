@@ -24,8 +24,6 @@ casper
             'Previous link is disabled');
         t.assertExists('#next.on',
             'Next link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
-            "Nav form is correct");
     })
     .then(function() {
         this.click('#next.on');
@@ -38,8 +36,6 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
-            "Nav form is correct");
     })
     .then(function() {
         this.click('#next.on');
@@ -52,8 +48,6 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "2",
-            "Nav form is correct");
     })
     .then(function() {
         this.click('#prev.on');
@@ -67,8 +61,6 @@ casper
             'Previous link is enabled');
         t.assertExists('#next.on',
             'Next link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
-            "Nav form is correct");
     })
     .then(function() {
         this.click('#prev.on');
@@ -82,8 +74,6 @@ casper
             'Previous link is disabled');
         t.assertExists('#next.on',
             'Next link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
-            "Nav form is correct");
     })
     .thenOpen(baseUrl + '#book/2/read/385', function() {
         t.assertInText('#page-view div.text:visible', 'Last Page Text.',
@@ -92,8 +82,41 @@ casper
             'Next link is disabled');
         t.assertExists('#prev.on',
             'Previous link is enabled');
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "385",
+    });
+    
+casper
+    .describe('Reading View page > Page Nav Field')
+    .thenOpen(viewUrl, function() {
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
             "Nav form is correct");
+    })
+    .then(function() {
+        this.click('#next.on');
+    })
+    .then(function() {
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
+            "Nav form updates on next");
+    })
+    .thenOpen(baseUrl + '#book/2/read/385', function() {
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "385",
+            "Nav form updates on route change");
+    })
+    .then(function() {
+        this.evaluate(function() { $('#page-id').val('133').change() })
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/133/, 'Book reading route correct');
+    })
+    .then(function() {
+        this.evaluate(function() { $('#page-id').val('spam').change() })
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
+            "Nav form won't accept an invalid page");
+        this.evaluate(function() { $('#page-id').val('200').change() })
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
+            "Nav form won't accept an invalid page");
+        this.evaluate(function() { $('#page-id').val('').change() })
+        t.assertEvalEquals(function() { return $('#page-id').val() }, "133",
+            "Nav form won't accept an invalid page");
     });
     
 casper
@@ -230,7 +253,40 @@ casper
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/5\/423025/, 'Route with place and next page correct');
         t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+    })
+    .then(function() {
+        this.click('div.infowindow svg rect:nth-child(5)');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/\d+\/read\/23\/423025/, 'Route with place and next page correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
     });
+    
+casper
+    .describe('Reading View page > Selected Place')
+    .thenOpen(baseUrl + '#book/2/read/2/423025')
+    .waitUntilVisible('div.infowindow')
+    .then(function() {
+        t.assertInfoWindow('Roma', 'Roma is selected in info window');
+        t.assertDoesNotExist('#book-view div.navigation-view label[for^="nav-place"].ui-state-disabled',
+            'Place Details button is active');
+    })
+    .then(function() {
+        this.click('div.infowindow span.goto-place');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/2\/place\/423025/, 'Place details route correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+    })
+    .back()
+    .then(function() {
+        this.click('#book-view div.navigation-view label[for^="nav-place"]');
+    })
+    .then(function() {
+        t.assertRoute(/^book\/2\/place\/423025/, 'Place details route correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+    });
+    
 
 casper.run(function() {
     t.done();
