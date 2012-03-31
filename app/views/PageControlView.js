@@ -80,7 +80,7 @@
             } else {
                 // not valid
                 this.renderNextPrev();
-                // XXX: error message?
+                state.set({ message: "Sorry, there isn't a page '" + pageId + "' in this book"});
             }
         }
     });

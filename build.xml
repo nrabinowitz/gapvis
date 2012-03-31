@@ -264,25 +264,42 @@
     
     <!-- Dev Server targets -->
     
-    <target name="start-server">
+    <target name="start-proxy-server">
         <exec executable="cmd.exe">
             <arg line="/K start node ${devserver.js} -p ${dev.server.port} -t ${dev.target.proxytarget}" />
         </exec>
     </target>
     
-    <target name="serve-dev"
-            depends="build-dev,
-                     start-server">
+    <target name="start-dev-server">
+        <exec executable="cmd.exe">
+            <arg line="/K start node ${devserver.js} -p ${dev.server.port} --testapi -T ./tests/api" />
+        </exec>
+    </target>
+    
+    <target name="launch-in-browser">
         <exec executable="cmd.exe">
             <arg line="/K start http://localhost:${dev.server.port}/index.html" />
         </exec>
     </target>
     
+    <target name="serve-proxy"
+            depends="build-dev,
+                     start-proxy-server,
+                     launch-in-browser" />
+    
+    <target name="serve-dev"
+            depends="build-dev,
+                     start-dev-server,
+                     launch-in-browser" />
+    
     <!-- Test targets -->
-    <target name="run-tests" depends="build-dev, start-server">
+    <target name="run-tests" depends="build-dev, start-dev-server">
         <echo>Running tests</echo>
+        <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
-            <arg file="tests/test_app.py" />
+            <arg file="${casper.js}" />
+            <arg file="tests/run.js" />
+            <arg file="${suite}" />
         </exec>
     </target>
     

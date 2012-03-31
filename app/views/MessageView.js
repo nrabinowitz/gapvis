@@ -1,7 +1,7 @@
 /*
  * Message View
  */
-(function(gv) {
+(function(gv, window) {
     var state = gv.state,
         showFor = 3000;
     
@@ -15,18 +15,23 @@
         },
         
         showMessage: function() {
-            var msg = state.get('message');
+            var view = this,
+                msg = state.get('message');
+            if (!!state.previous('message') && view._tmid) {
+                window.clearTimeout(view._tmid);
+                delete view._tmid;
+            }
             if (msg) {
-                this.$('#message-text').text(msg);
-                $(this.el).show();
-                window.setTimeout(function() {
+                view.$('#message-text').text(msg);
+                $(view.el).show();
+                view._tmid = window.setTimeout(function() {
                     state.unset('message');
                 }, showFor);
             } else {
-                $(this.el).fadeOut('slow');
+                $(view.el).fadeOut('slow');
             }
         }
         
     });
     
-}(gv));
+}(gv, window));

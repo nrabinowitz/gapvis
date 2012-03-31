@@ -61,7 +61,8 @@
                         mapTypeId: gmaps.MapTypeId.TERRAIN,
                         streetViewControl: false,
                         styles: mapStyle
-                    });
+                    }),
+                    markers = view.markers = [];
                 
                 // set bounds
                 gmap.fitBounds(bounds);
@@ -100,6 +101,8 @@
                             state.set({ placeid: place.id });
                         });
                     }
+                    
+                    markers.push(marker);
                 }
                 
                 // add markers for current place

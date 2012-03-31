@@ -32,8 +32,13 @@
                 map = view.map,
                 placeId = state.get('placeid'),
                 place;
-            // if no map or place has been set, give up
-            if (!map || !placeId) {
+            // if no map has been set, give up
+            if (!map) {
+                return;
+            }
+            // if there's no place selected, close the window
+            if (!placeId) {
+                map.closeBubble();
                 return;
             }
             // get the place

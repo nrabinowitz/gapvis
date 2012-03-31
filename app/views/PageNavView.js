@@ -12,8 +12,8 @@
         
         initialize: function() {
             // listen for state changes
-            state.on('change:pageid', this.renderCurrentPage, this);
-            state.on('change:placeid', this.renderSelectedPlace, this);
+            this.bindState('change:pageid', this.renderCurrentPage, this);
+            this.bindState('change:placeid', this.renderSelectedPlace, this);
         },
         
         render: function() {
