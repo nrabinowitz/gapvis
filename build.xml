@@ -244,11 +244,11 @@
                 password="${alexandria.password}"
                 depends="yes">
             <fileset dir="${target.dir}">
-                <include name="css/**"/>
                 <include name="images/**"/>
                 <include name="lib/**"/>
                 <include name="${index.target}"/>
                 <include name="${js.concat}"/>
+                <include name="${css.concat}"/>
                 <include name="about.html"/>
                 <include name="LICENSE.txt"/>
             </fileset>
