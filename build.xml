@@ -20,6 +20,10 @@
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
     <property name="js.concat.target" value="${target.dir}/${js.concat}" />
     
+    <property name="css.concat" value="styles-all.css" />
+    <property name="css.concat.build" value="${build.dir}/${css.concat}" />
+    <property name="css.concat.target" value="${target.dir}/${css.concat}" />
+    
     
     <!-- Build Targets -->
     <target name="build-dev"
@@ -30,13 +34,24 @@
                      build-templates,
                      finish-build"/>
             
-    <target name="build-production"
+    <target name="-build-production"
             depends="start-build,
                      build-js-production, 
                      build-css-production,
                      build-templates,
                      build-analytics,
+                     compress-html,
                      finish-build"/>
+                     
+    <target name="build-production">
+        <property name="js.files.compress" value="${js.files.production}"/>
+        <ant target="-build-production"/>
+    </target>
+                     
+    <target name="build-production-test">
+        <property name="js.files.compress" value="${js.files.production.test}"/>
+        <ant target="-build-production"/>
+    </target>
             
     <target name="deploy"
             depends="build-production,
@@ -154,10 +169,33 @@
         <replace file="${index.build}" token="${placeholder.js}" value=""/>
     </target>
     
-    <target name="build-css-production">
+    
+    <target name="css.minify.concat">
+        <echo>Minifying and concatenating CSS files</echo>
+        <!-- Compress and add extensions and apps -->
+        <for list="${css.files}" param="file" trim="true">
+            <sequential>
+                <echo>Compressing @{file}</echo>
+                <!-- compress -->
+                <exec executable="${lessc}" failonerror="true">
+                    <arg line="--yui-compress @{file} > @{file}.min.tmp"/>
+                </exec>
+                <!-- add to file -->
+                <concat destfile="${css.concat.build}" append="yes">
+                    <fileset file="@{file}.min.tmp"/>
+                </concat>
+                <!-- clean up -->
+                <delete file="@{file}.min.tmp"/>
+            </sequential>
+        </for>
+    </target>
+    
+    <target name="build-css-production" depends="css.minify.concat">
         <echo>Creating tags for production CSS files</echo>
+        <!-- move build to production -->
+        <copy file="${css.concat.build}" tofile="${css.concat.target}"/>
         <!-- Put in css files -->
-        <for list="${css.files}" param="file.url" trim="true">
+        <for list="${css.concat.target}" param="file.url" trim="true">
             <sequential>
                 <replace file="${index.build}" 
                     token="${placeholder.css}"
@@ -178,9 +216,21 @@
             value="${template.contents}"/>
     </target>
     
+    <target name="compress-html">
+        <echo>Compressing HTML</echo>
+        <!-- Compress to temp file -->
+        <java jar="${htmlcompressor.jar}" fork="true" failonerror="true">
+            <arg line="--remove-quotes"/>
+            <arg line="-o ${index.build}.tmp ${index.build}"/>
+        </java>
+        <!-- Replace build with compressed -->
+        <copy file="${index.build}.tmp" tofile="${index.build}"/>
+    </target>
+    
     <target name="clean-production-build">
         <delete file="${index.target}"/>
         <delete file="${js.concat.target}"/>
+        <delete file="${css.concat.target}"/>
     </target>
     
     <!-- Deployment targets -->
@@ -194,11 +244,11 @@
                 password="${alexandria.password}"
                 depends="yes">
             <fileset dir="${target.dir}">
-                <include name="css/**"/>
                 <include name="images/**"/>
                 <include name="lib/**"/>
                 <include name="${index.target}"/>
                 <include name="${js.concat}"/>
+                <include name="${css.concat}"/>
                 <include name="about.html"/>
                 <include name="LICENSE.txt"/>
             </fileset>
@@ -291,9 +341,25 @@
             depends="build-dev,
                      start-dev-server,
                      launch-in-browser" />
+                     
+    <target name="serve-production"
+            depends="build-production-test,
+                     start-dev-server,
+                     launch-in-browser" />
     
     <!-- Test targets -->
-    <target name="run-tests" depends="build-dev, start-dev-server">
+    
+    <target name="run-tests"
+            depends="build-dev, 
+                     start-dev-server,
+                     -run-tests"/>
+                     
+    <target name="run-tests-production"
+            depends="build-production-test, 
+                     start-dev-server,
+                     -run-tests"/>
+    
+    <target name="-run-tests" depends="build-dev, start-dev-server">
         <echo>Running tests</echo>
         <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
