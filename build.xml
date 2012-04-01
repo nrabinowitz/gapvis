@@ -20,6 +20,10 @@
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
     <property name="js.concat.target" value="${target.dir}/${js.concat}" />
     
+    <property name="css.concat" value="styles-all.css" />
+    <property name="css.concat.build" value="${build.dir}/${css.concat}" />
+    <property name="css.concat.target" value="${target.dir}/${css.concat}" />
+    
     
     <!-- Build Targets -->
     <target name="build-dev"
@@ -165,10 +169,33 @@
         <replace file="${index.build}" token="${placeholder.js}" value=""/>
     </target>
     
-    <target name="build-css-production">
+    
+    <target name="css.minify.concat">
+        <echo>Minifying and concatenating CSS files</echo>
+        <!-- Compress and add extensions and apps -->
+        <for list="${css.files}" param="file" trim="true">
+            <sequential>
+                <echo>Compressing @{file}</echo>
+                <!-- compress -->
+                <exec executable="${lessc}" failonerror="true">
+                    <arg line="--yui-compress @{file} > @{file}.min.tmp"/>
+                </exec>
+                <!-- add to file -->
+                <concat destfile="${css.concat.build}" append="yes">
+                    <fileset file="@{file}.min.tmp"/>
+                </concat>
+                <!-- clean up -->
+                <delete file="@{file}.min.tmp"/>
+            </sequential>
+        </for>
+    </target>
+    
+    <target name="build-css-production" depends="css.minify.concat">
         <echo>Creating tags for production CSS files</echo>
+        <!-- move build to production -->
+        <copy file="${css.concat.build}" tofile="${css.concat.target}"/>
         <!-- Put in css files -->
-        <for list="${css.files}" param="file.url" trim="true">
+        <for list="${css.concat.target}" param="file.url" trim="true">
             <sequential>
                 <replace file="${index.build}" 
                     token="${placeholder.css}"
@@ -203,6 +230,7 @@
     <target name="clean-production-build">
         <delete file="${index.target}"/>
         <delete file="${js.concat.target}"/>
+        <delete file="${css.concat.target}"/>
     </target>
     
     <!-- Deployment targets -->
