@@ -10,11 +10,13 @@
     
     <!-- get properties -->
     <property file="build.properties" />
+    
     <property name="build.dir" value="build" />
     <property name="target.dir" value="." />
     <property name="index.template" value="index.tmpl.html" />
     <property name="index.build" value="${build.dir}/index.html" />
     <property name="index.target" value="index.html" />
+    
     
     <property name="js.concat" value="scripts-all.js" />
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
@@ -24,6 +26,36 @@
     <property name="css.concat.build" value="${build.dir}/${css.concat}" />
     <property name="css.concat.target" value="${target.dir}/${css.concat}" />
     
+    <!-- Get files for build -->
+    <pathconvert property="js.app.files" pathsep="," dirsep="/">
+        <filelist dir="." files="${js.app.core}"/>
+        <fileset dir="${js.app.models.dir}"/>
+        <fileset dir="${js.app.views.dir}"/>
+        <fileset dir="${js.app.layouts.dir}"/>
+        <fileset dir="${js.app.routers.dir}"/>
+        <mapper type="glob" from="${basedir}${file.separator}*" to="*"/>
+    </pathconvert>
+    
+    <pathconvert property="js.app.templates.files" pathsep="," dirsep="/">
+        <fileset dir="${js.app.templates.dir}"/>
+    </pathconvert>
+    
+    <property name="js.files.dev" 
+              value="${js.lib.nomunge}, 
+                     ${js.lib.dev}, 
+                     ${js.libext},
+                     ${js.app.files},
+                     ${js.app.settings.dev}" />
+                     
+    <property name="js.files.production" 
+              value="${js.libext},
+                     ${js.app.files},
+                     ${js.app.settings.production}" />
+                     
+    <property name="js.files.production.test" 
+              value="${js.libext},
+                     ${js.app.files},
+                     ${js.app.settings.dev}" />
     
     <!-- Build Targets -->
     <target name="build-dev"
@@ -74,7 +106,7 @@
     <target name="build-templates">
         <echo>Inserting template code</echo>
         <!-- Put in template files -->
-        <for list="${js.app.templates}" param="file" trim="true">
+        <for list="${js.app.templates.files}" param="file" trim="true">
             <sequential>
                 <!-- Get file contents and name -->
                 <local name="template.contents"/>
