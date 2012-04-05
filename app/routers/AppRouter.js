@@ -55,8 +55,8 @@
         
         // Querystring functions
         
-        // list of parameters to de/serialize in the querystring
-        qsParams: ['mapzoom', 'mapcenter', 'pageview', 'maptypeid'],
+// list of parameters to de/serialize in the querystring
+qsParams: ['mapzoom', 'mapcenter', 'pageview', 'maptypeid'],
         
         // set any global state variables from the querystring
         parseQS: function(qs) {

@@ -37,16 +37,27 @@
  * @namespace
  * Top-level namespace for the GapVis application
  */
-var gv = {
+var gv = _.extend(spf, {
 
     init: function() {
+        // XXX: Do I need this?
         gv.books = new gv.BookList();
-        gv.router = new gv.AppRouter();
-        gv.app = new gv.AppView();
-        Backbone.history.start();
+        // XXX: set up screens etc
+        gv.configure({
+            globalViews: [gv.MessageView],
+            views: {
+                'index': {
+                    layout: gv.IndexLayout,
+                    router: ['', 'index'],
+                    slots: {
+                        '#book-list': gv.BookListView
+                    }
+                }
+            }
+        }).start();
     }
 
-};
+});
 
 // kick things off
 $(gv.init);
