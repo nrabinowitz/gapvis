@@ -31,6 +31,7 @@
         
     // View: IndexView (index page)
     gv.BookListView = View.extend({
+        el: '#book-list-view',
         
         initialize: function() {
             var books = this.model = gv.books;

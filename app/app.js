@@ -48,15 +48,13 @@ var gv = _.extend(spf, {
             globalViews: [gv.MessageView],
             views: {
                 'index': {
-                    layout: '#layout-2up-right',
+                    layout: '#layout-index',
                     router: ['', 'index'],
                     slots: {
-                        '.slot-left': {
-                            layout: gv.BookListView,
-                            id: 'book-list-view',
-                            className: 'panel loading'
+                        '#book-list-view': {
+                            layout: gv.BookListView
                         },
-                        '.slot-right': '#index-overview-template'
+                        '.overview': '#index-overview-template'
                     }
                 }
             }

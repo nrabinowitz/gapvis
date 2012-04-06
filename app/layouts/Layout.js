@@ -8,10 +8,10 @@
     gv.Layout = gv.Layout.extend({
         // top view size
         topViewWidth: function() {
-            return $(window).width() - 70;
+            return $(window).width() - 40;
         },
         topViewHeight: function() {
-            return $(window).height() - 115;
+            return $(window).height() - 87;
         },
         // default layout
         layout: function() {

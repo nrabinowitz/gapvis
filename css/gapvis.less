@@ -12,15 +12,15 @@
 @header-height: 40px;
 @footer-height: 35px;
 
-@view-margin-top: @header-height + 10;
-@view-margin-bottom: @footer-height;
-@view-margin-right: 20px;
-@view-margin-left: 20px;
-
 @view-padding-top: 20px;
 @view-padding-bottom: 25px;
 @view-padding-right: 15px;
 @view-padding-left: 15px;
+
+@view-margin-top: @header-height + 10;
+@view-margin-bottom: @footer-height + @view-padding-bottom;
+@view-margin-right: 20px;
+@view-margin-left: 20px;
 
 // ---------------------------------------------------
 // Mix-ins
@@ -105,10 +105,8 @@ div.top {
     position: relative;
     background: #eee;
     top: 0;
-    bottom: @view-margin-bottom;
-    right: @view-margin-right;
     left: @view-margin-left;
-    padding: @view-padding-top @view-padding-right @view-padding-bottom @view-padding-left;
+    // width & height set with JS
     -moz-border-radius: 15px;
     border-radius: 15px;
     overflow: hidden;
@@ -117,22 +115,18 @@ div.top {
         display: none;
     }
     
-    // 2-up layout
-    &.layout-2up-right {
-        .slot-left {
+    // index layout
+    &.layout-index {
+        #book-list-view {
             position: absolute;
-            width: 40%;
+            width: 35%;
+            left: @view-padding-left;
             top: @view-padding-top;
             bottom: @view-padding-bottom;
             overflow: auto;
-            
-            // index page book list
-            #book-list-view {
-                padding: 1em;
-                .full-size;
-            }
+            padding: 1em;
         }
-        .slot-right {
+        .overview {
             position: absolute;
             width: 50%;
             left: 40%;
