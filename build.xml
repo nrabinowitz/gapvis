@@ -240,8 +240,8 @@
     
     <target name="build-css-production">
         <property name="css.less.compress" value="true"/>
-        <property name="css.less.files" value="${css.lib}, ${css.app}"/>
-        <property name="css.files" value="${css.concat.target}"/>
+        <property name="css.less.files" value="${css.app}"/>
+        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
         <ant target="-less-concat-css"/>
         <ant target="-build-css"/>
     </target>
@@ -393,17 +393,17 @@
     
     <!-- Test targets -->
     
-    <target name="run-tests"
+    <target name="run-tests-dev"
             depends="build-dev, 
                      start-dev-server,
-                     -run-tests"/>
+                     run-tests"/>
                      
     <target name="run-tests-production"
             depends="build-production-test, 
                      start-dev-server,
-                     -run-tests"/>
+                     run-tests"/>
     
-    <target name="-run-tests" depends="build-dev, start-dev-server">
+    <target name="run-tests">
         <echo>Running tests</echo>
         <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
