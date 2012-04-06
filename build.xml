@@ -173,7 +173,7 @@
     <target name="css.minify.concat">
         <echo>Minifying and concatenating CSS files</echo>
         <!-- Compress and add extensions and apps -->
-        <for list="${css.files}" param="file" trim="true">
+        <for list="${css.app}" param="file" trim="true">
             <sequential>
                 <echo>Compressing @{file}</echo>
                 <!-- compress -->
@@ -195,7 +195,7 @@
         <!-- move build to production -->
         <copy file="${css.concat.build}" tofile="${css.concat.target}"/>
         <!-- Put in css files -->
-        <for list="${css.concat.target}" param="file.url" trim="true">
+        <for list="${css.lib},${css.concat.target}" param="file.url" trim="true">
             <sequential>
                 <replace file="${index.build}" 
                     token="${placeholder.css}"
@@ -349,17 +349,17 @@
     
     <!-- Test targets -->
     
-    <target name="run-tests"
+    <target name="run-tests-dev"
             depends="build-dev, 
                      start-dev-server,
-                     -run-tests"/>
+                     run-tests"/>
                      
     <target name="run-tests-production"
             depends="build-production-test, 
                      start-dev-server,
-                     -run-tests"/>
+                     run-tests"/>
     
-    <target name="-run-tests" depends="build-dev, start-dev-server">
+    <target name="run-tests">
         <echo>Running tests</echo>
         <property name="suite" value="tests/suites"/>
         <exec executable="python" failonerror="true">
