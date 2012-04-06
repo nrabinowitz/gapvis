@@ -129,11 +129,22 @@ div.top {
         .overview {
             position: absolute;
             width: 50%;
-            right: 40%;
-            top: @view-padding-right;;
+            right: @view-padding-right;
+            top: @view-padding-top;
             bottom: @view-padding-bottom;
             overflow: auto;
             padding: 0 2em 1em 3em;
+            
+            // image thumbnails
+            div.thumbs {
+                width: 100px;
+                margin-left: 1em;
+                float: right;
+                
+                img {
+                    margin-bottom: 1em;
+                }
+            }
         }
     }
 }
@@ -154,14 +165,6 @@ div.panel {
     border: 1px solid #CCC;
 }
 
-div.thumbs {
-    width: 100px;
-    margin-left: 1em;
-    float: right;
-}
-div.thumbs img {
-    margin-bottom: 1em;
-}
 
 /* book reading view */
 div#reading-pane {
