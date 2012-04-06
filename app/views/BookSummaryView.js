@@ -6,7 +6,7 @@
         state = gv.state;
     
     // View: BookSummaryView (master view for the book summary screen)
-    gv.BookSummaryView = gv.BookView.extend({
+    gv.BookSummaryView = View.extend({
         el: '#book-summary-view',
         
         initialize: function(opts) {

@@ -4,7 +4,7 @@
 (function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
-        API_ROOT = gv.settings.API_ROOT,
+        settings = gv.settings,
         Page;
        
     // Model: Page
@@ -30,7 +30,7 @@
     gv.PageList = Collection.extend({
         model: Page,
         url: function() {
-            return API_ROOT +  '/books/' + this.book.id + '/page';
+            return settings.API_ROOT +  '/books/' + this.book.id + '/page';
         }
     });
     

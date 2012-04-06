@@ -4,7 +4,7 @@
 (function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
-        API_ROOT = gv.settings.API_ROOT,
+        settings = gv.settings,
         Place;
        
     // Model: Place
@@ -64,7 +64,9 @@
     // Collection: PlaceList
     gv.PlaceList = Collection.extend({
         model: Place,
-        url: API_ROOT + '/places',
+        url: function() {
+            return settings.API_ROOT + '/places' 
+        },
         comparator: function(place) {
             return -place.get('frequency')
         }

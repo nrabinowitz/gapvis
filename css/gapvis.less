@@ -1,5 +1,37 @@
-/* GapVis styles. */
 
+// ---------------------------------------------------
+// Settings
+// ---------------------------------------------------
+
+// colors
+@link-color: steelblue;
+@active-link-color: orange;
+@discreet-text: #999;
+
+// top view dimensions
+@header-height: 40px;
+@footer-height: 35px;
+@view-margin-top: @header-height + 10;
+@view-margin-bottom: @footer-height;
+@view-margin-right: 20px;
+@view-margin-left: 20px;
+@view-padding: 15px;
+
+// ---------------------------------------------------
+// Mix-ins
+// ---------------------------------------------------
+
+.full-size {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+}
+
+// ---------------------------------------------------
+// Basic elements
+// ---------------------------------------------------
 html, body {
     font-family: Georgia, Garamond, serif;
     overflow: hidden;
@@ -8,10 +40,7 @@ html, body {
 h1, h2, h3, h4 {
     color: #555;
 }
-h4 {
-    font-style: italic;
-}
-h1 {
+h1, h4 {
     font-style: italic;
 }
 ul {
@@ -21,64 +50,99 @@ ul {
 li {
     margin: 0 0 .5em 0;
 }
-a:link, a:visited {
-    color: steelblue;
+a {
+    &:link, &:visited { color: @link-color; }
+    &:hover, &:active { color: @active-link-color; }
 }
-a:hover, a:active {
-    color: orange;
+em {
+    font-style: italic;
 }
 
-/* header */
+// ---------------------------------------------------
+// Header and Footer
+// ---------------------------------------------------
 header {
-    padding: 10px 20px 0 20px;
-    height: 40px;
+    padding: 10px @view-margin-right 0 @view-margin-left;
+    height: @header-height;
+
+    h1 {
+        margin: 0;
+        float: left;
+        
+        span.beta {
+            font-style: normal;
+            font-weight: normal;
+            font-size: .5em;
+            color: @discreet-text;
+        }
+    }
+    
+    nav {
+        margin: .95em 2em;
+        float: left;
+    }
 }
-header h1 {
-    margin: 0;
-    float: left;
-}
-header h1 span.beta {
-    font-style: normal;
-    font-weight: normal;
-    font-size: .5em;
-    color: #999;
-}
-header nav {
-    margin: .95em 2em;
-    float: left;
-}
+
 footer {
     position: absolute;
     bottom: 0;
     padding: 10px 20px;
     font-size: .8em;
-    color: #999;
-}
-footer a:link, footer a:visited {
-    color: #999;
+    color: @discreet-text;
+    
+    a:link, a:visited { color: @discreet-text; }
 }
 
-/* top view */
-div.topview {
-    position: absolute;
+// ---------------------------------------------------
+// Top layout views
+// ---------------------------------------------------
+div.top {
+    position: relative;
     background: #eee;
-    top: 50px;
-    bottom: 35px;
-    right: 20px;
-    left: 20px;
-    padding: 15px;
-    display: none;
+    top: 0;
+    bottom: @view-margin-bottom;
+    right: @view-margin-right;
+    left: @view-margin-left;
+    padding: @view-padding;
     -moz-border-radius: 15px;
     border-radius: 15px;
     overflow: hidden;
+    
+    loading * {
+        display: none;
+    }
+    
+    // 2-up layout
+    &.layout-2up-right {
+        .slot-left {
+            position: absolute;
+            width: 40%;
+            top: @view-padding;
+            bottom: @view-padding;
+            overflow: auto;
+            
+            // index page book list
+            #book-list-view {
+                padding: 1em;
+                .full-size;
+            }
+        }
+        .slot-right {
+            position: absolute;
+            width: 50%;
+            left: 40%;
+            top: @view-padding;
+            bottom: @view-padding;
+            overflow: auto;
+            padding: 0 2em 1em 3em;
+        }
+    }
 }
+
 div.loading {
     background-image: url(../images/blue-loading.gif);
     background-repeat: no-repeat;
     background-position: 50% 50%;
-}
-div.topview.loading  * {
-    display: none;
 }
 div.navigation-view {
     float: right;
@@ -91,23 +155,6 @@ div.panel {
     border: 1px solid #CCC;
 }
 
-/* index view */
-#book-list-view {
-    width: 40%;
-    padding: 1em;
-    overflow: auto;
-    float: left;
-    height: 20em;
-}
-#book-list em {
-    font-style: italic;
-}
-#instructions {
-    float: left;
-    width: 45%;
-    overflow: auto;
-    padding: 0 2em 1em 2em;
-}
 div.thumbs {
     width: 100px;
     margin-left: 1em;
@@ -236,16 +283,16 @@ div.flickr-photo {
 
 /* specific text styles */
 header h1 a:link, header h1 a:visited {
-    color: steelblue;
+    color: @link-color;
     text-decoration: none;
 }
 span.place {
-    color: steelblue;
+    color: @link-color;
     cursor: pointer;
     font-weight: bold;
 }
 span.place:hover {
-    color: orange;
+    color: @active-link-color;
 }
 span.place.hi {
     background: yellow;
@@ -271,11 +318,11 @@ span.control {
     cursor: default;
 }
 span.control.on {
-    color: steelblue;
+    color: @link-color;
     cursor: pointer;
 }
 span.control.on:hover {
-    color: orange;
+    color: @active-link-color;
 }
 #page-id {
     width: 3.5em;
@@ -340,7 +387,7 @@ div#timeline-controls div {
     background-repeat: none;
 }
 div#timeline-controls div.on {
-    background-color: steelblue;
+    background-color: @link-color;
     cursor: pointer;
 }
 div#timeline-controls div#timeline-play {
@@ -386,7 +433,7 @@ div.pagenum {
     cursor: pointer;
 }
 #page-nav-view div.current {
-    border: 2px solid steelblue;
+    border: 2px solid @link-color;
     margin-top: 4px;
     cursor: auto;
 }
@@ -417,16 +464,10 @@ div.pagenum {
 }
 #change-this-form  span {
     font-weight: bold;
-    color: steelblue;
+    color: @link-color;
 }
 .ui-dialog-titlebar {
     display:none
-}
-#change-this-form div.msg {
-    color: orange;
-    margin: .5em;
-    font-size: 1.5em;
-    text-align: center;
 }
 
 /* message view */
@@ -447,3 +488,7 @@ div.pagenum {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
+
+// eventually, delete
+div.topview { display: none; }

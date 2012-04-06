@@ -11,7 +11,7 @@
         tagName: 'p',
         
         initialize: function() {
-            this.template = _.template($('#book-list-template').html());
+            this.template = _.template($('#book-list-item-template').html());
         },
         
         render: function() {
@@ -40,10 +40,12 @@
         
         render: function() {
             var view = this;
-            // remove the loading image
-            $('#book-list-view').removeClass('loading');
+            // make content
+            view.$el
+                .html($('#book-list-template').html())
+                .removeClass('loading');
             // make the book list
-            view.$el.empty();
+            $('#book-list').empty();
             view.model.forEach(function(book) {
                 var item = new BookListItemView({ model:book });
                 view.$el.append(item.render().el);

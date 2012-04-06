@@ -4,7 +4,7 @@
 (function(gv) {
     var Model = gv.Model,
         Collection = gv.Collection,
-        API_ROOT = gv.settings.API_ROOT,
+        settings = gv.settings,
         Book;
        
     // Model: Book
@@ -16,7 +16,7 @@
         },
         
         url: function() {
-            return API_ROOT + '/books/' + this.id + '.json';
+            return settings.API_ROOT + '/books/' + this.id + '.json';
         },
         
         initialize: function() {
@@ -193,7 +193,9 @@
     // Collection: BookList
     gv.BookList = Collection.extend({
         model: Book,
-        url: API_ROOT +  '/books/.json',
+        url: function() { 
+            return settings.API_ROOT +  '/books/.json' 
+        },
         comparator: function(book) {
             // try for author last name
             var author = (book.get('author') || '')

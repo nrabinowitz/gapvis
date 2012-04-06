@@ -44,13 +44,19 @@ var gv = _.extend(spf, {
         gv.books = new gv.BookList();
         // XXX: set up screens etc
         gv.configure({
+            appElement: '#app-view',
             globalViews: [gv.MessageView],
             views: {
                 'index': {
-                    layout: gv.IndexLayout,
+                    layout: '#layout-2up-right',
                     router: ['', 'index'],
                     slots: {
-                        '#book-list': gv.BookListView
+                        '.slot-left': {
+                            layout: gv.BookListView,
+                            id: 'book-list-view',
+                            className: 'panel loading'
+                        },
+                        '.slot-right': '#index-overview-template'
                     }
                 }
             }

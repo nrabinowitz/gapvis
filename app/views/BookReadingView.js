@@ -4,10 +4,10 @@
 (function(gv) {
     var View = gv.View,
         state = gv.state,
-        _super = gv.BookView.prototype;
+        _super = View.prototype;
     
     // View: BookReadingView (master view for the book reading screen)
-    gv.BookReadingView = gv.BookView.extend({
+    gv.BookReadingView = View.extend({
         el: '#book-view',
         
         initialize: function(opts) {

@@ -3,11 +3,10 @@
  */
 (function(gv) {
     var View = gv.View,
-        BookView = gv.BookView,
         state = gv.state;
     
     // View: BookPlaceView (master view for the book place detail screen)
-    gv.BookPlaceView = BookView.extend({
+    gv.BookPlaceView = View.extend({
         el: '#book-place-view',
         
         initialize: function(opts) {
