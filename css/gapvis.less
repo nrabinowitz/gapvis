@@ -11,22 +11,27 @@
 // top view dimensions
 @header-height: 40px;
 @footer-height: 35px;
+
 @view-margin-top: @header-height + 10;
 @view-margin-bottom: @footer-height;
 @view-margin-right: 20px;
 @view-margin-left: 20px;
-@view-padding: 15px;
+
+@view-padding-top: 20px;
+@view-padding-bottom: 25px;
+@view-padding-right: 15px;
+@view-padding-left: 15px;
 
 // ---------------------------------------------------
 // Mix-ins
 // ---------------------------------------------------
 
-.full-size {
+.full-size(@top:0, @right:0, @bottom:0, @left:0) {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    top: @top;
+    bottom: @bottom;
+    right: @right;
+    left: @left;
 }
 
 // ---------------------------------------------------
@@ -103,7 +108,7 @@ div.top {
     bottom: @view-margin-bottom;
     right: @view-margin-right;
     left: @view-margin-left;
-    padding: @view-padding;
+    padding: @view-padding-top @view-padding-right @view-padding-bottom @view-padding-left;
     -moz-border-radius: 15px;
     border-radius: 15px;
     overflow: hidden;
@@ -117,8 +122,8 @@ div.top {
         .slot-left {
             position: absolute;
             width: 40%;
-            top: @view-padding;
-            bottom: @view-padding;
+            top: @view-padding-top;
+            bottom: @view-padding-bottom;
             overflow: auto;
             
             // index page book list
@@ -131,8 +136,8 @@ div.top {
             position: absolute;
             width: 50%;
             left: 40%;
-            top: @view-padding;
-            bottom: @view-padding;
+            top: @view-padding-top;
+            bottom: @view-padding-bottom;
             overflow: auto;
             padding: 0 2em 1em 3em;
         }
