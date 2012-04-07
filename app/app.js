@@ -58,14 +58,28 @@ var gv = _.extend(spf, {
                     }
                 },
                 'book-summary': {
-                    layout: gv.BookLayout3UpLeft,
+                    layout: gv.BookSummaryLayout,
                     router: 'book/:bookid',
                     refreshOn: 'change:bookid',
                     slots: {
+                        '.navigation-view': gv.NavigationView,
                         '.book-title-view': gv.BookTitleView,
                         '.text-slot': gv.BookSummaryTextView,
                         '.left-panel': gv.BookSummaryMapView,
                         '.right-panel': gv.PlaceFrequencyBarsView
+                    }
+                },
+                'reading-view': {
+                    layout: gv.BookReadingLayout,
+                    router: [
+                        'book/:bookid/read', 
+                        'book/:bookid/read/:pageid',
+                        'book/:bookid/read/:pageid/:placeid'
+                    ],
+                    refreshOn: 'change:bookid',
+                    slots: {
+                        '.navigation-view': gv.NavigationView,
+                        '.book-title-view': gv.BookTitleView
                     }
                 }
             }

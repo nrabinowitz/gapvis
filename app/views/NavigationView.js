@@ -2,46 +2,46 @@
  * Permalink View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state;
+    var state = gv.state;
     
     // View: PermalinkView (renders the permalink)
-    gv.NavigationView = View.extend({
-        tagName: 'div',
+    gv.NavigationView = gv.BookView.extend({
+        template: '#navigation-view-template',
         
         navViews: [
-            { view: gv.BookSummaryView, id: 'nav-summary' },
-            { view: gv.BookReadingView, id: 'nav-reading' },
-            { view: gv.BookPlaceView, id: 'nav-place' }
+            'book-summary',
+            'reading-view', 
+            'place-view'
         ],
     
         initialize: function() {
-            this.template = _.template($('#navigation-view-template').html())
+            var view = this;
             // listen for all state changes
-            this.bindState('change', this.updatePermalink, this);
-            this.bindState('change:placeid', this.updateNavButtons, this);
-            this.bindState('change:topview', this.updateNavButtons, this);
+            view.bindState('change', view.updatePermalink, view);
+            view.bindState('change:placeid', view.updateNavButtons, view);
+            view.bindState('change:view', view.updateNavButtons, view);
         },
         
         render: function() {
+            var view = this,
+                cid = view.cid;
             // render content and append to parent
-            $(this.el).html(this.template({ cid: this.cid }))
-                .appendTo(this.options.parent.$('div.navigation-view'));
+            view.renderTemplate({ cid: cid });
             // button it
-            this.$('.nav-buttons').buttonset();
-            $('#nav-summary-' + this.cid).button('option', 'icons', {primary:'ui-icon-star'});
-            $('#nav-reading-' + this.cid).button('option', 'icons', {primary:'ui-icon-note'});
-            $('#nav-place-' + this.cid).button('option', 'icons', {primary:'ui-icon-pin-s'});
-            this.$('.permalink').button({
+            view.$('.nav-buttons').buttonset();
+            $('#book-summary-' + cid).button('option', 'icons', {primary:'ui-icon-star'});
+            $('#reading-view' + cid).button('option', 'icons', {primary:'ui-icon-note'});
+            $('#place-view' + cid).button('option', 'icons', {primary:'ui-icon-pin-s'});
+            view.$('.permalink').button({
                 icons: {
                     primary: "ui-icon-link"
                 },
                 text: false
             });
             // update
-            this.updatePermalink();
-            this.updateNavButtons();
-            return this;
+            view.updatePermalink();
+            view.updateNavButtons();
+            return view;
         },
         
         updatePermalink: function() {
@@ -50,14 +50,14 @@
         
         updateNavButtons: function() {
             // enable/disable place view
-            $('#nav-place-' + this.cid)
-                .button(state.get('placeid') ? 'enable' : 'disable');
+            $('#place-view-' + this.cid)
+                .button(gv.state.get('placeid') ? 'enable' : 'disable');
             // check the appropriate button
-            var topView = state.get('topview'),
+            var viewKey = gv.state.get('view'),
                 cid = this.cid;
             this.navViews.forEach(function(nav) {
-                $('#' + nav.id + '-' + cid)
-                    .prop('checked', nav.view == topView)
+                $('#' + nav + '-' + cid)
+                    .prop('checked', nav == viewKey)
                     .button('refresh');
             });
         },
@@ -70,13 +70,8 @@
         
         uiGoToView: function(evt) {
             // get view from id
-            var id = $(evt.target).attr('data-view-id'),
-                nav = _(this.navViews).find(function(n) {
-                    return n.id == id;
-                });
-            if (nav) {
-                state.set({ 'topview': nav.view });
-            }
+            var nav = $(evt.target).attr('data-view-id');
+            gv.state.set({ 'view': nav });
         }
         
     

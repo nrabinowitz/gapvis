@@ -11,15 +11,15 @@ casper
         t.assertAtBookSummaryView();
         t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
             "Book title shown");
-        t.assertExists("#place-freq-bars-view > svg",
+        t.assertExists("div.right-panel div svg",
             "Frequency bars SVG found");
-        t.assertEval(function() { return $("#place-freq-bars-view > svg rect").length > 6000 },
+        t.assertEval(function() { return $("div.right-panel div svg rect").length > 6000 },
             "Frequency bars have been rendered");
-        t.assertText("#book-summary-text-view span.place", 'Roma',
+        t.assertText("div.text-slot span.place", 'Roma',
             "Top-frequency place is correct (span)");
-        t.assertText("#place-freq-bars-view > svg text", 'Roma',
+        t.assertText("div.right-panel div svg text", 'Roma',
             "Top-frequency place is correct (bars)");
-        t.assertExists('#book-summary-view div.navigation-view label[for^="nav-summary"].ui-state-active',
+        t.assertExists('div.top.layout-book-summary div.navigation-view label[for^="book-summary"].ui-state-active',
             'Book Summary button is active');
         t.assertPermalink(RegExp(baseUrl + '#book/2\\?'),
             "Permalink is correct");
@@ -28,7 +28,7 @@ casper
 casper
     .describe('Book summary page > Nav button')
     .thenOpen(summaryUrl, function() {
-        this.click('#book-summary-view div.navigation-view label[for^="nav-reading"]');
+        this.click('div.top.layout-book-summary div.navigation-view label[for^="reading-view"]');
     })
     .then(function() {
         t.assertAtBookReadingView();
@@ -46,7 +46,7 @@ casper
 casper
     .describe('Book summary page > Freq bars click')
     .thenOpen(summaryUrl, function() {
-        this.click("#place-freq-bars-view > svg rect");
+        this.click("div.right-panel div svg rect");
     })
     .then(function() {
         t.assertAtBookReadingView();
@@ -60,11 +60,11 @@ casper
     .describe('Book summary page > Map items')
     .thenOpen(summaryUrl, function() {
         // this is ugly
-        t.assertEval(function() { return gv.app.currentView.children[3].markers.length > 10; },
+        t.assertEval(function() { return gv.app.currentView.slots['.left-panel'].markers.length > 10; },
             "Some markers are loaded on the map");
         // this is really ugly
         this.evaluate(function() {
-            var marker = gv.app.currentView.children[3].markers[0];
+            var marker = gv.app.currentView.slots['.left-panel'].markers[0];
             google.maps.event.trigger(marker, 'click');
         });
     })

@@ -9,6 +9,7 @@
         open: function(view, fromRight) {
             view.layout();
             view.$el.show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
+            view.layout();
         },
         
         close: function(view, fromRight) {

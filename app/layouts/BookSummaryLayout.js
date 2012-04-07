@@ -2,27 +2,12 @@
  * Core setup for views
  */
 (function(gv, window) {
-    var Layout = gv.Layout,
-        BookLayout;
-    
-    // abstract book layout view
-    BookLayout = Layout.extend({
-        className: 'layout-book',
-        // layout the bottom slot correctly
-        layout: function() {
-            Layout.prototype.layout.call(this);
-            var view = this,
-                h = view.$el.height(),
-                th = view.$('.book-title-view').height();
-            
-            view.$('.bottom-slot')
-                .height(h - th);
-        }
-    });
+    var Layout = gv.Layout;
     
     
-    gv.BookLayout3UpLeft = Layout.extend({
-        el: '#layout-book-3up-left',
+    gv.BookSummaryLayout = Layout.extend({
+        el: '#layout-book-summary',
+        
         // layout the bottom slot correctly
         layout: function() {
             Layout.prototype.layout.call(this);
