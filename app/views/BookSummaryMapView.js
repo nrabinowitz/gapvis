@@ -2,31 +2,17 @@
  * Book Summary Text View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state,
+    var state = gv.state,
         settings = gv.settings,
         // map styles
         mapStyle = settings.mapStyle,
         colorThemes = settings.colorThemes;
     
     // View: BookSummaryTextView (text content for the book summary)
-    gv.BookSummaryMapView = View.extend({
-        el: '#book-summary-map-view',
-        
-        // render and update functions
-        
-        layout: function() {
-            $(this.el).height(
-                this.topViewHeight() * .8 - 10 - $('#book-summary-text-view').height()
-            )
-            .width(
-                this.topViewWidth() - 450
-            );
-        },
+    gv.BookSummaryMapView = gv.BookView.extend({
+        el: '.left-panel',
         
         render: function() {
-            this.bindingLayout();
-            
             var book = this.model,
                 markers = this.markers = [],
                 gmaps = google.maps,
@@ -67,7 +53,7 @@
                 // UI listener
                 gmaps.event.addListener(marker, 'click', function() {
                     state.set({ placeid: place.id });
-                    state.set({ topview: gv.BookPlaceView });
+                    state.set({ view: 'place-view' });
                 });
                 markers.push(marker);
             });

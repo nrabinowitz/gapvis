@@ -40,9 +40,9 @@
 var gv = _.extend(spf, {
 
     init: function() {
-        // XXX: Do I need this?
+        // initialize empty book list
         gv.books = new gv.BookList();
-        // XXX: set up screens etc
+        // set up top-level views
         gv.configure({
             appElement: '#app-view',
             globalViews: [gv.MessageView],
@@ -55,6 +55,17 @@ var gv = _.extend(spf, {
                             layout: gv.BookListView
                         },
                         '.overview': '#index-overview-template'
+                    }
+                },
+                'book-summary': {
+                    layout: gv.BookLayout3UpLeft,
+                    router: 'book/:bookid',
+                    refreshOn: 'change:bookid',
+                    slots: {
+                        '.book-title-view': gv.BookTitleView,
+                        '.text-slot': gv.BookSummaryTextView,
+                        '.left-panel': gv.BookSummaryMapView,
+                        '.right-panel': gv.PlaceFrequencyBarsView
                     }
                 }
             }

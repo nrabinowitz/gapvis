@@ -2,71 +2,21 @@
  * Book View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state;
+    var View = gv.View;
     
-    // View: BookView (parent class for the book screens)
-    gv.BookView = View.extend({
-        
-        initialize: function(opts) {
-            var view = this;
-            // listen for state changes
-            state.on('change:bookid', function() {
-                if (view.$el.is(':visible')) {
-                    view.updateBook();
-                }
-            });
-        },
-        
-        updateViews: function() {
+    // View: BookView (parent class for book views)
+    var BookView = gv.BookView = gv.View.extend({
+        // utility - render an underscore template to this el's html
+        renderTemplate: function(context) {
             var view = this,
-                book = view.model;
-            view.children = view.childClasses.map(function(cls) {
-                return new cls({ 
-                    model: book,
-                    parent: view
-                })
-            });
-            return view;
+                template = _.template(view.template);
+            context = context || view.model.toJSON();
+            $(view.el).html(template(context));
         },
         
-        // Render functions
-        
-        render: function() {
-            var view = this;
-            // render all children
-            view.children.forEach(function(child) {
-                child.render();
-            });
-            view.layout();
-            view.rendered = true;
-            return view;
-        },
-        
-        clear: function() {
-            // delete contents of all children
-            this.children.forEach(function(child) {
-                child.clear();
-            });
-            this.$('div.book-title-view').empty();
-        },
-        
-        open: function(fromRight) {
-            $(this.el)
-                .addClass('loading')
-                .height(this.topViewHeight())
-                .show('slide', {direction: (fromRight ? 'right' : 'left') }, 500);
-            this.updateBook();
-        },
-        
-        close: function(fromRight) {
-            $(this.el).hide('slide', {direction: (fromRight ? 'left' : 'right') }, 500);
-        },
-        
-        // Model update functions
-        
-        updateBook: function() {
+        ready: function(callback) {
             var view = this,
+                state = gv.state,
                 bookId = state.get('bookid'),
                 book = view.model;
             if (!book || book.id != bookId) {
@@ -76,17 +26,28 @@
                     if (!state.get('pageid')) {
                         state.set({ pageid: book.firstId() });
                     }
-                    // clear out previously rendered content
-                    if (view.rendered) {
-                        view.clear();
-                    }
-                    // create child views and render
-                    view.$el.removeClass('loading');
-                    view.updateViews().render();
+                    callback();
                 });
             } else {
-                view.$el.removeClass('loading');
+                callback();
             }
+        }
+        
+    });
+    
+    // parent for views that require a place
+    var PlaceView = BookView.extend({
+        
+        ready: function(callback) {
+            var view = this,
+                placeId = gv.state.get('placeid');
+            // if no place has been set, give up
+            if (!placeId) return;
+            // get the book, then the place
+            BookView.prototype.ready.call(view, function() {
+                view.model.places.get(placeId)
+                    .ready(callback)
+            });
         }
         
     });

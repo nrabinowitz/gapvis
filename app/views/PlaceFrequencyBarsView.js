@@ -2,13 +2,11 @@
  * Place Frequency Bar Chart View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state,
+    var state = gv.state,
         PlaceFrequencyBarsView;
     
     // View: BookTitleView (title and metadata)
-    PlaceFrequencyBarsView = View.extend({
-        el: '#place-freq-bars-view',
+    PlaceFrequencyBarsView = gv.BookView.extend({
         
         settings: {
             buckets: 50,
@@ -20,18 +18,8 @@
             _.extend(this.settings, this.options);
         },
         
-        layout: function() {
-            $(this.el).height(
-                this.topViewHeight() * .8 - 35
-            );
-        },
-        
         render: function() {
             var singlePlace = !!this.options.place;
-            
-            if (!singlePlace) {
-                this.bindingLayout();
-            }
         
             var bh = 12,
                 w = 250,
@@ -72,14 +60,14 @@
                             // scrolljump: true,
                             placeid: pdata.id,
                             pageid: pageId,
-                            topview: gv.BookReadingView
+                            view: 'reading-view'
                         });
                     }
                     // label click
                     if ($(target).is('text.title')) {
                         state.set({
                             placeid: pdata.id,
-                            topview: gv.BookPlaceView
+                            view: 'place-view'
                         });
                     }
                 })

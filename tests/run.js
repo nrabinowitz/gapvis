@@ -91,11 +91,11 @@ t.assertMessage = function(expected, message) {
 
 t.assertAtIndexView = function() {
     t.assertRoute('index', "Index route correct");
-    t.assertVisible('#index-view', "Index view is visible");
+    t.assertVisible('div.top.layout-index', "Index view is visible");
 }
 t.assertAtBookSummaryView = function() {
     t.assertRoute(/^book\/\d+/, 'Book Summary route correct');
-    t.assertVisible('#book-summary-view', "Book Summary view is visible");
+    t.assertVisible('div.top.layout-book-3up-left', "Book Summary view is visible");
 }
 t.assertAtBookReadingView = function() {
     t.assertRoute(/^book\/\d+\/read/, 'Book reading route correct');

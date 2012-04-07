@@ -2,24 +2,17 @@
  * Book Title View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state,
-        BookSummaryView = gv.BookSummaryView;
+    var state = gv.state;
     
     // View: BookTitleView (title and metadata)
-    gv.BookTitleView = View.extend({
-        tagName: 'div',
-    
-        initialize: function() {
-            this.template = _.template($('#book-title-template').html())
-        },
+    gv.BookTitleView = gv.BookView.extend({
+        template: '#book-title-template',
         
         render: function() {
-            // render content and append to parent
-            $(this.el).html(this.template(this.model.toJSON()))
-                .appendTo(this.options.parent.$('div.book-title-view'));
-            this.$('h2.book-title').toggleClass('on', state.get('topview') != BookSummaryView);
-            return this;
+            var view = this;
+            view.renderTemplate();
+            view.$('h2.book-title').toggleClass('on', state.get('view') != 'book-summary');
+            return view;
         },
         
         // UI event handlers
@@ -29,7 +22,7 @@
         },
         
         uiGoToSummary: function() {
-            state.set({ 'topview': BookSummaryView });
+            state.set({ 'view': 'book-summary' });
         }
     });
     

@@ -2,29 +2,25 @@
  * Book Summary Text View
  */
 (function(gv) {
-    var View = gv.View,
-        state = gv.state;
+    var state = gv.state;
     
     // View: BookSummaryTextView (text content for the book summary)
-    gv.BookSummaryTextView = View.extend({
-        el: '#book-summary-text-view',
-        
-        initialize: function(opts) {
-            this.template = _.template($('#book-summary-text-template').html());
-        },
+    gv.BookSummaryTextView = gv.BookView.extend({
+        template: '#book-summary-text-template',
         
         // render and update functions
         
         render: function() {
-            var book = this.model, 
+            var view = this,
+                book = view.model, 
                 context = _.extend({}, book.toJSON(), {
                     pageCount: book.pages.length,
                     topPlaces: book.places.toJSON().slice(0,4)
                 });
             // fill in template
-            $(this.el).html(this.template(context));
+            view.renderTemplate(context);
             // buttonize reading link
-            this.$('button.goto-reading').button({
+            view.$('button.goto-reading').button({
                 icons: {
                     secondary: 'ui-icon-triangle-1-e'
                 }
@@ -41,13 +37,13 @@
         uiPlaceClick: function(e) {
             var placeId = $(e.target).attr('data-place-id');
             if (placeId) {
-                state.setSerialized('placeid', placeId);
-                state.set({ topview: gv.BookPlaceView });
+                state.set('placeid', placeId);
+                state.set({ 'view': 'place-view' });
             }
         },
         
         uiGoToReading: function() {
-            state.set({ 'topview': gv.BookReadingView });
+            state.set({ 'view': 'reading-view' });
         }
     });
     

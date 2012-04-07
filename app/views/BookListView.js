@@ -49,7 +49,7 @@
             $('#book-list').empty();
             view.model.forEach(function(book) {
                 var item = new BookListItemView({ model:book });
-                view.$el.append(item.render().el);
+                $('#book-list').append(item.render().el);
             });
         }
     });
