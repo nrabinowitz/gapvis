@@ -12,14 +12,14 @@
     </taskdef>
     
     <!-- get properties -->
-    <property file="build.properties" />
+    <property name="config.dir" value="config" />
+    <property file="${config.dir}/build.properties" />
     
     <property name="build.dir" value="build" />
     <property name="target.dir" value="." />
     <property name="index.template" value="index.tmpl.html" />
     <property name="index.build" value="${build.dir}/index.html" />
-    <property name="index.target" value="index.html" />
-    
+    <property name="index.target" value="${target.dir}/index.html" />
     
     <property name="js.concat" value="scripts-${build.time}.js" />
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
@@ -42,58 +42,74 @@
     <pathconvert property="js.app.templates.files" pathsep="," dirsep="/">
         <fileset dir="${js.app.templates.dir}"/>
     </pathconvert>
-    
-    <property name="js.files.dev" 
-              value="${js.lib.nomunge}, 
-                     ${js.lib.dev}, 
-                     ${js.libext},
-                     ${js.app.files},
-                     ${js.app.settings.dev}" />
                      
     <property name="js.files.production" 
               value="${js.libext},
-                     ${js.app.files},
-                     ${js.app.settings.production}" />
-                     
-    <property name="js.files.production.test" 
-              value="${js.libext},
-                     ${js.app.files},
-                     ${js.app.settings.dev}" />
+                     ${js.app.init},
+                     ${js.app.files}" />
     
     <!-- Build Targets -->
-    <target name="build-dev"
+    
+    <target name="build-dev">
+        <property name="js.settings" value="${js.settings.dev}"/>
+        <ant target="-start-build-dev"/>
+    </target>
+    
+    <target name="build-production">
+        <property name="js.settings" value="${js.settings.production}"/>
+        <ant target="-start-build-production"/>
+    </target>
+                     
+    <target name="build-production-test">
+        <property name="js.settings" value="${js.settings.dev}"/>
+        <ant target="-start-build-production"/>
+    </target>
+    
+    <target name="-build-dev"
             depends="clean-build,
                      start-build,
-                     build-js-dev, 
-                     build-css-dev,
+                     build-js, 
+                     build-css,
                      build-templates,
                      finish-build"/>
             
     <target name="-build-production"
             depends="clean-build,
                      start-build,
-                     build-js-production, 
-                     build-css-production,
+                     concat-libs-js,
+                     build-js,
+                     build-css,
                      build-templates,
                      build-analytics,
                      compress-html,
                      finish-build"/>
-                     
-    <target name="build-production">
-        <property name="js.files.compress" value="${js.files.production}"/>
-        <ant target="-build-production"/>
+    
+    <target name="-start-build-dev">
+        <property name="js.uglify.files" value="${js.app.init}"/>
+        <property name="js.insert.files" 
+                  value="${js.lib.nomunge}, 
+                         ${js.lib.dev}, 
+                         ${js.libext},
+                         ${js.concat.target},
+                         ${js.app.files}" />
+        <property name="css.less.files" value="${css.app}"/>
+        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
+        <ant target="-build-dev"/>
     </target>
-                     
-    <target name="build-production-test">
-        <property name="js.files.compress" value="${js.files.production.test}"/>
+    
+    <target name="-start-build-production">
+        <property name="js.uglify.files" 
+                  value="${js.libext},
+                         ${js.app.init},
+                         ${js.app.files}"/>
+        <property name="js.insert.files" 
+                  value="${js.lib.nomunge},
+                         ${js.concat.target}" />
+        <property name="js.uglify.compress" value="true"/>
+        <property name="css.less.compress" value="true"/>
+        <property name="css.less.files" value="${css.app}"/>
+        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
         <ant target="-build-production"/>
-    </target>
-            
-    <target name="deploy"
-            depends="build-production,
-                     deploy-alexandria">
-        <!-- and switch back to dev state -->
-        <ant target="build-dev"/>
     </target>
             
     <!-- Shared Targets -->
@@ -108,7 +124,19 @@
         <delete dir="${build.dir}" />
     </target>
     
-    <target name="-build-css">
+    <target name="clean-build">
+        <delete file="${index.target}"/>
+        <delete>
+            <fileset dir="." includes="scripts-*.js"/>
+        </delete>
+        <delete>
+            <fileset dir="." includes="styles-*.css"/>
+        </delete>
+    </target>
+    
+    <!-- CSS Targets -->
+    
+    <target name="build-css" depends="-less-concat-css">
         <echo>Creating tags for CSS files</echo>
         <!-- Put in css files -->
         <for list="${css.files}" param="file.url" trim="true">
@@ -124,7 +152,7 @@
     
     <target name="-less-concat-css">
         <echo>Less-ifying and concatenating CSS files</echo>
-        <condition property="compress.argument" value="--yui-compress" else="">
+        <condition property="css.compress.argument" value="--yui-compress" else="">
             <isset property="css.less.compress"/>
         </condition>
         <for list="${css.less.files}" param="file" trim="true">
@@ -132,7 +160,7 @@
                 <echo>Less-ifying @{file}</echo>
                 <!-- compress -->
                 <exec executable="${lessc}" failonerror="true">
-                    <arg line="${compress.argument}"/>
+                    <arg line="${css.compress.argument}"/>
                     <arg line="@{file} > @{file}.min.tmp"/>
                 </exec>
                 <!-- add to file -->
@@ -146,6 +174,64 @@
         <!-- move build to target -->
         <copy file="${css.concat.build}" tofile="${css.concat.target}"/>
     </target>
+    
+    <!-- JS Targets -->
+    
+    <target name="build-js" depends="-uglify-concat-js">
+        <echo>Creating tags for JS files</echo>
+        <!-- Put in script files -->
+        <for list="${js.insert.files}" param="file.url" trim="true">
+            <sequential>
+                <replace file="${index.build}" 
+                    token="${placeholder.js}"
+                    value="&lt;script type=&quot;text/javascript&quot; src=&quot;@{file.url}&quot;&gt;&lt;/script&gt;${placeholder.js}"/>
+            </sequential>
+        </for>
+        <!-- Clean up placeholder -->
+        <replace file="${index.build}" token="${placeholder.js}" value=""/>
+    </target>
+    
+    <target name="concat-libs-js">
+        <echo>Add compressed JS libraries</echo>
+        <!-- Add compressed libs -->
+        <for list="${js.lib.min}" param="file" trim="true">
+            <sequential>
+                <echo>Adding @{file} to ${js.concat.build}</echo>
+                <!-- add to file -->
+                <concat destfile="${js.concat.build}" append="yes">
+                    <fileset file="@{file}"/>
+                </concat>
+            </sequential>
+        </for>
+    </target>
+    
+    <target name="-uglify-concat-js">
+        <echo>Minifying and concatenating JS files</echo>
+        <!-- Compress and add extensions and apps -->
+        <condition property="js.compress.argument" value="-nc" else="-ns -b">
+            <isset property="js.uglify.compress"/>
+        </condition>
+        <for list="${js.uglify.files}" param="file" trim="true">
+            <sequential>
+                <echo>Compressing @{file}</echo>
+                <exec executable="${uglify.js}" failonerror="true">
+                    <arg line="--define-from-module &quot;${basedir}/${js.settings}&quot;"/>
+                    <arg line="${js.compress.argument}"/>
+                    <arg line="@{file} > @{file}.min.tmp"/>
+                </exec>
+                <!-- add to file -->
+                <concat destfile="${js.concat.build}" append="yes">
+                    <fileset file="@{file}.min.tmp"/>
+                </concat>
+                <!-- clean up -->
+                <delete file="@{file}.min.tmp"/>
+            </sequential>
+        </for>
+        <!-- Move script file to production -->
+        <copy file="${js.concat.build}" tofile="${js.concat.target}"/>
+    </target>
+    
+    <!-- Template Targets -->
     
     <target name="build-templates">
         <echo>Inserting template code</echo>
@@ -167,84 +253,7 @@
         <replace file="${index.build}" token="${placeholder.templates}" value=""/>
     </target>
     
-    <!-- Dev Targets -->
-    
-    <target name="build-js-dev">
-        <echo>Creating tags for dev JS files</echo>
-        <!-- Put in script files -->
-        <for list="${js.files.dev}" param="file.url" trim="true">
-            <sequential>
-                <replace file="${index.build}" 
-                    token="${placeholder.js}"
-                    value="&lt;script type=&quot;text/javascript&quot; src=&quot;@{file.url}&quot;&gt;&lt;/script&gt;${placeholder.js}"/>
-            </sequential>
-        </for>
-        <!-- Clean up placeholder -->
-        <replace file="${index.build}" token="${placeholder.js}" value=""/>
-    </target>
-
-    <target name="build-css-dev">
-        <property name="css.less.files" value="${css.app}"/>
-        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
-        <ant target="-less-concat-css"/>
-        <ant target="-build-css"/>
-    </target>
-    
     <!-- Production Targets -->
-    
-    <target name="js.minify.concat">
-        <echo>Minifying and concatenating JS files</echo>
-        <!-- Add compressed libs -->
-        <for list="${js.lib.min}" param="file" trim="true">
-            <sequential>
-                <echo>Adding @{file} to ${js.concat.build}</echo>
-                <!-- add to file -->
-                <concat destfile="${js.concat.build}" append="yes">
-                    <fileset file="@{file}"/>
-                </concat>
-            </sequential>
-        </for>
-        <!-- Compress and add extensions and apps -->
-        <for list="${js.files.compress}" param="file" trim="true">
-            <sequential>
-                <echo>Compressing @{file}</echo>
-                <!-- compress -->
-                <java jar="${yuicompressor.jar}" fork="true" failonerror="true">
-                    <arg line=" --line-break 4000 -o @{file}.min.tmp @{file}"/>
-                </java>
-                <!-- add to file -->
-                <concat destfile="${js.concat.build}" append="yes">
-                    <fileset file="@{file}.min.tmp"/>
-                </concat>
-                <!-- clean up -->
-                <delete file="@{file}.min.tmp"/>
-            </sequential>
-        </for>
-    </target>
-    
-    <target name="build-js-production" depends="js.minify.concat">
-        <echo>Creating tags for production JS files</echo>
-        <!-- Move script file to production -->
-        <copy file="${js.concat.build}" tofile="${js.concat.target}"/>
-        <!-- Put in script files -->
-        <for list="${js.lib.nomunge}, ${js.concat.target}" param="file.url" trim="true">
-            <sequential>
-                <replace file="${index.build}" 
-                    token="${placeholder.js}"
-                    value="&lt;script type=&quot;text/javascript&quot; src=&quot;@{file.url}&quot;&gt;&lt;/script&gt;${placeholder.js}"/>
-            </sequential>
-        </for>
-        <!-- Clean up placeholder -->
-        <replace file="${index.build}" token="${placeholder.js}" value=""/>
-    </target>
-    
-    <target name="build-css-production">
-        <property name="css.less.compress" value="true"/>
-        <property name="css.less.files" value="${css.app}"/>
-        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
-        <ant target="-less-concat-css"/>
-        <ant target="-build-css"/>
-    </target>
     
     <target name="build-analytics">
         <echo>Inserting Google Analytics code</echo>
@@ -267,20 +276,17 @@
         <copy file="${index.build}.tmp" tofile="${index.build}"/>
     </target>
     
-    <target name="clean-build">
-        <delete file="${index.target}"/>
-        <delete>
-            <fileset dir="." includes="scripts-*.js"/>
-        </delete>
-        <delete>
-            <fileset dir="." includes="styles-*.css"/>
-        </delete>
+    <!-- Deployment targets -->
+            
+    <target name="deploy"
+            depends="build-production,
+                     deploy-alexandria">
+        <!-- and switch back to dev state -->
+        <ant target="build-dev"/>
     </target>
     
-    <!-- Deployment targets -->
-    
     <target name="deploy-alexandria">
-        <property file="build.secret.properties" />
+        <property file="${config.dir}/build.secret.properties" />
         <echo>Deploying to ${alexandria.server}</echo>
         <ftp server="${alexandria.server}"
                 remotedir="${alexandria.path}"

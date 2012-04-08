@@ -48,7 +48,7 @@
         });
         
     // add settings to namespace
-    gv.settings = {
+    _.extend(gv.settings, {
         // google maps style settings
         mapStyle: mapStyle,
         scaleColors: scaleColors,
@@ -56,6 +56,6 @@
         
         // number of related places to show
         relatedCount: 8
-    };
+    });
     
 })(gv);

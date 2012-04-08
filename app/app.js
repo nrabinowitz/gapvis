@@ -84,9 +84,22 @@ var gv = _.extend(spf, {
                 }
             }
         }).start();
+        DEBUG && console.log('Application initialized');
+    },
+    
+    // core settings (set from config)
+    settings: {
+        API_ROOT: API_ROOT,
+        REPORT_URL: REPORT_URL,
+        API_DATA_TYPE: API_DATA_TYPE
     }
 
 });
+
+// removed in production by uglify
+if (typeof DEBUG === 'undefined') {
+    DEBUG = true;
+}
 
 // kick things off
 $(gv.init);
