@@ -13,6 +13,7 @@
         el: '.left-panel',
         
         render: function() {
+            if (DEBUG && !window.google) return;
             var book = this.model,
                 markers = this.markers = [],
                 gmaps = google.maps,

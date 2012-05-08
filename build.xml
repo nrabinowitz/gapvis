@@ -55,6 +55,11 @@
         <ant target="-start-build-dev"/>
     </target>
     
+    <target name="build-dev-local">
+        <property name="locallibs" value="true"/>
+        <ant target="build-dev"/>
+    </target>
+    
     <target name="build-production">
         <property name="js.settings" value="${js.settings.production}"/>
         <ant target="-start-build-production"/>
@@ -85,9 +90,12 @@
                      finish-build"/>
     
     <target name="-start-build-dev">
+        <condition property="js.lib.remote" value="${js.lib.local}" else="${js.lib.nomunge}">
+            <isset property="locallibs"/>
+        </condition>
         <property name="js.uglify.files" value="${js.app.init}"/>
         <property name="js.insert.files" 
-                  value="${js.lib.nomunge}, 
+                  value="${js.lib.remote}, 
                          ${js.lib.dev}, 
                          ${js.libext},
                          ${js.concat.target},
