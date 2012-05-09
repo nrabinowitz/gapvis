@@ -1,14 +1,12 @@
 /*
  * Place models
  */
-(function(gv) {
-    var Model = gv.Model,
-        Collection = gv.Collection,
-        settings = gv.settings,
+define(['gv', 'models/Model', 'models/Collection'], function(gv, Model, Collection) {
+    var settings = gv.settings,
         Place;
        
     // Model: Place
-    Place = gv.Place = Model.extend({
+    Place = Model.extend({
         type: 'place',
     
         defaults: {
@@ -62,7 +60,7 @@
     });
     
     // Collection: PlaceList
-    gv.PlaceList = Collection.extend({
+    return Collection.extend({
         model: Place,
         url: function() {
             return settings.API_ROOT + '/places' 
@@ -72,4 +70,4 @@
         }
     });
     
-}(gv));
+});

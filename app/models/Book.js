@@ -1,14 +1,13 @@
 /*
- * Page models
+ * Book model
  */
-(function(gv) {
-    var Model = gv.Model,
-        Collection = gv.Collection,
-        settings = gv.settings,
-        Book;
+define(['gv', 'models/Model', 'models/Places', 'models/Pages'], 
+    function(gv, Model, Places, Pages) {
+    
+    var settings = gv.settings;
        
     // Model: Book
-    Book = gv.Book = Model.extend({
+    return Model.extend({
         type: 'book',
         
         defaults: {
@@ -22,8 +21,8 @@
         initialize: function() {
             var book = this,
                 // create collections
-                places = book.places = new gv.PlaceList(),
-                pages = book.pages = new gv.PageList();
+                places = book.places = new Places(),
+                pages = book.pages = new Pages();
             // set backreferences
             places.book = book;
             pages.book = book;
@@ -53,27 +52,6 @@
         
         isFullyLoaded: function() {
             return !!(this.pages.length && this.places.length);
-        },
-        
-        // get word counts, asynchronously
-        wordsReady: function(callback) {
-            var book = this,
-                url = API_ROOT + '/book/' + this.id + '/words.json';
-            if (!book.get('words')) {
-                $.ajax({
-                    url: url, 
-                    success: function(words) {
-                        book.set({ words: words });
-                        callback();
-                    },
-                    error: function() {
-                        state.set({ message: 'Error: Could not retrieve word counts.' });
-                    },
-                    dataType: 'json'
-                });
-            } else {
-                callback();
-            }
         },
         
         // array of page labels for timemap
@@ -190,21 +168,4 @@
         }
     });
     
-    // Collection: BookList
-    gv.BookList = Collection.extend({
-        model: Book,
-        url: function() { 
-            return settings.API_ROOT +  '/books/.json' 
-        },
-        comparator: function(book) {
-            // try for author last name
-            var author = (book.get('author') || '')
-                .toLowerCase()
-                .split(/[,(]/)[0]
-                .split(/\s+/)
-                .pop();
-            return author + book.get('title').toLowerCase(); 
-        }
-    });
-    
-}(gv));
+});

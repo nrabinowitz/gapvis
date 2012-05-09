@@ -1,7 +1,7 @@
 /*
  * Core setup for views
  */
-(function(gv, window) {
+define(['gv'], function(gv) {
     
     // default layout view
     gv.Layout = gv.Layout.extend({
@@ -22,4 +22,4 @@
         }
     });
     
-}(gv, this));
+});

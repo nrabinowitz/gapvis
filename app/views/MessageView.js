@@ -1,12 +1,12 @@
 /*
  * Message View
  */
-(function(gv, window) {
+define(['gv'], function(gv) {
     var state = gv.state,
         showFor = 3000;
     
-    // View: MessageView (master view for the book reading screen)
-    gv.MessageView = gv.View.extend({
+    // View: MessageView
+    return gv.View.extend({
         el: '#message-view',
         
         initialize: function(opts) {
@@ -34,4 +34,4 @@
         
     });
     
-}(gv, window));
+});

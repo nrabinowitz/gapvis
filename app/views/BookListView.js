@@ -1,7 +1,7 @@
 /*
  * Index View
  */
-(function(gv) {
+define(['gv'], function(gv) {
     var View = gv.View,
         state = gv.state,
         BookListItemView;
@@ -29,8 +29,8 @@
         }
     });
         
-    // View: IndexView (index page)
-    gv.BookListView = View.extend({
+    // View: Book List View
+    return View.extend({
         el: '#book-list-view',
         
         initialize: function() {
@@ -54,4 +54,4 @@
         }
     });
     
-}(gv));
+});

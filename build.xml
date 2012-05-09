@@ -93,13 +93,11 @@
         <condition property="js.lib.remote" value="${js.lib.local}" else="${js.lib.nomunge}">
             <isset property="locallibs"/>
         </condition>
-        <property name="js.uglify.files" value="${js.app.init}"/>
         <property name="js.insert.files" 
                   value="${js.lib.remote}, 
                          ${js.lib.dev}, 
                          ${js.libext},
-                         ${js.concat.target},
-                         ${js.app.files}" />
+                         ${js.app.init}" />
         <property name="css.less.files" value="${css.app}"/>
         <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
         <ant target="-build-dev"/>
@@ -213,7 +211,7 @@
         </for>
     </target>
     
-    <target name="-uglify-concat-js">
+    <target name="-uglify-concat-js" if="js.uglify.files">
         <echo>Minifying and concatenating JS files</echo>
         <!-- Compress and add extensions and apps -->
         <condition property="js.compress.argument" value="-nc" else="-ns -b">

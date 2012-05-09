@@ -33,73 +33,30 @@
  - view either renders, or fetches data and renders in the callback
 */
 
-/**
- * @namespace
- * Top-level namespace for the GapVis application
- */
-var gv = _.extend(spf, {
-
-    init: function() {
-        // initialize empty book list
-        gv.books = new gv.BookList();
-        // set up top-level views
-        gv.configure({
-            appElement: '#app-view',
-            globalViews: [gv.MessageView],
-            views: {
-                'index': {
-                    layout: '#layout-index',
-                    router: ['', 'index'],
-                    slots: {
-                        '#book-list-view': {
-                            layout: gv.BookListView
-                        },
-                        '.overview': '#index-overview-template'
-                    }
-                },
-                'book-summary': {
-                    layout: gv.BookSummaryLayout,
-                    router: 'book/:bookid',
-                    refreshOn: 'change:bookid',
-                    slots: {
-                        '.navigation-view': gv.NavigationView,
-                        '.book-title-view': gv.BookTitleView,
-                        '.text-slot': gv.BookSummaryTextView,
-                        '.left-panel': gv.BookSummaryMapView,
-                        '.right-panel': gv.PlaceFrequencyBarsView
-                    }
-                },
-                'reading-view': {
-                    layout: gv.BookReadingLayout,
-                    router: [
-                        'book/:bookid/read', 
-                        'book/:bookid/read/:pageid',
-                        'book/:bookid/read/:pageid/:placeid'
-                    ],
-                    refreshOn: 'change:bookid',
-                    slots: {
-                        '.navigation-view': gv.NavigationView,
-                        '.book-title-view': gv.BookTitleView
-                    }
-                }
-            }
-        }).start();
-        DEBUG && console.log('Application initialized');
-    },
-    
-    // core settings (set from config)
-    settings: {
-        API_ROOT: API_ROOT,
-        REPORT_URL: REPORT_URL,
-        API_DATA_TYPE: API_DATA_TYPE
-    }
-
+require.config({
+    baseUrl: 'app'
 });
 
-// removed in production by uglify
-if (typeof DEBUG === 'undefined') {
-    DEBUG = true;
-}
-
-// kick things off
-$(gv.init);
+require(['gv', 'config', 'models/Books', 'models/State', 'layouts/Layout'], function(gv, config, Books) {
+    
+    // change Backbone.sync to use JSON/JSONP
+    var defaultSync = Backbone.sync;
+    Backbone.sync = function(method, model, options) {
+        options = _.extend({
+            dataType: gv.settings.API_DATA_TYPE,
+            cache: true
+        }, options);
+        defaultSync(method, model, options);
+    }
+    
+    // initialize empty book list
+    gv.books = new Books();
+    
+    // kick things off
+    $(function() {
+        gv.configure(config)
+            .start();
+        DEBUG && console.log('Application initialized');
+    });
+    
+});

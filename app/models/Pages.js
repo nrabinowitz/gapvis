@@ -1,14 +1,12 @@
 /*
- * Page models
+ * Page model
  */
-(function(gv) {
-    var Model = gv.Model,
-        Collection = gv.Collection,
-        settings = gv.settings,
+define(['gv', 'models/Model', 'models/Collection'], function(gv, Model, Collection) {
+    var settings = gv.settings,
         Page;
        
     // Model: Page
-    Page = gv.Page = Model.extend({
+    Page = Model.extend({
         type: 'page',
         
         defaults: {
@@ -27,11 +25,11 @@
     });
     
     // Collection: PageList
-    gv.PageList = Collection.extend({
+    return Collection.extend({
         model: Page,
         url: function() {
             return settings.API_ROOT +  '/books/' + this.book.id + '/page';
         }
     });
     
-}(gv));
+});

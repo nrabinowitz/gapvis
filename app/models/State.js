@@ -1,7 +1,7 @@
 /*
  * State model
  */
-(function(gv) {
+define(['gv'], function(gv) {
     
     // model to hold current state
     gv.State = gv.State.extend({
@@ -34,15 +34,22 @@
     gv.resetState();
     
     // add parameters
-    var center = TimeMap.state.params.center;
     gv.addParameter('bookid', { deserialize: parseInt });
     gv.addParameter('pageid', { deserialize: String });
     gv.addParameter('placeid', { deserialize: parseInt });
     gv.addParameter('mapzoom', { deserialize: parseInt });
     gv.addParameter('mapcenter', { 
-        deserialize: center.fromString, 
-        serialize: center.toString 
+        deserialize: function(s) {
+            var params = s.split(",");
+            return params.length < 2 ? null :
+                {
+                    lat: parseFloat(params[0]),
+                    lon: parseFloat(params[1])
+                };
+        }, 
+        serialize: function(value) {
+            return value.lat + "," + value.lng;
+        }
     });
     
-    
-}(gv));
+});
