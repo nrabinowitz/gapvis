@@ -1,11 +1,10 @@
 /*
  * Book View
  */
-(function(gv) {
-    var View = gv.View;
-    
+define(['gv'], function(gv) {
+
     // View: BookView (parent class for book views)
-    var BookView = gv.BookView = gv.View.extend({
+    return gv.View.extend({
         // utility - render an underscore template to this el's html
         renderTemplate: function(context) {
             var view = this,
@@ -36,6 +35,7 @@
     });
     
     // parent for views that require a place
+    // XXX: Currently unreachable, should be a separate file
     var PlaceView = BookView.extend({
         
         ready: function(callback) {
@@ -52,4 +52,4 @@
         
     });
     
-}(gv));
+});

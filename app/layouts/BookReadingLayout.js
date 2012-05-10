@@ -1,10 +1,10 @@
 /*
  * Core setup for views
  */
-(function(gv, window) {
+define(['gv'], function(gv) {
     var Layout = gv.Layout;
     
-    gv.BookReadingLayout = Layout.extend({
+    return Layout.extend({
         el: '#layout-book-reading',
         
         // layout the bottom slot correctly
@@ -18,4 +18,4 @@
         }
     });
     
-}(gv, this));
+});

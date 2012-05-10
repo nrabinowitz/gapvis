@@ -1,7 +1,7 @@
 /*
  * Core setup for routers
  */
-(function(gv) {
+define(['gv'], function(gv) {
     
     // set up default model
     gv.Router = gv.Router.extend({
@@ -17,4 +17,4 @@
         
     });
     
-}(gv));
+});

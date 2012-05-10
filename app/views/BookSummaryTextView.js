@@ -1,11 +1,11 @@
 /*
  * Book Summary Text View
  */
-(function(gv) {
+define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state;
     
     // View: BookSummaryTextView (text content for the book summary)
-    gv.BookSummaryTextView = gv.BookView.extend({
+    return BookView.extend({
         template: '#book-summary-text-template',
         
         // render and update functions
@@ -47,4 +47,4 @@
         }
     });
     
-}(gv));
+});

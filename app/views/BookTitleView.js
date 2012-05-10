@@ -1,17 +1,18 @@
 /*
  * Book Title View
  */
-(function(gv) {
+define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state;
     
     // View: BookTitleView (title and metadata)
-    gv.BookTitleView = gv.BookView.extend({
+    return BookView.extend({
         template: '#book-title-template',
         
         render: function() {
             var view = this;
             view.renderTemplate();
-            view.$('h2.book-title').toggleClass('on', state.get('view') != 'book-summary');
+            view.$('h2.book-title')
+                .toggleClass('on', state.get('view') != 'book-summary');
             return view;
         },
         
@@ -26,4 +27,4 @@
         }
     });
     
-}(gv));
+});

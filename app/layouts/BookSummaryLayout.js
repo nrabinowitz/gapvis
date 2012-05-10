@@ -1,11 +1,11 @@
 /*
- * Core setup for views
+ * Book Summary Layout
  */
-(function(gv, window) {
+define(['gv'], function(gv) {
     var Layout = gv.Layout;
     
     
-    gv.BookSummaryLayout = Layout.extend({
+    return Layout.extend({
         el: '#layout-book-summary',
         
         // layout the bottom slot correctly
@@ -36,4 +36,4 @@
         }
     });
     
-}(gv, this));
+});

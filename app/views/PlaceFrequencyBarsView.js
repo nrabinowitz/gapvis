@@ -1,12 +1,12 @@
 /*
  * Place Frequency Bar Chart View
  */
-(function(gv) {
+define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state,
         PlaceFrequencyBarsView;
     
     // View: BookTitleView (title and metadata)
-    PlaceFrequencyBarsView = gv.BookView.extend({
+    PlaceFrequencyBarsView =  BookView.extend({
         
         settings: {
             buckets: 50,
@@ -216,13 +216,11 @@
     // no d3 option
     if (window.nod3) {
         PlaceFrequencyBarsView = PlaceFrequencyBarsView.extend({
-            render: function() {
-                // if (!!this.options.place) this.bindingLayout();
-            },
+            render: $.noop,
             updateHighlight: $.noop
         });
     }
     
-    gv.PlaceFrequencyBarsView = PlaceFrequencyBarsView;
+    return PlaceFrequencyBarsView;
     
-}(gv));
+});

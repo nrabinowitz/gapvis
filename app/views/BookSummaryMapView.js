@@ -1,15 +1,14 @@
 /*
- * Book Summary Text View
+ * Book Summary Map View
  */
-(function(gv) {
+define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state,
         settings = gv.settings,
         // map styles
         mapStyle = settings.mapStyle,
         colorThemes = settings.colorThemes;
     
-    // View: BookSummaryTextView (text content for the book summary)
-    gv.BookSummaryMapView = gv.BookView.extend({
+    return BookView.extend({
         el: '.left-panel',
         
         render: function() {
@@ -62,4 +61,4 @@
         }
     });
     
-}(gv));
+});

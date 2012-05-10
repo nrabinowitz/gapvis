@@ -1,11 +1,11 @@
 /*
  * Permalink View
  */
-(function(gv) {
+define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state;
     
-    // View: PermalinkView (renders the permalink)
-    gv.NavigationView = gv.BookView.extend({
+    // View: NavigationView
+    return BookView.extend({
         template: '#navigation-view-template',
         
         navViews: [
@@ -51,9 +51,9 @@
         updateNavButtons: function() {
             // enable/disable place view
             $('#place-view-' + this.cid)
-                .button(gv.state.get('placeid') ? 'enable' : 'disable');
+                .button(state.get('placeid') ? 'enable' : 'disable');
             // check the appropriate button
-            var viewKey = gv.state.get('view'),
+            var viewKey = state.get('view'),
                 cid = this.cid;
             this.navViews.forEach(function(nav) {
                 $('#' + nav + '-' + cid)
@@ -71,10 +71,10 @@
         uiGoToView: function(evt) {
             // get view from id
             var nav = $(evt.target).attr('data-view-id');
-            gv.state.set({ 'view': nav });
+            state.set({ 'view': nav });
         }
         
     
     });
     
-}(gv));
+});
