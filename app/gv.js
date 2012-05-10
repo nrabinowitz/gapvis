@@ -4,8 +4,7 @@
 define(function() {
 
     // removed in production by uglify
-    if (typeof DEBUG === 'undefined') {
-        DEBUG = true;
+    if (DEBUG) {
         API_ROOT = '/api';
         REPORT_URL = '/api/report/issue';
         API_DATA_TYPE = 'json';

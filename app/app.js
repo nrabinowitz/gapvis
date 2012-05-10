@@ -33,6 +33,15 @@
  - view either renders, or fetches data and renders in the callback
 */
 
+// removed in production by uglify
+if (typeof DEBUG === 'undefined') {
+    DEBUG = true;
+    // cache busting for development
+    require.config({
+        urlArgs: "bust=" +  (new Date()).getTime()
+    });
+}
+
 require.config({
     baseUrl: 'app'
 });
