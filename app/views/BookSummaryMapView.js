@@ -9,7 +9,6 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         colorThemes = settings.colorThemes;
     
     return BookView.extend({
-        el: '.left-panel',
         
         render: function() {
             if (DEBUG && !window.google) return;

@@ -107,6 +107,17 @@ div.top {
     overflow: hidden;
     margin: 0 @view-margin-right 0 @view-margin-left;
     
+    .layout {
+        position: absolute;
+        top: @view-padding-top;
+        bottom: @view-padding-bottom;
+        left: @view-padding-left;
+        right: @view-padding-right;
+        
+        .full-height {
+            height: 100%;
+        }
+    }
     
     // sliding transitions
     &.sliding {
@@ -131,45 +142,8 @@ div.top {
         left: 100%;
     }
     
-    .padding {
-        padding: @view-padding-top @view-padding-right @view-padding-bottom @view-padding-left;
-    }
-    
     &.loading * {
         display: none;
-    }
-    
-    // index layout
-    &.layout-index {
-        #book-list-view {
-            position: absolute;
-            width: 35%;
-            left: @view-padding-left;
-            top: @view-padding-top;
-            bottom: @view-padding-bottom;
-            overflow: auto;
-            padding: 1em;
-        }
-        .overview {
-            position: absolute;
-            width: 50%;
-            right: @view-padding-right;
-            top: @view-padding-top;
-            bottom: @view-padding-bottom;
-            overflow: auto;
-            padding: 0 2em 1em 3em;
-            
-            // image thumbnails
-            .thumbs {
-                width: 100px;
-                margin-left: 1em;
-                float: right;
-                
-                img {
-                    margin-bottom: 1em;
-                }
-            }
-        }
     }
     
     // book summary layout
@@ -215,8 +189,31 @@ div.top {
     }
 }
 
+// image thumbnails
+.thumbs {
+    width: 100px;
+    margin-left: 1em;
+    float: right;
+    
+    img {
+        margin-bottom: 1em;
+    }
+}
+
+
+// ---------------------------------------------------
+// View-specific slot styles
+// ---------------------------------------------------
+
+// index page book list
+.book-list-view, .index-overview-template {
+    overflow: auto;
+    height: 100%;
+    .padding { padding: 1em; }
+}
+
 // navigation bar for book layouts
-div.navigation-view {
+.navigation-view {
     float: right;
     width: 410px;
     margin-left: 20px;
@@ -235,19 +232,19 @@ div.navigation-view {
     }
 }
 
-div.book-title-view {
+.book-title-view {
     h2 { margin: 0;
         &.on { cursor: pointer; }
     }
     p { margin-top: 0; }
 }
 
-div.loading {
+.loading {
     background-image: url(../images/blue-loading.gif);
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
-div.panel {
+.panel {
     background-color: #FFF;
     border: 1px solid #CCC;
 }

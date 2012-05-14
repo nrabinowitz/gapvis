@@ -6,13 +6,13 @@ define({
     globalViews: ['views/MessageView'],
     views: {
         'index': {
-            layout: '#layout-index',
+            layout: '#layout-2col',
             router: ['', 'index'],
             slots: {
-                '#book-list-view': {
+                '.left-column': {
                     layout: 'views/BookListView'
                 },
-                '.overview': '#index-overview-template'
+                '.right-column': '#index-overview-template'
             }
         },
         'book-summary': {

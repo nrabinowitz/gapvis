@@ -31,7 +31,7 @@ define(['gv'], function(gv) {
         
     // View: Book List View
     return View.extend({
-        el: '#book-list-view',
+        className: 'book-list-view panel loading',
         
         initialize: function() {
             var books = this.model = gv.books;
@@ -46,10 +46,10 @@ define(['gv'], function(gv) {
                 .html($('#book-list-template').html())
                 .removeClass('loading');
             // make the book list
-            $('#book-list').empty();
+            view.$('.book-list').empty();
             view.model.forEach(function(book) {
                 var item = new BookListItemView({ model:book });
-                $('#book-list').append(item.render().el);
+                view.$('.book-list').append(item.render().el);
             });
         }
     });
