@@ -6,8 +6,6 @@
 // ---------------------------------------------------
 
 // colors
-@link-color: steelblue;
-@active-link-color: orange;
 @discreet-text: #999;
 
 // top view dimensions
@@ -40,16 +38,18 @@
 // Basic elements
 // ---------------------------------------------------
 html, body {
-    font-family: Georgia, Garamond, serif;
     overflow: hidden;
 }
-
 h1, h2, h3, h4 {
     color: #555;
 }
 h1, h4 {
     font-style: italic;
 }
+p {
+    font-family: @serifFontFamily;
+}
+/*
 ul {
     margin: 0 0 1em 0;
     padding: 0 0 0 1.5em;
@@ -58,12 +58,12 @@ li {
     margin: 0 0 .5em 0;
 }
 a {
-    &:link, &:visited { color: @link-color; }
-    &:hover, &:active { color: @active-link-color; }
+    &:link, &:visited { color: @linkColor; }
+    &:hover, &:active { color: @linkColorHover; }
 }
 em {
     font-style: italic;
-}
+} */
 
 // ---------------------------------------------------
 // Header and Footer
@@ -84,14 +84,15 @@ header {
         }
         
         a:link, a:visited {
-            color: @link-color;
+            color: @linkColor;
             text-decoration: none;
         }
     }
     
     nav {
-        margin: .95em 2em;
+        margin: 1em 2em;
         float: left;
+        font-weight: bold;
     }
 }
 
@@ -148,14 +149,6 @@ div.top {
     
     &.loading * {
         display: none;
-    }
-    
-    // navigation bar for book layouts
-    div.navigation-view {
-        float: right;
-        width: 410px;
-        margin-left: 20px;
-        text-align: right;
     }
     
     // index layout
@@ -228,6 +221,26 @@ div.top {
             }
             
         }
+    }
+}
+
+// navigation bar for book layouts
+div.navigation-view {
+    float: right;
+    width: 410px;
+    margin-left: 20px;
+    text-align: right;
+    
+    nav, a {
+        display: inline-block;
+    }
+    
+    a {
+        vertical-align: top;
+    }
+    
+    button {
+        font-weight: bold;
     }
 }
 
@@ -352,12 +365,12 @@ div.flickr-photo {
 /* specific text styles */
 
 span.place {
-    color: @link-color;
+    color: @linkColor;
     cursor: pointer;
     font-weight: bold;
 }
 span.place:hover {
-    color: @active-link-color;
+    color: @linkColorHover;
 }
 span.place.hi {
     background: yellow;
@@ -375,11 +388,11 @@ span.control {
     cursor: default;
 }
 span.control.on {
-    color: @link-color;
+    color: @linkColor;
     cursor: pointer;
 }
 span.control.on:hover {
-    color: @active-link-color;
+    color: @linkColorHover;
 }
 #page-id {
     width: 3.5em;
@@ -444,7 +457,7 @@ div#timeline-controls div {
     background-repeat: none;
 }
 div#timeline-controls div.on {
-    background-color: @link-color;
+    background-color: @linkColor;
     cursor: pointer;
 }
 div#timeline-controls div#timeline-play {
@@ -490,7 +503,7 @@ div.pagenum {
     cursor: pointer;
 }
 #page-nav-view div.current {
-    border: 2px solid @link-color;
+    border: 2px solid @linkColor;
     margin-top: 4px;
     cursor: auto;
 }
@@ -521,7 +534,7 @@ div.pagenum {
 }
 #change-this-form  span {
     font-weight: bold;
-    color: @link-color;
+    color: @linkColor;
 }
 .ui-dialog-titlebar {
     display:none

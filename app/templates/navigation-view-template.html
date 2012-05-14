@@ -1,6 +1,6 @@
-<span class="nav-buttons">
-    <input type="radio" id="book-summary-<%= cid %>" data-view-id="book-summary" name="nav-buttons-<%= cid %>" /><label for="book-summary-<%= cid %>">Book Summary</label>
-    <input type="radio" id="reading-view-<%= cid %>" data-view-id="reading-view" name="nav-buttons-<%= cid %>" /><label for="reading-view-<%= cid %>">Reading View</label>
-    <input type="radio" id="place-view-<%= cid %>" data-view-id="place-view" name="nav-buttons-<%= cid %>" /><label for="place-view-<%= cid %>">Place Detail</label>
-</span>
-<a class="permalink" href="#">Permalink</a>
+<nav class="btn-group" data-toggle="buttons-radio">
+  <button class="btn btn-small btn-primary" data-view-id="book-summary"><i class="icon-star icon-white"></i> Book Summary</button>
+  <button class="btn btn-small btn-primary" data-view-id="reading-view"><i class="icon-book icon-white"></i> Reading View</button>
+  <button class="btn btn-small btn-primary" data-view-id="place-view"><i class="icon-globe icon-white"></i> Place Detail</button>
+</nav>
+<a class="permalink btn btn-primary" href="#"><i class="icon-bookmark icon-white"></i></a>
