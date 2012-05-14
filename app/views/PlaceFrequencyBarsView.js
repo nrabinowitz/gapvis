@@ -7,6 +7,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
     
     // View: BookTitleView (title and metadata)
     PlaceFrequencyBarsView =  BookView.extend({
+        className: 'freq-bars-view',
         
         settings: {
             buckets: 50,

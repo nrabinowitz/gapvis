@@ -9,6 +9,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         colorThemes = settings.colorThemes;
     
     return BookView.extend({
+        className: 'summary-map-view panel',
         
         render: function() {
             if (DEBUG && !window.google) return;
@@ -24,6 +25,9 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                     zoom: 4,
                     mapTypeId: gmaps.MapTypeId.TERRAIN,
                     streetViewControl: false,
+                    zoomControlOptions: {
+                        style: google.maps.ZoomControlStyle.LARGE
+                    },
                     styles: mapStyle
                 });
                 
