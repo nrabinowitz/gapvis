@@ -100,7 +100,7 @@
                          ${js.libext},
                          ${js.app.init}" />
         <property name="css.less.files" value="${css.app}"/>
-        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
+        <property name="css.files" value="${css.concat.target}"/>
         <ant target="-build-dev"/>
     </target>
     
@@ -116,7 +116,7 @@
         <property name="js.uglify.compress" value="true"/>
         <property name="css.less.compress" value="true"/>
         <property name="css.less.files" value="${css.app}"/>
-        <property name="css.files" value="${css.lib}, ${css.concat.target}"/>
+        <property name="css.files" value="${css.concat.target}"/>
         <ant target="-build-production"/>
     </target>
             
