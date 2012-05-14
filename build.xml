@@ -89,6 +89,7 @@
                      compress-html,
                      finish-build"/>
     
+    <!-- Set properties for Dev build -->
     <target name="-start-build-dev">
         <condition property="js.lib.remote" value="${js.lib.local}" else="${js.lib.nomunge}">
             <isset property="locallibs"/>
@@ -103,6 +104,7 @@
         <ant target="-build-dev"/>
     </target>
     
+    <!-- Set properties for Production build -->
     <target name="-start-build-production">
         <property name="js.uglify.files" 
                   value="${js.libext},

@@ -1,4 +1,6 @@
 
+@import "../lib/bootstrap/less/mixins.less";
+
 // ---------------------------------------------------
 // Settings
 // ---------------------------------------------------
@@ -115,6 +117,30 @@ div.top {
     border-radius: 15px;
     overflow: hidden;
     margin: 0 @view-margin-right 0 @view-margin-left;
+    
+    
+    // sliding transitions
+    &.sliding {
+        .transition(.6s ease-in-out left);
+    }
+    &.active {
+        left: 0;
+    }
+    &.next {
+        left: 100%;
+    }
+    &.prev {
+        left: -100%;
+    }
+    &.next.left, &.prev.right {
+        left: 0;
+    }
+    &.active.left {
+        left: -100%;
+    }
+    &.active.right {
+        left: 100%;
+    }
     
     .padding {
         padding: @view-padding-top @view-padding-right @view-padding-bottom @view-padding-left;
