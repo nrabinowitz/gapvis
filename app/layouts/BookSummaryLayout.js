@@ -23,15 +23,15 @@ define(['gv'], function(gv) {
                 .height(h - titleh);
                 
             texth = view.$('.text-slot')
-                .width(lw)
+                //.width(lw)
                 .height();
                 
             view.$('.left-panel')
-                .width(lw)
+                //.width(lw)
                 .height(h - titleh - texth - padding);
                 
             view.$('.right-panel')
-                .width(w - lw - padding)
+                //.width(w - lw - padding)
                 .height(h - titleh);
         }
     });
