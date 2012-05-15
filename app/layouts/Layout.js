@@ -14,11 +14,25 @@ define(['gv'], function(gv) {
         },
         // default layout
         layout: function() {
+            // fill screen
             if (this.topLevel) {
                 this.$el
                     .width(this.topViewWidth())
                     .height(this.topViewHeight());
             }
+            
+            // fill height as necessary
+            this.$('.fill').each(function() {
+                // add up sibling heights
+                var $fill = $(this),
+                    padding = 12,
+                    sibHeight = 0;
+                $fill.siblings().each(function() {
+                    sibHeight += $(this).height();
+                });
+                // set top margin
+                $fill.css({ marginTop: sibHeight + padding });
+            });
         }
     });
     

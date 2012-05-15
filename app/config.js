@@ -16,7 +16,9 @@ define({
             }
         },
         'book-summary': {
-            layout: 'layouts/BookSummaryLayout',
+            // XXX can I make a 2-col book layout that handles the heights?
+            // could work for all the book layouts...
+            layout: '#layout-book-summary',
             router: 'book/:bookid',
             refreshOn: 'change:bookid',
             slots: {
