@@ -12,10 +12,8 @@ define(['gv'], function(gv) {
         layout: function() {
             Layout.prototype.layout.call(this);
             var view = this,
-                w = view.$el.width() - 30,
                 h = view.$el.height() - 60,
                 titleh = view.$('.book-title-view').height(),
-                lw = ~~w*3/5,
                 padding = 15,
                 texth;
                 
@@ -23,15 +21,12 @@ define(['gv'], function(gv) {
                 .height(h - titleh);
                 
             texth = view.$('.text-slot')
-                //.width(lw)
                 .height();
                 
             view.$('.left-panel')
-                //.width(lw)
                 .height(h - titleh - texth - padding);
                 
             view.$('.right-panel')
-                //.width(w - lw - padding)
                 .height(h - titleh);
         }
     });

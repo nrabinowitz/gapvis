@@ -9,7 +9,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         colorThemes = settings.colorThemes;
     
     return BookView.extend({
-        className: 'summary-map-view panel',
+        className: 'summary-map-view',
         
         render: function() {
             if (DEBUG && !window.google) return;
