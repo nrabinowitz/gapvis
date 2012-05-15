@@ -31,7 +31,7 @@ define(['gv'], function(gv) {
         
     // View: Book List View
     return View.extend({
-        className: 'book-list-view panel loading',
+        className: 'panel padded-scroll full-height loading',
         
         initialize: function() {
             var books = this.model = gv.books;

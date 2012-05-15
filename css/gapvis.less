@@ -168,11 +168,6 @@ div.top {
             }
         }
         
-        .left-panel {
-            // height set with JS
-            
-        }
-        
     }
 }
 
@@ -190,6 +185,14 @@ div.top {
 .panel {
     background-color: #FFF;
     border: 1px solid #CCC;
+    
+    &.padded-scroll {
+        overflow: auto;
+        
+        > div {
+            padding: 1.5em 1em;
+        }
+    }
 }
 
 .control {
@@ -227,7 +230,6 @@ div.top {
 // ---------------------------------------------------
 
 // index page book list
-.book-list-view, 
 .index-overview-template {
     overflow: auto;
     height: 100%;

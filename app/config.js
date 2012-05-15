@@ -25,8 +25,8 @@ define({
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',
                 '.text-slot': 'views/BookSummaryTextView',
-                '.right-panel': 'views/BookSummaryMapView',
-                '.left-panel': 'views/PlaceFrequencyBarsView'
+                '.left-panel': 'views/BookSummaryMapView',
+                '.right-panel': 'views/PlaceFrequencyBarsView'
             }
         },
         'reading-view': {
