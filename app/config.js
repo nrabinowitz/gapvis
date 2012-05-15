@@ -28,6 +28,7 @@ define({
             }
         },
         'reading-view': {
+            // XXX: this should be reusable for the Place page
             layout: 'layouts/BookReadingLayout',
             router: [
                 'book/:bookid/read', 
@@ -37,7 +38,14 @@ define({
             refreshOn: 'change:bookid',
             slots: {
                 '.navigation-view': 'views/NavigationView',
-                '.book-title-view': 'views/BookTitleView'
+                '.book-title-view': 'views/BookTitleView',
+                '.left-panel': {
+                    // XXX: this should be a reusable 100% + margin piece for map and page
+                    layout: '#reading-pane-template',
+                    slots: {
+                        '.page-controls': 'views/PageControlView'
+                    }
+                }
             }
         }
     }

@@ -11,10 +11,11 @@ define(['gv'], function(gv) {
         layout: function() {
             Layout.prototype.layout.call(this);
             var view = this,
-                w = view.$el.width() - 30,
                 h = view.$el.height() - 60,
-                titleh = view.$('.book-title-view').height(),
-                padding = 15;
+                titleh = view.$('.book-title-view').height();
+                
+            view.$('.bottom-slot')
+                .height(h - titleh);
         }
     });
     

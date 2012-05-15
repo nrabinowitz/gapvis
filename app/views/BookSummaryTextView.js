@@ -19,12 +19,6 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                 });
             // fill in template
             view.renderTemplate(context);
-            // buttonize reading link
-            view.$('button.goto-reading').button({
-                icons: {
-                    secondary: 'ui-icon-triangle-1-e'
-                }
-            });
         },
         
         // UI Event Handlers - update state

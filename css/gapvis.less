@@ -125,6 +125,12 @@ div.top {
     }
     &.active {
         left: 0;
+        &.left {
+            left: -100%;
+        }
+        &.right {
+            left: 100%;
+        }
     }
     &.next {
         left: 100%;
@@ -134,12 +140,6 @@ div.top {
     }
     &.next.left, &.prev.right {
         left: 0;
-    }
-    &.active.left {
-        left: -100%;
-    }
-    &.active.right {
-        left: 100%;
     }
     
     &.loading * {
@@ -157,7 +157,7 @@ div.top {
                 right: 0;
                 top: 0;
                 overflow: auto;
-                // size set with JS
+                // height set with JS
                 
                 div {
                     padding: 1.5em 1em;
@@ -168,12 +168,42 @@ div.top {
                 position: absolute;
                 left: 0;
                 bottom: 0;
+                // height set with JS
                 
                 // fix for google maps controls
                 img { max-width: none; }
-                // size set with JS
             }
             
+        }
+    }
+}
+
+
+// ---------------------------------------------------
+// Utility styles
+// ---------------------------------------------------
+
+.loading {
+    background-image: url(../images/blue-loading.gif);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
+
+.panel {
+    background-color: #FFF;
+    border: 1px solid #CCC;
+}
+
+.control {
+    color: #999;
+    cursor: default;
+    
+    &.on {
+        color: @linkColor;
+        cursor: pointer;
+        
+        &:hover {
+            color: @linkColorHover;
         }
     }
 }
@@ -195,7 +225,8 @@ div.top {
 // ---------------------------------------------------
 
 // index page book list
-.book-list-view, .index-overview-template {
+.book-list-view, 
+.index-overview-template {
     overflow: auto;
     height: 100%;
     .padding { padding: 1em; }
@@ -244,14 +275,16 @@ div.top {
     p { margin-top: 0; }
 }
 
-.loading {
-    background-image: url(../images/blue-loading.gif);
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-}
-.panel {
-    background-color: #FFF;
-    border: 1px solid #CCC;
+// page control buttons
+.nextprev{
+    float: right;
+    
+    .page-id {
+        width: 3.5em;
+        text-align: center;
+        font-family: Georgia, Garamond, serif;
+        font-variant: lining-nums;
+    }
 }
 
 
@@ -375,31 +408,6 @@ p.warning {
     color: #c00;
 }
 
-/* page control buttons */
-span.control {
-    color: #999;
-    cursor: default;
-}
-span.control.on {
-    color: @linkColor;
-    cursor: pointer;
-}
-span.control.on:hover {
-    color: @linkColorHover;
-}
-#page-id {
-    width: 3.5em;
-    text-align: center;
-    font-family: Georgia, Garamond, serif;
-}
-div#nextprev{
-    float: right;
-}
-span.goto-reading {
-    font-size: 2em;
-    float: right;
-}
-
 /* timemap styles. */
 div#timeline-container{
     position: relative;
@@ -480,28 +488,6 @@ div.infowindow  span.zoom {
 div.pagenum {
     color: #999;
     font-style: italic;
-}
-
-/* pagenav styles. */
-#page-nav-view {
-    margin-bottom: .5em;
-    background: #fff;
-    padding: 0 5px 5px 0;
-}
-#page-nav-view div {
-    border: 1px solid #ccc;
-    background: #eee;
-    float: left;
-    margin: 5px 0 0 5px;
-    cursor: pointer;
-}
-#page-nav-view div.current {
-    border: 2px solid @linkColor;
-    margin-top: 4px;
-    cursor: auto;
-}
-#page-nav-view div.haspoi {
-    background: yellow;
 }
 
 /* edit reference form */

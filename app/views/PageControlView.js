@@ -1,58 +1,59 @@
 /*
  * Page Control View
  */
-(function(gv) {
-    var View = gv.View,
-        state = gv.state;
+define(['gv', 'views/BookView'], function(gv, BookView) {
+    var state = gv.state;
     
     // View: PageControlView (control buttons)
-    gv.PageControlView = View.extend({
-        el: '#page-control-view',
+    return BookView.extend({
+        className: 'page-control-view',
+        template: '#page-control-template',
         
         initialize: function(opts) {
+            var view = this;
             // listen for state changes
-            this.bindState('change:pageid', this.renderNextPrev, this);
-            this.bindState('change:pageview', this.renderPageView, this);
+            view.bindState('change:pageid', view.renderNextPrev, view);
+            view.bindState('change:pageview', view.renderPageView, view);
         },
         
         render: function() {
-            this.renderNextPrev();
-            this.renderPageView();
+            var view = this;
+            // fill in template
+            view.renderTemplate();
+            view.renderNextPrev();
+            view.renderPageView();
         },
         
         renderNextPrev: function() {
             // update next/prev
-            var book = this.model,
-                pageId = state.get('pageid') || book.firstId();
-            this.prev = book.prevId(pageId);
-            this.next = book.nextId(pageId);
+            var view = this,
+                book = view.model,
+                pageId = state.get('pageid') || book.firstId(),
+                prev = view.prev = book.prevId(pageId),
+                next = view.next = book.nextId(pageId);
+            console.log('here', view.$el);
             // render
-            $('#prev').toggleClass('on', !!this.prev);
-            $('#next').toggleClass('on', !!this.next);
-            $('#page-id').val(pageId);
+            view.$('.prev').toggleClass('on', !!prev);
+            view.$('.next').toggleClass('on', !!next);
+            view.$('.page-id').val(pageId);
         },
         
         renderPageView: function() {
-            var pageView = state.get('pageview');
+            var view = this,
+                pageView = state.get('pageview');
             // render
-            $('#showimg').toggleClass('on', pageView == 'text');
-            $('#showtext').toggleClass('on', pageView == 'image');
-        },
-        
-        clear: function() {
-            $('#prev, #next').removeClass('on');
-            this.unbindState();
-            this.unbindEvents();
+            view.$('.showimg').toggleClass('on', pageView == 'text');
+            view.$('.showtext').toggleClass('on', pageView == 'image');
         },
         
         // UI Event Handlers - update state
         
         events: {
-            'click #next.on':       'uiNext',
-            'click #prev.on':       'uiPrev',
-            'click #showimg.on':    'uiShowImage',
-            'click #showtext.on':   'uiShowText',
-            'change #page-id':      'uiJumpToPage'
+            'click .next.on':       'uiNext',
+            'click .prev.on':       'uiPrev',
+            'click .showimg.on':    'uiShowImage',
+            'click .showtext.on':   'uiShowText',
+            'change .page-id':      'uiJumpToPage'
         },
         
         uiNext: function() {
@@ -76,7 +77,7 @@
             if (pageId && this.model.pages.get(pageId)) {
                 // valid pageId
                 state.set({ scrolljump: true });
-                state.setSerialized('pageid', pageId)
+                state.set('pageid', pageId);
             } else {
                 // not valid
                 this.renderNextPrev();
@@ -85,4 +86,4 @@
         }
     });
     
-}(gv));
+});

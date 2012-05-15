@@ -4,7 +4,6 @@
 define(['gv'], function(gv) {
     var Layout = gv.Layout;
     
-    
     return Layout.extend({
         el: '#layout-book-summary',
         
