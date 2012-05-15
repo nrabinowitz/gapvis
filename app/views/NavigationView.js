@@ -46,13 +46,15 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         // UI event handlers
         
         events: {
-            "click input":      "uiGoToView"
+            "click button":      "uiGoToView"
         },
         
         uiGoToView: function(evt) {
             // get view from id
-            var nav = $(evt.target).attr('data-view-id');
-            state.set({ 'view': nav });
+            var viewKey = $(evt.target)
+                .closest('[data-view-id]')
+                .attr('data-view-id');
+            state.set({ 'view': viewKey });
         }
         
     
