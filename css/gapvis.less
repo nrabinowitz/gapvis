@@ -172,6 +172,7 @@ div.top {
     .bottom-slot {
         position: absolute;
         bottom: 0;
+        width: 100%;
     }
 }
 
@@ -255,6 +256,14 @@ div.top {
     }
 }
 
+.frequency-legend-view {
+    text-align: right;
+    
+    img {
+        margin: 0 5px 3px 5px;
+    }
+}
+
 // navigation bar for book layouts
 .navigation-view {
     float: right;
@@ -295,6 +304,9 @@ div.top {
     }
 }
 
+
+// ----------------------------------------------------------
+// old, for clean-up
 
 /* book reading view */
 div#reading-pane {
@@ -437,17 +449,7 @@ div#map {
     height: 100%;
     background: #EEEEEE;
 }
-div#timemap-legend-container {
-    position: absolute;
-    height: 30px;
-    bottom: 0;
-    margin-bottom: -43px;
-    width: 100%;
-    text-align: right;
-}
-div#timemap-legend-container img {
-    margin: 0 5px 3px 5px;
-}
+
 
 /* timeline controls */
 div#timeline-controls {

@@ -43,6 +43,12 @@ define({
                     slots: {
                         '.bottom-slot': 'views/PageControlView'
                     }
+                },
+                '.right-panel': {
+                    layout: '#layout-full-top',
+                    slots: {
+                        '.bottom-slot': 'views/FrequencyLegendView'
+                    }
                 }
             }
         }
