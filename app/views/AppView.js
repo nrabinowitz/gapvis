@@ -1,7 +1,7 @@
 /*
  * AppView (extending spf)
  */
-(function(gv) {
+define(['gv'], function(gv) {
     
     // CSS-based slide
     function slide($el, slideIn, direction) {
@@ -46,4 +46,4 @@
     
     });
     
-}(gv));
+});
