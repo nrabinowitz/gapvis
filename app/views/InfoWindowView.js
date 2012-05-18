@@ -26,8 +26,14 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         },
         
         // render and update functions
-        
         render: function() {
+            var view = this;
+            view.ready(function() {
+                view.openWindow();
+            })
+        },
+        
+        openWindow: function() {
             var view = this,
                 book = view.model,
                 map = view.map,
@@ -47,7 +53,7 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
             // if the place isn't fully loaded, do so
             place.ready(function() {
                 // create content
-                view.$el.html(view.template(place.toJSON()));
+                view.renderTemplate(place.toJSON());
                 // add frequency bars
                 var freqBars = view.freqBars = new PlaceFrequencyBarsView({
                     model: book,
@@ -70,7 +76,6 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
                 }
                 map.closeInfoBubble.addHandler(handler);
             });
-            return this;
         },
         
         renderZoomControl: function() {
