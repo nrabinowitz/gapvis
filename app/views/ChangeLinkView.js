@@ -1,12 +1,11 @@
 /*
  * Change This Link View
  */
-(function(gv, window) {
-    var View = gv.View,
-        state = gv.state;
+define(['gv'], function(gv) {
+    var state = gv.state;
     
     // View: ChangeLinkView (hovering change this link)
-    gv.ChangeLinkView = View.extend({
+    return gv.View.extend({
         el: '#change-this-link',
         
         initialize: function() {
@@ -83,4 +82,4 @@
      
     });
     
-}(gv, this));
+});

@@ -41,6 +41,7 @@ define({
                 '.left-panel': {
                     layout: '#layout-full-top',
                     slots: {
+                        '.top-slot': 'views/PagesView',
                         '.bottom-slot': 'views/PageControlView'
                     }
                 },

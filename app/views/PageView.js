@@ -1,22 +1,20 @@
 /*
  * Page View
  */
-(function(gv) {
-    var View = gv.View,
-        state = gv.state;
+define(['gv', 'views/BookView'], function(gv, BookView) {
+    var state = gv.state;
     
     // View: PageView (page content)
-    gv.PageView = View.extend({
-        tagName: 'div',
+    return BookView.extend({
         className: 'single-page panel',
+        template: '#page-template',
         
         initialize: function() {
             var view = this,
                 page = view.model;
-            view.template = _.template($('#page-template').html());
             // listen for state changes
-            this.bindState('change:pageview', this.renderPageView, this);
-            this.bindState('change:placeid', this.renderPlaceHighlight, this);
+            view.bindState('change:pageview',   view.renderPageView, view);
+            view.bindState('change:placeid',    view.renderPlaceHighlight, view);
             // set backreference
             page.view = view;
             // load page
@@ -25,27 +23,20 @@
             });
         },
         
-        layout: function() {
-            $(this.el)
-                .height(this.topViewHeight() * .8 - 75)
-                .width(this.topViewWidth() * .4 - 45)
-        },
-        
         render: function() {
             var view = this;
-            view.$el
-                .html(view.template(view.model.toJSON()));
-            view.bindingLayout();
+            view.renderTemplate();
             view.renderPageView();
             view.renderPlaceHighlight();
             return view;
         },
         
         renderPageView: function() {
-            var pageView = state.get('pageview');
+            var view = this,
+                pageView = state.get('pageview');
             // render
-            this.$('.text').toggle(pageView == 'text');
-            this.$('.img').toggle(pageView == 'image');
+            view.$('.text').toggle(pageView == 'text');
+            view.$('.img').toggle(pageView == 'image');
         },
         
         renderPlaceHighlight: function() {
@@ -57,7 +48,13 @@
         },
         
         open: function(fromLeft) {
-            $(this.el).show('slide', {direction: (fromLeft ? 'left' : 'right') }, 500);
+            // XXX: use CSS slide transition here
+            this.$el.show();
+        },
+        
+        close: function(fromLeft) {
+            // XXX: use CSS slide transition here
+            this.$el.hide();
         },
         
         // UI Event Handlers - update state
@@ -69,10 +66,10 @@
         uiPlaceClick: function(e) {
             var placeId = $(e.target).attr('data-place-id');
             if (placeId) {
-                state.setSerialized('placeid', placeId);
+                state.set('placeid', placeId);
             }
         }
         
     });
     
-}(gv));
+});

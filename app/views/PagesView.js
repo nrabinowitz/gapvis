@@ -1,48 +1,29 @@
 /*
- * Book Reading View
+ * Master view for pages
  */
-(function(gv) {
-    var View = gv.View,
-        state = gv.state,
-        _super = View.prototype;
+define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'], 
+    function(gv, BookView, PageView, ChangeLinkView) {
     
-    // View: BookReadingView (master view for the book reading screen)
-    gv.BookReadingView = View.extend({
-        el: '#book-view',
+    var state = gv.state;
+    
+    // View: PagesView (master view for the book reading screen)
+    return BookView.extend({
+        className: 'page-view loading',
         
-        initialize: function(opts) {
+        initialize: function() {
             var view = this;
-            // set child classes
-            view.childClasses = [
-                gv.NavigationView,
-                gv.BookTitleView,
-                gv.PageControlView,
-                gv.TimeMapView
-            ];
+            // view.changeLink = new ChangeLinkView();
             // listen for state changes
-            state.on('change:pageid', view.updatePage, view);
-            // super initialization kicks off model fetch
-            _super.initialize.call(this);
-        },
-        
-        render: function() {
-            _super.render.call(this);
-            this.updatePage();
-        },
-        
-        updateViews: function() {
-            _super.updateViews.call(this);
-            this.changeLink = new gv.ChangeLinkView({ model: this.model });
-            return this;
+            view.bindState('change:pageid', view.render, view);
         },
         
         clear: function() {
-            _super.clear.call(this);
-            this.changeLink.clear();
-            $('#page-view').empty();
+            var view = this;
+            // view.changeLink.clear();
+            BookView.prototype.clear.call(view);
         },
         
-        updatePage: function() {
+        render: function() {
             var view = this,
                 book = view.model,
                 pages = book.pages,
@@ -60,13 +41,14 @@
             }
             // make a new page view if necessary
             if (!page.view) {
-                $('#page-view').addClass('loading');
+                view.$el.addClass('loading');
                 page.on('change', function() {
-                    $('#page-view').append(page.view.render().el);
-                    $('#page-view').removeClass('loading');
-                    view.updatePage();
+                    view.$el
+                        .append(page.view.render().el)
+                        .removeClass('loading');
+                    view.render();
                 });
-                new gv.PageView({ model: page });
+                new PageView({ model: page });
             } 
             // page view has been created; show
             else {
@@ -76,13 +58,14 @@
                     oldPage && pages.indexOf(oldPage) > pages.indexOf(page)
                 );
             }
+            return view;
         },
         
-        // UI events
+        /* UI events
         
         events: {
-            'mouseover #page-view span.place':  'uiShowChangeLink',
-            'mouseleave #page-view span.place': 'uiHideChangeLink'
+            'mouseover span.place':  'uiShowChangeLink',
+            'mouseleave span.place': 'uiHideChangeLink'
         },
         
         uiShowChangeLink: function(e) {
@@ -104,8 +87,8 @@
         uiHideChangeLink: function() {
             // start countdown to close
             this.changeLink.startTimer();
-        }
+        } */
         
     });
     
-}(gv));
+});
