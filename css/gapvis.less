@@ -94,10 +94,12 @@ footer {
     a:link, a:visited { color: @discreet-text; }
 }
 
+
 // ---------------------------------------------------
-// Top layout styles
+// Layout styles
 // ---------------------------------------------------
-div.top {
+
+.top {
     position: absolute;
     background: #eee;
     top: @view-margin-top;
@@ -107,29 +109,6 @@ div.top {
     overflow: hidden;
     margin: 0 @view-margin-right 0 @view-margin-left;
     
-    // sliding transitions
-    &.sliding {
-        .transition(.6s ease-in-out left);
-    }
-    &.active {
-        left: 0;
-        &.left {
-            left: -100%;
-        }
-        &.right {
-            left: 100%;
-        }
-    }
-    &.next {
-        left: 100%;
-    }
-    &.prev {
-        left: -100%;
-    }
-    &.next.left, &.prev.right {
-        left: 0;
-    }
-    
     &.loading * {
         display: none;
     }
@@ -138,10 +117,6 @@ div.top {
     img { max-width: none; }
 }
 
-
-// ---------------------------------------------------
-// Layout styles
-// ---------------------------------------------------
 .layout {
     position: absolute;
     top: @view-padding-top;
@@ -182,6 +157,32 @@ div.top {
 // Utility styles
 // ---------------------------------------------------
 
+// slide transitions
+.top, .single-page {
+    &.sliding {
+        .transition(.6s ease-in-out left);
+    }
+    &.active {
+        left: 0;
+        &.left {
+            left: -100%;
+        }
+        &.right {
+            left: 100%;
+        }
+    }
+    &.next {
+        left: 100%;
+    }
+    &.prev {
+        left: -100%;
+    }
+    &.next.left, &.prev.right {
+        left: 0;
+    }
+}
+
+// loading spinner
 .loading {
     background-image: url(../images/blue-loading.gif);
     background-repeat: no-repeat;
