@@ -46,7 +46,7 @@ require.config({
     baseUrl: 'app'
 });
 
-require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'layouts/Layout', 'routers/Router'], 
+require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views/Layout', 'routers/Router'], 
     function(gv, config, Books) {
     
     // change Backbone.sync to use JSON/JSONP

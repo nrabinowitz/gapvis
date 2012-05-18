@@ -34,13 +34,13 @@
         <filelist dir="." files="${js.app.core}"/>
         <fileset dir="${js.app.models.dir}"/>
         <fileset dir="${js.app.views.dir}"/>
-        <fileset dir="${js.app.layouts.dir}"/>
         <fileset dir="${js.app.routers.dir}"/>
         <mapper type="glob" from="${basedir}${file.separator}*" to="*"/>
     </pathconvert>
     
     <pathconvert property="js.app.templates.files" pathsep="," dirsep="/">
         <fileset dir="${js.app.templates.dir}"/>
+        <fileset dir="${js.app.layouts.dir}"/>
     </pathconvert>
                      
     <property name="js.files.production" 
