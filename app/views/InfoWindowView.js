@@ -1,27 +1,28 @@
 /*
  * TimeMap View
  */
-(function(gv) {
-    var View = gv.View,
-        state = gv.state;
+define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'], 
+    function(gv, BookView, PlaceFrequencyBarsView) {
+    
+    var state = gv.state;
     
     // View: InfoWindowView (content for the map infowindow)
-    gv.InfoWindowView = View.extend({
-        tagName: 'div',
+    return BookView.extend({
         className: 'infowindow',
+        template: '#info-window-template',
         
         initialize: function(opts) {
-            this.template = _.template($('#info-window-template').html());
+            var view = this;
             // listen for state changes
-            this.bindState('change:placeid', this.render, this);
-            this.bindState('change:pageid', this.renderNextPrevControl, this);
-            this.bindState('change:pageid', this.renderBarHighlight, this);
-            this.bindState('change:mapzoom', this.renderZoomControl, this);
+            view.bindState('change:placeid',    view.render, view);
+            view.bindState('change:pageid',     view.renderNextPrevControl, view);
+            view.bindState('change:pageid',     view.renderBarHighlight, view);
+            view.bindState('change:mapzoom',    view.renderZoomControl, view);
         },
         
         clear: function() {
             this.freqBars && this.freqBars.clear();
-            View.prototype.clear.call(this);
+            BookView.prototype.clear.call(this);
         },
         
         // render and update functions
@@ -48,7 +49,7 @@
                 // create content
                 view.$el.html(view.template(place.toJSON()));
                 // add frequency bars
-                var freqBars = view.freqBars = new gv.PlaceFrequencyBarsView({
+                var freqBars = view.freqBars = new PlaceFrequencyBarsView({
                     model: book,
                     place: place,
                     el: view.$('div.frequency-bars')[0]
@@ -77,20 +78,19 @@
         },
         
         renderNextPrevControl: function() {
-            var book = this.model,
+            var view = this,
+                book = view.model,
                 pageId = state.get('pageid'),
                 placeId = state.get('placeid'),
-                prev = this.prev = book.prevPlaceRef(pageId, placeId),
-                next = this.next = book.nextPlaceRef(pageId, placeId);
-            this.$('.prev').toggleClass('on', !!prev);
-            this.$('.next').toggleClass('on', !!next);
-            this.$('.controls').toggle(!!(prev || next));
+                prev = view.prev = book.prevPlaceRef(pageId, placeId),
+                next = view.next = book.nextPlaceRef(pageId, placeId);
+            view.$('.prev').toggleClass('on', !!prev);
+            view.$('.next').toggleClass('on', !!next);
+            view.$('.controls').toggle(!!(prev || next));
         },
         
         renderBarHighlight: function() {
-            if (this.freqBars) {
-                this.freqBars.updateHighlight();
-            }
+            this.freqBars && this.freqBars.updateHighlight();
         },
         
         getPoint: function() {
@@ -127,8 +127,8 @@
         },
         
         uiGoToPlace: function() {
-            state.set({ 'topview': gv.BookPlaceView });
+            state.set({ 'view': 'place-view' });
         }
     });
     
-}(gv));
+});

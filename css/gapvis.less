@@ -243,7 +243,6 @@ div.top {
 // summary page map view
 .summary-map-view {
     width: 100%;
-    // height: 100%;
     overflow: auto;
 }
 
@@ -303,6 +302,31 @@ div.top {
         font-variant: lining-nums;
     }
 }
+
+// timemap view
+.timemap-view {
+    .timeline-container{
+        position: relative;
+        height: 35%;
+        width: 100%;
+    }
+    .timeline{
+        font-size: 12px;
+        height: 100%;
+        width: 100%;
+        background: #CCCCCC;
+    }
+    .map-container {
+        width: 100%;
+        height: 65%;
+    }
+    .map {
+        width: 100%;
+        height: 100%;
+        background: #EEEEEE;
+    }
+}
+
 
 
 // ----------------------------------------------------------
@@ -428,27 +452,6 @@ p.warning {
     color: #c00;
 }
 
-/* timemap styles. */
-div#timeline-container{
-    position: relative;
-    height: 35%;
-    width: 100%;
-}
-div#timeline{
-    font-size: 12px;
-    height: 100%;
-    width: 100%;
-    background: #CCCCCC;
-}
-div#map-container {
-    width: 100%;
-    height: 65%;
-}
-div#map {
-    width: 100%;
-    height: 100%;
-    background: #EEEEEE;
-}
 
 
 /* timeline controls */
