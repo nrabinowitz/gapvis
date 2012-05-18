@@ -95,7 +95,7 @@ footer {
 }
 
 // ---------------------------------------------------
-// Top layout views
+// Top layout styles
 // ---------------------------------------------------
 div.top {
     position: absolute;
@@ -106,30 +106,6 @@ div.top {
     border-radius: 15px;
     overflow: hidden;
     margin: 0 @view-margin-right 0 @view-margin-left;
-    
-    .layout {
-        position: absolute;
-        top: @view-padding-top;
-        bottom: @view-padding-bottom;
-        left: @view-padding-left;
-        right: @view-padding-right;
-        
-        .row-fluid > div {
-            position: relative;
-        }
-        
-        .full-height {
-            height: 100%;
-        }
-        
-        .fill {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
-            // height set with JS
-        }
-    }
     
     // sliding transitions
     &.sliding {
@@ -160,6 +136,43 @@ div.top {
     
     // fix for google maps controls
     img { max-width: none; }
+}
+
+
+// ---------------------------------------------------
+// Layout styles
+// ---------------------------------------------------
+.layout {
+    position: absolute;
+    top: @view-padding-top;
+    bottom: @view-padding-bottom;
+    left: @view-padding-left;
+    right: @view-padding-right;
+    
+    .row-fluid > div {
+        position: relative;
+    }
+    
+    .full-height {
+        height: 100%;
+    }
+    
+    .fill {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        // height set with JS
+    }
+}
+
+// layout-specific styles
+
+.layout-full-top {
+    .bottom-slot {
+        position: absolute;
+        bottom: 0;
+    }
 }
 
 

@@ -39,7 +39,7 @@ define({
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',
                 '.left-panel': {
-                    layout: '#layout-fulltop',
+                    layout: '#layout-full-top',
                     slots: {
                         '.bottom-slot': 'views/PageControlView'
                     }
