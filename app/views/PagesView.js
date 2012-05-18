@@ -54,6 +54,8 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
             else {
                 view.pageView = page.view;
                 page.view.open(
+                    // send final width
+                    view.$el.width(),
                     // figure out left/right
                     oldPage && pages.indexOf(oldPage) > pages.indexOf(page)
                 );

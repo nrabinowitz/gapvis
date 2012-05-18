@@ -1,7 +1,7 @@
 /*
  * Page View
  */
-define(['gv', 'views/BookView'], function(gv, BookView) {
+define(['gv', 'views/BookView', 'util/slide'], function(gv, BookView, slide) {
     var state = gv.state;
     
     // View: PageView (page content)
@@ -47,13 +47,12 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
             });
         },
         
-        open: function(fromLeft) {
-            // XXX: use CSS slide transition here
-            this.$el.show();
+        open: function(width, fromRight) {
+            this.$el.width(width - 24); // deal with padding
+            slide(this.$el, true, fromRight ? 'right' : 'left');
         },
         
-        close: function(fromLeft) {
-            // XXX: use CSS slide transition here
+        close: function(fromRight) {
             this.$el.hide();
         },
         
