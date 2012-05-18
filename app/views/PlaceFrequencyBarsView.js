@@ -7,7 +7,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
     
     // View: BookTitleView (title and metadata)
     PlaceFrequencyBarsView =  BookView.extend({
-        className: 'freq-bars-view',
+        className: 'freq-bars-view panel padded-scroll fill loading',
         
         settings: {
             buckets: 50,
@@ -20,33 +20,39 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         },
         
         render: function() {
-            var singlePlace = !!this.options.place;
-        
-            var bh = 12,
-                w = 250,
-                lw = singlePlace ? 0 : 100,
-                spacing = 3;
-                
-            var book = this.model,
-                places = singlePlace ? [this.options.place] : book.places.models,
-                settings = this.settings,
+            var view = this,
+                singlePlace = !!view.options.place,
+                book = view.model,
+                places = singlePlace ? [view.options.place] : book.places.models,
+                settings = view.settings,
                 buckets = settings.buckets,
                 color = settings.color,
                 hicolor = settings.hicolor,
                 frequency = function(d) { return d.get('frequency') },
                 max = d3.max(places, frequency),
+                bh = 12,
+                w = 250,
+                lw = singlePlace ? 0 : 100,
+                spacing = 3,
                 x = d3.scale.linear()
                     .domain([0, max])
                     .range([0, w]),
                 y = function(d, i) { return i * (bh + spacing) },
                 bw = function(d) { return x(frequency(d)) };
+                
+            // remove loading spinner
+            view.$el.removeClass('loading');
+                
+            // make div container (for padding)
+            var $container = $('<div></div>').appendTo(view.el);
             
+            // title if we're showing the whole book
             if (!singlePlace) {
-                $(this.el).append('<h3>Most-Referenced Places</h3>');
+                $container.append('<h3>Most-Referenced Places</h3>');
             }
         
             // create svg container
-            var svg = d3.select(this.el)
+            var svg = d3.select($container[0])
               .append('svg:svg')
                 .attr('height', (bh + spacing) * places.length + (singlePlace ? 0 : 10))
                 // delegated handler: click

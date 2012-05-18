@@ -16,9 +16,7 @@ define({
             }
         },
         'book-summary': {
-            // XXX can I make a 2-col book layout that handles the heights?
-            // could work for all the book layouts...
-            layout: '#layout-book-summary',
+            layout: '#layout-book-3panel',
             router: 'book/:bookid',
             refreshOn: 'change:bookid',
             slots: {
@@ -30,8 +28,7 @@ define({
             }
         },
         'reading-view': {
-            // XXX: this should be reusable for the Place page
-            layout: 'layouts/BookReadingLayout',
+            layout:  '#layout-book-2panel',
             router: [
                 'book/:bookid/read', 
                 'book/:bookid/read/:pageid',
@@ -42,10 +39,9 @@ define({
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',
                 '.left-panel': {
-                    // XXX: this should be a reusable 100% + margin piece for map and page
-                    layout: '#reading-pane-template',
+                    layout: '#layout-fulltop',
                     slots: {
-                        '.page-controls': 'views/PageControlView'
+                        '.bottom-slot': 'views/PageControlView'
                     }
                 }
             }

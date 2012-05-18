@@ -114,6 +114,10 @@ div.top {
         left: @view-padding-left;
         right: @view-padding-right;
         
+        .row-fluid > div {
+            position: relative;
+        }
+        
         .full-height {
             height: 100%;
         }
@@ -156,19 +160,6 @@ div.top {
     
     // fix for google maps controls
     img { max-width: none; }
-    
-    // book summary layout
-    &.layout-book-summary {
-            
-        .right-panel {
-            overflow: auto;
-            
-            div {
-                padding: 1.5em 1em;
-            }
-        }
-        
-    }
 }
 
 
@@ -238,7 +229,7 @@ div.top {
 // summary page map view
 .summary-map-view {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     overflow: auto;
 }
 

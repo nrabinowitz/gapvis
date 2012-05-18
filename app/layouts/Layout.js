@@ -26,12 +26,20 @@ define(['gv'], function(gv) {
                 // add up sibling heights
                 var $fill = $(this),
                     padding = 12,
-                    sibHeight = 0;
-                $fill.siblings().each(function() {
-                    sibHeight += $(this).height();
-                });
+                    prevHeight = 0,
+                    nextHeight = 0;
+                    
                 // set top margin
-                $fill.css({ marginTop: sibHeight + padding });
+                $fill.prevAll().each(function() {
+                    prevHeight += $(this).height();
+                });
+                $fill.css({ marginTop: prevHeight + (prevHeight ? padding : 0) });
+                
+                // set bottom margin
+                $fill.nextAll().each(function() {
+                    nextHeight += $(this).height();
+                });
+                $fill.css({ marginBottom: nextHeight + (nextHeight ? padding : 0) });
             });
         }
     });
