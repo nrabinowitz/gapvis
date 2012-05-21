@@ -34,8 +34,11 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         
         updateNavButtons: function() {
             // enable/disable place view
-            this.$('[data-view-id=place-view]')
-                .attr('disabled', state.get('placeid') ? '' : 'disabled');
+            var $placeButton = this.$('[data-view-id=place-view]'),
+                d = 'disabled';
+            state.get('placeid') ?
+                $placeButton.removeClass(d).removeAttr(d) :
+                $placeButton.addClass(d).attr(d, d);
             // check the appropriate button
             this.$('button').each(function() {
                 var $this = $(this);
