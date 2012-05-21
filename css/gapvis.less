@@ -197,7 +197,7 @@ footer {
         overflow: auto;
         
         > div {
-            padding: 1.5em 1em;
+            margin: 1.5em 1em;
         }
     }
 }
@@ -354,6 +354,29 @@ footer {
     
 }
 
+// page summary view
+.place-summary {
+    font-family: @serifFontFamily;
+    
+    p {
+        margin: 0 0 .5em 0;
+    }
+    h4 {
+        margin: 1.5em 0 .5em 0;
+    }
+    h3 {
+        margin: 0 0 .5em 0;
+    }
+}
+.related-places-view {
+    p {
+        font-size: .88em;
+    }
+    h4 {
+        margin: 0;
+    }
+}
+
 
 // ----------------------------------------------------------
 // old, for clean-up
@@ -390,19 +413,6 @@ div#place-summary-container {
     padding: 15px 10px;
     margin-right: 15px;
     overflow: auto;
-}
-div#place-summary-container p {
-    margin: 0 0 .5em 0;
-}
-div#place-summary-container h4 {
-    margin: 1.5em 0 .5em 0;
-}
-#place-freq-bars-view h3,
-#place-summary-container h3 {
-    margin: 0 0 .5em 0;
-}
-#related-places-view p {
-    font-size: .88em;
 }
 div#place-map-view {
     position: relative;

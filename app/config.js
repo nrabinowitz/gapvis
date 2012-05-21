@@ -53,6 +53,27 @@ define({
                     }
                 }
             }
+        },
+        'place-view': {
+            layout:  '#layout-book-2panel',
+            router: 'book/:bookid/place/:placeid',
+            refreshOn: ['change:bookid', 'change:placeid'],
+            slots: {
+                '.navigation-view': 'views/NavigationView',
+                '.book-title-view': 'views/BookTitleView',
+                '.left-panel': {
+                    className: 'place-summary panel fill padded-scroll',
+                    slots: {
+                        'this': [
+                            'views/PlaceSummaryView',
+                            'views/RelatedPlacesView'
+                        ]
+                    }
+                },
+                '.right-panel': {
+                    layout: '#layout-full-top'
+                }
+            }
         }
     }
 });
