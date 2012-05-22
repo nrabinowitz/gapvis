@@ -71,7 +71,12 @@ define({
                     }
                 },
                 '.right-panel': {
-                    layout: '#layout-full-top'
+                    layout: '#layout-full-top',
+                    className: 'place-view-right',
+                    slots: {
+                        '.top-slot': 'views/BookPlaceMapView',
+                        '.bottom-slot': 'views/BookPlaceFlickrView'
+                    }
                 }
             }
         }

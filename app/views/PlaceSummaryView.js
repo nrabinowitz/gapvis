@@ -13,7 +13,7 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         
         clear: function() {
             this.freqBars && this.freqBars.clear();
-            View.prototype.clear.call(this);
+            BookView.prototype.clear.call(this);
         },
         
         // render and update functions

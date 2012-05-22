@@ -243,7 +243,7 @@ footer {
 }
 
 // summary page map view
-.summary-map-view {
+.summary-map-view, .place-map-view {
     width: 100%;
     overflow: auto;
     
@@ -373,73 +373,59 @@ footer {
         font-size: .88em;
     }
     h4 {
-        margin: 0;
+        margin-top: 0;
     }
 }
 
+// flickr photos
+.place-flickr-view {
+    > div {
+        padding: 10px;
+    }
+    h4 {
+        margin: 0 0 5px 0;
+        display: inline-block;
+    }
+    .flickr-link {
+        display: none;
+    }
+    .photos {
+        width: 100%;
+        height: 75px;
+        overflow: hidden;
+    }
+    .flickr-photo {
+        float: left;
+        margin: 0 10px 10px 0;
+    }
+}
+.place-view-right.layout-full-top .bottom-slot {
+    height: 120px;
+}
+
+// message view
+#message-view {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    display: none;
+    
+    .alert {
+        padding: .3em 35px .3em 14px;
+        display: inline-block;
+        margin-top: .5em;
+    }
+}
 
 // ----------------------------------------------------------
 // old, for clean-up
 
-/* book reading view */
-div#reading-pane {
-    position: relative;
-    width: 40%;
-    height: 80%;
-    float: left;
-}
-div#timemap-view {
-    position: relative;
-    margin-left: 40%; 
-    height: 80%;
-}
-div#page-view {
-    position: relative;
-    overflow: hidden;
-    height: 100%;
-}
-div#page-control-view {
-    width: 95%;
-    position: absolute;
-    bottom: 0;
-}
 
 
 
 /* book place view */
-div#place-summary-container {
-    float: left;
-    width: 350px;
-    padding: 15px 10px;
-    margin-right: 15px;
-    overflow: auto;
-}
-div#place-map-view {
-    position: relative;
-    margin-left: 385px;
-}
-div#place-flickr-view {
-    position: relative;
-    padding: 15px 10px;
-    height: 93px;
-    margin: 15px 0 0 387px;
-}
-div#place-flickr-view h4 {
-    margin: 0 0 5px 0;
-    display: inline-block;
-}
-span.flickr-link {
-    display: none;
-}
-div#place-flickr-view div.photos {
-    width: 100%;
-    height: 75px;
-    overflow: hidden;
-}
-div.flickr-photo {
-    float: left;
-    margin: 0 10px 10px 0;
-}
+
 
 /* About Us page */
 #about-us-view {
@@ -552,24 +538,7 @@ div.pagenum {
     display:none
 }
 
-/* message view */
-#message-view {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    text-align: center;
-    display: none;
-}
-#message-text {
-    font-weight: bold;
-    display: inline-block;
-    background: #FAE896;
-    border: 1px solid #F0C36D;
-    padding: .3em 1em;
-    margin-top: .3em;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-}
+
 
 
 // eventually, delete

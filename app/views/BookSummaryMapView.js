@@ -25,6 +25,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                 
             // deal with layout issues - div must be visible in DOM before map initialization
             setTimeout(function() {
+                // init map
                 var gmap = new gmaps.Map($container[0], {
                         center: bounds.getCenter(),
                         zoom: 4,
