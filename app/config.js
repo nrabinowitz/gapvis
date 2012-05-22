@@ -7,6 +7,7 @@ define({
     views: {
         'index': {
             layout: '#layout-2col',
+            className: 'index-view',
             router: ['', 'index'],
             slots: {
                 '.left-column': {
@@ -17,6 +18,7 @@ define({
         },
         'book-summary': {
             layout: '#layout-book-3panel',
+            className: 'summary-view',
             router: 'book/:bookid',
             refreshOn: 'change:bookid',
             slots: {
@@ -29,6 +31,7 @@ define({
         },
         'reading-view': {
             layout:  '#layout-book-2panel',
+            className: 'reading-view',
             router: [
                 'book/:bookid/read', 
                 'book/:bookid/read/:pageid',
@@ -56,6 +59,7 @@ define({
         },
         'place-view': {
             layout:  '#layout-book-2panel',
+            className: 'place-view',
             router: 'book/:bookid/place/:placeid',
             refreshOn: ['change:bookid', 'change:placeid'],
             slots: {

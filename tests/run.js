@@ -91,19 +91,19 @@ t.assertMessage = function(expected, message) {
 
 t.assertAtIndexView = function() {
     t.assertRoute('index', "Index route correct");
-    t.assertVisible('div.top.layout-index', "Index view is visible");
+    t.assertVisible('div.top.index-view', "Index view is visible");
 }
 t.assertAtBookSummaryView = function() {
     t.assertRoute(/^book\/\d+/, 'Book Summary route correct');
-    t.assertVisible('div.top.layout-book-summary', "Book Summary view is visible");
+    t.assertVisible('div.top.summary-view', "Book Summary view is visible");
 }
 t.assertAtBookReadingView = function() {
     t.assertRoute(/^book\/\d+\/read/, 'Book reading route correct');
-    t.assertVisible('div.top.layout-book-reading', "Book Reading view is visible");
+    t.assertVisible('div.top.reading-view', "Book Reading view is visible");
 }
 t.assertAtBookPlaceView = function() {
     t.assertRoute(/^book\/\d+\/place\/\d+/, 'Place Detail route correct');
-    t.assertVisible('#book-place-view', "Place Detail view is visible");
+    t.assertVisible('div.top.place-view', "Place Detail view is visible");
 }
 
 // set up and run suites
