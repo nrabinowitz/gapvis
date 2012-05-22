@@ -80,7 +80,12 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
             } else {
                 // not valid
                 this.renderNextPrev();
-                state.set({ message: "Sorry, there isn't a page '" + pageId + "' in this book"});
+                state.set({ 
+                    message: {
+                        text: "Sorry, there isn't a page '" + pageId + "' in this book.",
+                        type: "error"
+                    }
+                });
             }
         }
     });

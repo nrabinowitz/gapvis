@@ -44,8 +44,11 @@ define(function() {
                         },
                         error: function() {
                             gv.state.set({ 
-                                message: 'Error: Could not get data for the ' + model.type +
-                                    ' with ID ' + model.id 
+                                message: {
+                                    text: 'Error: Could not get data for the ' + model.type +
+                                        ' with ID ' + model.id,
+                                    type: 'error'
+                                }
                             });
                         }
                     });

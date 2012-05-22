@@ -12,10 +12,20 @@
         initialize: function() {
             var view = this,
                 showSuccess = function() {
-                    state.set({ message: "Your feedback was submitted. Thanks!" });
+                    state.set({
+                        message: { 
+                            text: "Your feedback was submitted. Thanks!",
+                            type: "success"
+                        }
+                    });
                 },
                 showError = function() {
-                    state.set({ message: "Something went wrong, and we couldn't submit your feedback. Sorry!" });
+                    state.set({ 
+                        message: { 
+                            text: "Something went wrong, and we couldn't submit your feedback. Sorry!",
+                            type: "error"
+                        }
+                    });
                 };
             // init the dialog, but don't open
             view.$el.dialog({
