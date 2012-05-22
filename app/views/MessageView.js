@@ -3,7 +3,18 @@
  */
 define(['gv'], function(gv) {
     var state = gv.state,
-        showFor = 3000;
+        showFor = 5000,
+        timeoutId;
+        
+    function unsetMsg() {
+        state.unset('message');
+    }
+    
+    function clear() {
+        console.log('clearing timeout');
+        window.clearTimeout(timeoutId);
+        delete timeoutId;
+    }
     
     // View: MessageView
     return gv.View.extend({
@@ -17,19 +28,27 @@ define(['gv'], function(gv) {
         showMessage: function() {
             var view = this,
                 msg = state.get('message');
-            if (!!state.previous('message') && view._tmid) {
-                window.clearTimeout(view._tmid);
-                delete view._tmid;
-            }
+            if (!!state.previous('message') && timeoutId) clear();
             if (msg) {
-                view.$('#message-text').text(msg);
+                var text = msg.text || msg,
+                    typeClass = 'alert-' + (msg.type || 'warning');
+                view.$('.alert')
+                    .removeClass('alert-error alert-success alert-info')
+                    .addClass(typeClass)
+                    .find('span')
+                        .text(text);
                 $(view.el).show();
-                view._tmid = window.setTimeout(function() {
-                    state.unset('message');
-                }, showFor);
+                timeoutId = window.setTimeout(unsetMsg, showFor);
             } else {
-                $(view.el).fadeOut('slow');
+                $(view.el).fadeOut();
             }
+        },
+        
+        // UI events
+        
+        events: {
+            'click .close':     unsetMsg,
+            'mouseover .alert': clear
         }
         
     });
