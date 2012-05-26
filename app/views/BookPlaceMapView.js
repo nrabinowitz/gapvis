@@ -15,6 +15,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         // render and update functions
         
         render: function() {
+            if (DEBUG && !window.google) return;
             var view = this,
                 placeId = state.get('placeid'),
                 book = view.model,

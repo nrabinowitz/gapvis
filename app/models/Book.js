@@ -105,6 +105,7 @@ define(['gv', 'models/Model', 'models/Places', 'models/Pages'],
         
         // return a google maps API bounding box
         gmapBounds: function() {
+            if (DEBUG && !window.google) return;
             var gmaps = google.maps,
                 placeBounds = this.bounds();
             return new gmaps.LatLngBounds(
