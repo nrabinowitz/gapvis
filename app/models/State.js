@@ -33,24 +33,4 @@ define(['gv'], function(gv) {
     // reset to use new class
     gv.resetState();
     
-    // add parameters
-    gv.addParameter('bookid', { deserialize: parseInt });
-    gv.addParameter('pageid', { deserialize: String });
-    gv.addParameter('placeid', { deserialize: parseInt });
-    gv.addParameter('pageview');
-    gv.addParameter('mapzoom', { deserialize: parseInt });
-    gv.addParameter('mapcenter', { 
-        deserialize: function(s) {
-            var params = s.split(",");
-            return params.length < 2 ? null :
-                {
-                    lat: parseFloat(params[0]),
-                    lon: parseFloat(params[1])
-                };
-        }, 
-        serialize: function(value) {
-            return value.lat + "," + value.lng;
-        }
-    });
-    
 });

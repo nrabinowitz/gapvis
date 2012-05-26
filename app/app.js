@@ -62,6 +62,26 @@ require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views
     // initialize empty book list
     gv.books = new Books();
     
+    // add parameters for permalinks
+    gv.addParameter('bookid', { deserialize: parseInt });
+    gv.addParameter('pageid', { deserialize: String });
+    gv.addParameter('placeid', { deserialize: parseInt });
+    gv.addParameter('pageview');
+    gv.addParameter('mapzoom', { deserialize: parseInt });
+    gv.addParameter('mapcenter', { 
+        deserialize: function(s) {
+            var params = s.split(",");
+            return params.length < 2 ? null :
+                new mxn.LatLonPoint(
+                    parseFloat(params[0]),
+                    parseFloat(params[1])
+                );
+        }, 
+        serialize: function(value) {
+            return value.lat + "," + value.lng;
+        }
+    });
+    
     // kick things off
     $(function() {
         gv.configure(config)
