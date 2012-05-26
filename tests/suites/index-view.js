@@ -5,8 +5,9 @@ casper.start();
 
 casper
     .describe("Index page")
-    .thenOpen(baseUrl, function() {
-        t.assertAtIndexView();
+    .thenOpen(baseUrl)
+    .assertAtIndexView()
+    .then(function() {
         t.assertTitle("GapVis: Visual Interface for Reading Ancient Texts", 
             "Loaded application");
         t.assertText("h2", "Overview",
@@ -19,16 +20,14 @@ casper
     
 casper
     .describe("Index page > Book Links")
-    .thenOpen(baseUrl, function() {
+    .thenOpen(baseUrl)
+    .assertAtIndexView()
+    .then(function() {
         this.click('div.book-list p span');
     })
-    .then(function() {
-        t.assertAtBookSummaryView();
-    })
+    .assertAtBookSummaryView()
     .back()
-    .then(function() {
-        t.assertAtIndexView();
-    });
+    .assertAtIndexView();
 
 casper.run(function() {
     t.done();

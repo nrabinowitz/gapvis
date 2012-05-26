@@ -20,12 +20,27 @@ casper.describe = function(msg) {
 
 // helpers
 
+casper.waitForSelector = function(selector, msg) {
+    this.waitUntilVisible(selector, function() {
+        t.pass(msg || 'Selector ' + selector + ' found');
+    },  function() {
+        t.fail(msg || 'Selector ' + selector + ' not found');
+    });
+    return this;
+};
+
+casper.waitForInfoWindow = function() {
+    return this.waitForSelector('div.infowindow', "Info window is open");
+};
+
 casper.closeInfoWindow = function() {
     // no way to easily access the close button
     this.evaluate(function() { 
         gv.app.currentView.children[3].tm.map.closeBubble(); 
     });
+    return this;
 };
+
     
 // extend the tester with some custom assertions
 
@@ -65,9 +80,7 @@ t.assertRoute = function(expected, message) {
 };
 
 // Assertions about app-specific UI components
-
 t.assertInfoWindow = function(expected, message) {
-    t.assertVisible('div.infowindow', "Info window is open");
     t.assertText('div.infowindow h3', expected + ' (Zoom In)', message);
 };
 
@@ -89,22 +102,29 @@ t.assertMessage = function(expected, message) {
 
 // bundled assertions
 
-t.assertAtIndexView = function() {
-    t.assertRoute('index', "Index route correct");
-    t.assertVisible('div.top.index-view', "Index view is visible");
-}
-t.assertAtBookSummaryView = function() {
-    t.assertRoute(/^book\/\d+/, 'Book Summary route correct');
-    t.assertVisible('div.top.summary-view', "Book Summary view is visible");
-}
-t.assertAtBookReadingView = function() {
-    t.assertRoute(/^book\/\d+\/read/, 'Book reading route correct');
-    t.assertVisible('div.top.reading-view', "Book Reading view is visible");
-}
-t.assertAtBookPlaceView = function() {
-    t.assertRoute(/^book\/\d+\/place\/\d+/, 'Place Detail route correct');
-    t.assertVisible('div.top.place-view', "Place Detail view is visible");
-}
+casper.assertAtView = function(viewName, route, view, selector) {
+    selector = selector || view;
+    this.waitForSelector('div.top.' + selector, viewName + " is visible")
+        .then(function() {
+            t.assertEvalEquals(function() { return gv.state.get('view'); }, view,
+                "State set correctly for " + viewName);
+            t.assertRoute(route, 
+                "Route correct for " + viewName);
+        });
+    return this;
+};
+casper.assertAtIndexView = function() {
+    return this.assertAtView("Index view", 'index', 'index', 'index-view');
+};
+casper.assertAtBookSummaryView = function() {
+    return this.assertAtView("Book summary", /^book\/\d+/, 'book-summary', 'summary-view');
+};
+casper.assertAtBookReadingView = function() {
+    return this.assertAtView("Reading view", /^book\/\d+\/read/, 'reading-view');
+};
+casper.assertAtBookPlaceView = function() {
+    return this.assertAtView("Place detail view", /^book\/\d+\/place\/\d+/, 'place-view');
+};
 
 // set up and run suites
 var fs = require('fs'),

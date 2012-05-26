@@ -6,115 +6,119 @@ casper.start();
     
 casper
     .describe('Reading View page')
-    .thenOpen(viewUrl, function() {
+    .thenOpen(viewUrl)
+    .wait(300)
+    .then(function() {
         t.assertAtBookReadingView();
         t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
             "Book title shown");
         t.assertPermalink(RegExp(baseUrl + '#book/2/read/-2\\?'),
             "Permalink is correct");
-        t.assertExists('#book-view div.navigation-view label[for^="nav-reading"].ui-state-active',
+        t.assertVisible('div.navigation-view button[data-view-id="reading-view"].active',
             'Reading View button is active');
     });
     
 casper
     .describe('Reading View page > Next/Prev')
-    .thenOpen(viewUrl, function() {
+    .thenOpen(viewUrl)
+    .wait(300)
+    .then(function() {
         t.assertRoute(/^book\/\d+\/read\/-2/, 'Book reading route correct');
-        t.assertInText('#page-view div.text:visible', 'Page Negative Two Text.',
+        t.assertInText('.page-view div.text:visible', 'Page Negative Two Text.',
             'Page -2 text is shown');
-        t.assertDoesNotExist('#prev.on',
+        t.assertDoesNotExist('.nextprev .prev.on',
             'Previous link is disabled');
-        t.assertExists('#next.on',
+        t.assertExists('.nextprev .next.on',
             'Next link is enabled');
     })
     .then(function() {
-        this.click('#next.on');
+        this.click('.nextprev .next.on');
     })
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/1/, 'Book reading route correct');
-        t.assertInText('#page-view div.text:visible', 'Page One Text.',
+        t.assertInText('.page-view div.text:visible', 'Page One Text.',
             'Page 1 text is shown');
-        t.assertExists('#prev.on',
+        t.assertExists('.nextprev .prev.on',
             'Previous link is enabled');
-        t.assertExists('#next.on',
+        t.assertExists('.nextprev .next.on',
             'Next link is enabled');
     })
     .then(function() {
-        this.click('#next.on');
+        this.click('.nextprev .next.on');
     })
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/2/, 'Book reading route correct');
-        t.assertInText('#page-view div.text:visible', 'Page Two Text.',
+        t.assertInText('.page-view div.text:visible', 'Page Two Text.',
             'Page 2 text is shown');
-        t.assertExists('#prev.on',
+        t.assertExists('.nextprev .prev.on',
             'Previous link is enabled');
-        t.assertExists('#next.on',
+        t.assertExists('.nextprev .next.on',
             'Next link is enabled');
     })
     .then(function() {
-        this.click('#prev.on');
+        this.click('.nextprev .prev.on');
     })
     .wait(300)
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/1/, 'Book reading route correct');
-        t.assertInText('#page-view div.text:visible', 'Page One Text.',
+        t.assertInText('.page-view div.text:visible', 'Page One Text.',
             'Page 1 text is shown');
-        t.assertExists('#prev.on',
+        t.assertExists('.nextprev .prev.on',
             'Previous link is enabled');
-        t.assertExists('#next.on',
+        t.assertExists('.nextprev .next.on',
             'Next link is enabled');
     })
     .then(function() {
-        this.click('#prev.on');
+        this.click('.nextprev .prev.on');
     })
     .wait(300)
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/-2/, 'Book reading route correct');
-        t.assertInText('#page-view div.text:visible', 'Page Negative Two Text.',
+        t.assertInText('.page-view div.text:visible', 'Page Negative Two Text.',
             'Page -2 text is shown');
-        t.assertDoesNotExist('#prev.on',
+        t.assertDoesNotExist('.nextprev .prev.on',
             'Previous link is disabled');
-        t.assertExists('#next.on',
+        t.assertExists('.nextprev .next.on',
             'Next link is enabled');
     })
     .thenOpen(baseUrl + '#book/2/read/385', function() {
-        t.assertInText('#page-view div.text:visible', 'Last Page Text.',
+        t.assertInText('.page-view div.text:visible', 'Last Page Text.',
             'Last page text is shown');
-        t.assertDoesNotExist('#next.on',
+        t.assertDoesNotExist('.nextprev .next.on',
             'Next link is disabled');
-        t.assertExists('#prev.on',
+        t.assertExists('.nextprev .prev.on',
             'Previous link is enabled');
     });
 
 casper
     .describe('Reading View page > Page Nav Field')
     .thenOpen(viewUrl, function() {
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "-2",
+        t.assertEvalEquals(function() { return $('input.page-id').val() }, "-2",
             "Nav form is correct");
     })
     .then(function() {
-        this.click('#next.on');
+        this.click('.nextprev .next.on');
     })
     .then(function() {
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "1",
+        t.assertEvalEquals(function() { return $('input.page-id').val() }, "1",
             "Nav form updates on next");
     })
     .thenOpen(baseUrl + '#book/2/read/385', function() {
-        t.assertEvalEquals(function() { return $('#page-id').val() }, "385",
+        t.assertEvalEquals(function() { return $('input.page-id').val() }, "385",
             "Nav form updates on route change");
     })
     .then(function() {
-        this.evaluate(function() { $('#page-id').val('133').change() })
+        this.evaluate(function() { $('input.page-id').val('133').change() })
     })
     .then(function() {
         t.assertRoute(/^book\/\d+\/read\/133/, 'Book reading route correct');
     })
     .then(function() {
         function testNavField(test, expected) {
-            casper.evaluate(function() { $('#page-id').val(test).change() });
+            casper.evaluate(function() { $('input.page-id').val(test).change() });
             /* t.assertMessage("Sorry, there isn't a page '" + test + "' in this book",
                 "Nav error message shown"); */
-            t.assertEvalEquals(function() { return $('#page-id').val() }, expected,
+            t.assertEvalEquals(function() { return $('input.page-id').val() }, expected,
                 "Nav form won't accept an invalid page: " + test);
         }    
         testNavField('spam', '133');
