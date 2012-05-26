@@ -12,14 +12,14 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
         
         initialize: function() {
             var view = this;
-            // view.changeLink = new ChangeLinkView();
+            view.changeLink = new ChangeLinkView();
             // listen for state changes
             view.bindState('change:pageid', view.render, view);
         },
         
         clear: function() {
             var view = this;
-            // view.changeLink.clear();
+            view.changeLink.clear();
             BookView.prototype.clear.call(view);
         },
         
@@ -63,7 +63,7 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
             return view;
         },
         
-        /* UI events
+        // UI events
         
         events: {
             'mouseover span.place':  'uiShowChangeLink',
@@ -89,7 +89,7 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
         uiHideChangeLink: function() {
             // start countdown to close
             this.changeLink.startTimer();
-        } */
+        }
         
     });
     

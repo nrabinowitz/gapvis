@@ -1,29 +1,21 @@
 /*
  * Change This Link View
  */
-define(['gv'], function(gv) {
-    var state = gv.state;
+define(['gv', 'views/ChangeFormView'], function(gv, ChangeFormView) {
+    var state = gv.state,
+        timer;
     
     // View: ChangeLinkView (hovering change this link)
     return gv.View.extend({
         el: '#change-this-link',
         
-        initialize: function() {
-            var view = this;
-            // button-ify change this button
-            $('#change-this-link button').button({
-                icons: { primary: "ui-icon-pencil" },
-                text: false
-            });
-        },
-        
-        // this is called by parent view (BookReadingView)
+        // this is called by parent view (PagesView)
         open: function(top, left, width, height) {
             // position the link
             $(this.el)
                 .css({
-                    top: top + 10,
-                    left: left + width + 35
+                    top: top - 15,
+                    left: left + width + 5
                 })
                 .show();
         },
@@ -33,13 +25,16 @@ define(['gv'], function(gv) {
         },
         
         clear: function() {
-            this.close();
+            var view = this;
+            if (view.form) view.form.clear();
+            view.close();
+            view.undelegateEvents();
         },
         
         // lazy instantiation of form view
         openForm: function() {
             if (!this.form) {
-                this.form = new gv.ChangeFormView({ model: this.model });
+                this.form = new ChangeFormView({ model: this.model });
             }
             this.form.open();
         },
@@ -66,17 +61,16 @@ define(['gv'], function(gv) {
         startTimer: function() {
             var view = this;
             view.clearTimer();
-            view._timer = setTimeout(function() {
+            timer = setTimeout(function() {
                 view.close();
-                view._timer = null;
+                timer = null;
             }, 1000);
         },
         
         clearTimer: function() {
-            var timer = this._timer;
             if (timer) {
                 window.clearTimeout(timer);
-                this._timer = null;
+                timer = null;
             }
         }
      

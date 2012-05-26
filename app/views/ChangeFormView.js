@@ -1,15 +1,56 @@
 /*
  * Change This Form View
  */
-(function(gv, window) {
-    var View = gv.View,
-        state = gv.state;
+define(['gv', 'views/BookView'], function(gv, BookView) {
+    var state = gv.state;
     
     // View: ChangeFormView (change this form)
-    gv.ChangeFormView = View.extend({
+    return BookView.extend({
         el: '#change-this-form',
         
         initialize: function() {
+            // init the dialog, but don't open
+            this.$el.modal({
+                show: false
+            });
+        },
+        
+        clear: function() {
+            this.close();
+            this.undelegateEvents();
+        },
+        
+        open: function() {
+            var view = this,
+                placeId = state.get('changelinkid'),
+                pageId = state.get('pageid');
+            view.ready(function() {
+                var book = view.model,
+                    bookName = book.get('title'),
+                    placeName = '"' + book.places.get(placeId).get('title') + '"';
+                // set form value and span to match state
+                view.$('input[name="book-id"]')
+                    .val(placeId);
+                view.$('#ctf-book-title')
+                    .html(bookName);
+                view.$('input[name="place-id"]')
+                    .val(placeId);
+                view.$('#ctf-place-name')
+                    .html(placeName);
+                // set page if appropriate
+                if (!view.options.placeOnly) {
+                    view.$('input[name="page-id"]')
+                        .val(pageId);
+                    view.$('#ctf-page-id')
+                        .html(pageId);
+                }
+                view.$('span.pagenum').toggle(!view.options.placeOnly);
+                // open window
+                view.$el.modal('show');
+            });
+        },
+        
+        submit: function() {
             var view = this,
                 showSuccess = function() {
                     state.set({
@@ -27,60 +68,35 @@
                         }
                     });
                 };
-            // init the dialog, but don't open
-            view.$el.dialog({
-                autoOpen: false,
-                modal: true,
-                buttons: {
-                    Submit: function() {
-                        // post to the server
-                        $.ajax({
-                            type: 'POST',
-                            url: gv.settings.REPORT_URL,
-                            data: view.$('form').serializeArray(),
-                            success: function(data) {
-                                if (data && data.success) showSuccess(); 
-                                else showError();
-                            },
-                            error: showError,
-                            dataType: 'json'
-                        });
-                        // close out
-                        view.close();
-                    },
-                    Cancel: function() {
-                        view.close();
-                    }
-                }
+            // post to the server
+            $.ajax({
+                type: 'POST',
+                url: gv.settings.REPORT_URL,
+                data: view.$('form').serializeArray(),
+                success: function(data) {
+                    if (data && data.success) showSuccess(); 
+                    else showError();
+                },
+                error: showError,
+                dataType: 'json'
             });
-        },
-        
-        open: function() {
-            var placeId = state.get('changelinkid'),
-                pageId = state.get('pageid'),
-                placeName = this.model.places.get(placeId).get('title');
-            // set form value and span to match state
-            this.$('input[name="place-id"]')
-                .val(placeId);
-            this.$('#ctf-place-name')
-                .html(placeName);
-            // set page if appropriate
-            if (!this.options.placeOnly) {
-                this.$('input[name="page-id"]')
-                    .val(pageId);
-                this.$('#ctf-page-id')
-                    .html(pageId);
-            }
-            this.$('span.pagenum').toggle(!this.options.placeOnly);
-            // open window
-            $(this.el).dialog('open');
+            state.set({ message: "Submitting..." });
+            // close out
+            view.close();
         },
         
         close: function() {
-            $(this.el).dialog('close');
+            this.$el.modal('hide');
             this.$('form').get(0).reset();
+        },
+        
+        // UI Event Handlers
+        
+        events: {
+            'click .cancel':    'close',
+            'click .submit':    'submit'
         }
      
     });
     
-}(gv, this));
+});

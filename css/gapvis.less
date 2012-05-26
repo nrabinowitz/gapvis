@@ -231,6 +231,28 @@ footer {
     padding: 1em; 
 }
 
+.place {
+    color: @linkColor;
+    cursor: pointer;
+    font-weight: bold;
+    
+    &:hover {
+        color: @linkColorHover;
+    }
+    
+    &.hi {
+    background: yellow;
+    }
+}
+
+// For image replacement
+.ir { 
+    display: block; 
+    border: 0; 
+    text-indent: -999em; 
+    overflow: hidden;
+}
+
 
 // ---------------------------------------------------
 // View-specific slot styles
@@ -418,6 +440,59 @@ footer {
     }
 }
 
+// edit reference form
+#change-this-link {
+    position: absolute;
+    display: none;
+}
+#change-this-form {
+    display: none;
+    
+    textarea {
+        width: 100%;
+    }
+    label {
+        display: block;
+        font-weight: bold;
+        margin: .5em 0;
+    }
+    .ref {
+        font-style: italic;
+    }
+}
+
+// timeline play/pause controls
+.timeline-controls {
+    position: absolute;
+    top: 0;
+    z-index: 1000;
+    background: #ccc;
+    width: 25px;
+    height: 50px;
+    div {
+        width: 16px;
+        height: 16px;
+        margin: 5px;
+        background-color: #999;
+        background-repeat: none;
+        
+        &.on {
+            background-color: @linkColor;
+            cursor: pointer;
+        }
+        &.timeline-play {
+            background-image: url(../images/play.png);
+        }
+        &.timeline-stop {
+            background-image: url(../images/stop.png);
+        }
+    }
+}
+div.timeline-event-label {
+    margin: 3px 0px 0px 3px;
+}
+
+
 // ----------------------------------------------------------
 // old, for clean-up
 
@@ -438,57 +513,7 @@ footer {
     max-width: 600px;
 }
 
-/* specific text styles */
 
-span.place {
-    color: @linkColor;
-    cursor: pointer;
-    font-weight: bold;
-}
-span.place:hover {
-    color: @linkColorHover;
-}
-span.place.hi {
-    background: yellow;
-}
-
-
-p.warning {
-    font-weight: bold;
-    color: #c00;
-}
-
-
-
-/* timeline controls */
-div#timeline-controls {
-    position: absolute;
-    top: 0;
-    z-index: 1000;
-    background: #ccc;
-    width: 25px;
-    height: 50px;
-}
-div#timeline-controls div {
-    width: 16px;
-    height: 16px;
-    margin: 5px;
-    background-color: #999;
-    background-repeat: none;
-}
-div#timeline-controls div.on {
-    background-color: @linkColor;
-    cursor: pointer;
-}
-div#timeline-controls div#timeline-play {
-    background-image: url(../images/play.png);
-}
-div#timeline-controls div#timeline-stop {
-    background-image: url(../images/stop.png);
-}
-div.timeline-event-label {
-    margin: 3px 0px 0px 3px;
-}
 
 /* info window styles */
 div.infowindow {
@@ -509,34 +534,7 @@ div.pagenum {
     font-style: italic;
 }
 
-/* edit reference form */
-#change-this-link {
-    position: absolute;
-    display: none;
-}
-#change-this-link button {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-#change-this-form {
-    display: none;
-}
-#change-this-form textarea {
-    width: 100%;
-}
-#change-this-form label {
-    display: block;
-    font-weight: bold;
-    margin: .5em 0;
-}
-#change-this-form  span {
-    font-weight: bold;
-    color: @linkColor;
-}
-.ui-dialog-titlebar {
-    display:none
-}
+
 
 
 
