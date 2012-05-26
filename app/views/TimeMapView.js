@@ -223,8 +223,8 @@ define(['gv', 'views/BookView', 'views/InfoWindowView'], function(gv, BookView, 
         renderAutoplayControls: function() {
             var playing = state.get('autoplay');
             // render
-            $('#timeline-play').toggleClass('on', !playing);
-            $('#timeline-stop').toggleClass('on', playing);
+            this.$('.timeline-play').toggleClass('on', !playing);
+            this.$('.timeline-stop').toggleClass('on', playing);
         },
         
         // UI update functions
@@ -315,8 +315,8 @@ define(['gv', 'views/BookView', 'views/InfoWindowView'], function(gv, BookView, 
         // UI Event Handlers
         
         events: {
-            'click #timeline-play': 'startAutoplay',
-            'click #timeline-stop': 'stopAutoplay'
+            'click .timeline-play': 'startAutoplay',
+            'click .timeline-stop': 'stopAutoplay'
         },
         
         startAutoplay: function() {
