@@ -37,6 +37,7 @@ define(['gv'], function(gv) {
     gv.addParameter('bookid', { deserialize: parseInt });
     gv.addParameter('pageid', { deserialize: String });
     gv.addParameter('placeid', { deserialize: parseInt });
+    gv.addParameter('pageview');
     gv.addParameter('mapzoom', { deserialize: parseInt });
     gv.addParameter('mapcenter', { 
         deserialize: function(s) {
