@@ -86,7 +86,7 @@ require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views
     $(function() {
         gv.configure(config)
             .start();
-        DEBUG && console.log('Application initialized');
+        if (DEBUG) console.log('Application initialized');
     });
     
 });

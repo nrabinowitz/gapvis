@@ -29,14 +29,14 @@ casper.waitForSelector = function(selector, msg) {
     return this;
 };
 
-casper.waitForInfoWindow = function() {
-    return this.waitForSelector('div.infowindow', "Info window is open");
+casper.waitForInfoWindow = function(msg) {
+    return this.waitForSelector('div.infowindow', msg || "Info window is open");
 };
 
 casper.closeInfoWindow = function() {
     // no way to easily access the close button
     this.evaluate(function() { 
-        gv.app.currentView.children[3].tm.map.closeBubble(); 
+        gv.app.currentView.slots['.right-panel'].slots['.top-slot'].tm.map.closeBubble(); 
     });
     return this;
 };
@@ -90,9 +90,11 @@ t.assertPermalink = function(expected, message) {
 }
 
 t.assertMessage = function(expected, message) {
-    t.assertVisible('#message-text',
+    t.assertVisible('#message-view .alert span',
         "Message is shown");
-    var text = casper.evaluate(function() { return $('#message-text').text().trim(); });
+    var text = casper.evaluate(function() { 
+        return $('#message-view .alert span').text().trim(); 
+    });
     if (expected instanceof RegExp) {
         t.assertMatch(text, expected, message);
     } else {
