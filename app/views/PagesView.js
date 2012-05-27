@@ -44,15 +44,15 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
             if (!page.view) {
                 view.$el.addClass('loading');
                 page.on('change', function() {
-                    view.$el
-                        .append(page.view.render().el)
-                        .removeClass('loading');
+                    view.$el.removeClass('loading');
                     view.render();
                 });
                 new PageView({ model: page });
             } 
             // page view has been created; show
             else {
+                // always reappend, just in case
+                view.$el.append(page.view.render().el);
                 view.pageView = page.view;
                 page.view.open(
                     // send final width

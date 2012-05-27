@@ -114,6 +114,7 @@ t.assertMessage = function(expected, message) {
 casper.assertAtView = function(viewName, route, view, selector) {
     selector = selector || view;
     this.waitForSelector('div.top.' + selector, viewName + " is visible")
+        .waitForSelector('div.top.' + selector + ' h2', viewName + " header is visible")
         .then(function() {
             t.assertEvalEquals(function() { return gv.state.get('view'); }, view,
                 "State set correctly for " + viewName);

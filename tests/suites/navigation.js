@@ -118,6 +118,25 @@ casper
         },
             "Map isn't screwed up");
     });
+    
+casper
+    .describe('Place to page, check page')
+    .thenOpen(baseUrl + '#book/2/read/2/423025')
+    .assertAtBookReadingView()
+    .then(function() {
+        t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
+            "Book 2 title shown");
+    })
+    .waitForInfoWindow()
+    .then(function() {
+        casper.click('.navigation-view button[data-view-id="place-view"]');
+    })
+    .assertAtBookPlaceView()
+    .then(function() {
+        casper.click('.navigation-view button[data-view-id="reading-view"]');
+    })
+    .assertAtBookReadingView()
+    .waitForSelector('.page-view div.text', 'Page is visible');
 
 casper.run(function() {
     t.done();
