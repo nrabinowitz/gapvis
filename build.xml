@@ -316,13 +316,18 @@
     </macrodef>
     
     <!-- Deployment targets -->
-            
-    <target name="deploy"
-            depends="build-production,
-                     deploy-alexandria">
-        <!-- and switch back to dev state -->
-        <ant target="build-dev"/>
+    
+    <target name="deploy" depends="-deploy"/>
+    
+    <target name="deploy-full">
+        <property name="deploy.full" value="true"/>
+        <ant target="-deploy"/>
     </target>
+            
+    <target name="-deploy"
+            depends="build-production,
+                     deploy-alexandria,
+                     build-dev"/>
     
     <target name="deploy-alexandria">
         <property file="${config.dir}/build.secret.properties" />
@@ -331,16 +336,25 @@
                 remotedir="${alexandria.path}"
                 userid="${alexandria.username}"
                 password="${alexandria.password}"
-                verbose="yes"
-                depends="yes">
+                action="del"
+                verbose="yes">
             <fileset dir="${target.dir}">
-                <include name="images/**"/>
-                <include name="lib/**"/>
-                <include name="${index.target}"/>
+                <include name="scripts-*"/>
+                <include name="styles-*"/>
+            </fileset>
+        </ftp>
+        <ftp server="${alexandria.server}"
+                remotedir="${alexandria.path}"
+                userid="${alexandria.username}"
+                password="${alexandria.password}"
+                verbose="yes">
+            <fileset dir="${target.dir}">
+                <include name="images/**" if="deploy.full"/>
+                <include name="lib/**" if="deploy.full"/>
+                <include name="LICENSE.txt" if="deploy.full"/>
+                <include name="index.html"/>
                 <include name="${js.concat}"/>
                 <include name="${css.concat}"/>
-                <include name="about.html"/>
-                <include name="LICENSE.txt"/>
             </fileset>
         </ftp>
     </target>
