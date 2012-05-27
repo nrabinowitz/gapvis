@@ -24,6 +24,8 @@
     <property name="js.concat" value="scripts-${build.time}.js" />
     <property name="js.concat.build" value="${build.dir}/${js.concat}" />
     <property name="js.concat.target" value="${target.dir}/${js.concat}" />
+    <property name="js.rjs.target" value="${build.dir}/rjs_modules.js" />
+    
     
     <property name="css.concat" value="styles-${build.time}.css" />
     <property name="css.concat.build" value="${build.dir}/${css.concat}" />
@@ -42,11 +44,6 @@
         <fileset dir="${js.app.templates.dir}"/>
         <fileset dir="${js.app.layouts.dir}"/>
     </pathconvert>
-                     
-    <property name="js.files.production" 
-              value="${js.libext},
-                     ${js.app.init},
-                     ${js.app.files}" />
     
     <!-- Build Targets -->
     
@@ -82,6 +79,7 @@
             depends="clean-build,
                      start-build,
                      concat-libs-js,
+                     optimize-require,
                      build-js,
                      build-css,
                      build-templates,
@@ -107,9 +105,10 @@
     <!-- Set properties for Production build -->
     <target name="-start-build-production">
         <property name="js.uglify.files" 
-                  value="${js.libext},
-                         ${js.app.init},
-                         ${js.app.files}"/>
+                  value="${js.lib.uglify},
+                         ${js.libext},
+                         ${js.rjs.target},
+                         ${js.app.init}"/>
         <property name="js.insert.files" 
                   value="${js.lib.nomunge},
                          ${js.concat.target}" />
@@ -200,7 +199,7 @@
     </target>
     
     <target name="concat-libs-js">
-        <echo>Add compressed JS libraries</echo>
+        <echo>Add JS libraries</echo>
         <!-- Add compressed libs -->
         <for list="${js.lib.min}" param="file" trim="true">
             <sequential>
@@ -283,6 +282,38 @@
         <!-- Replace build with compressed -->
         <copy file="${index.build}.tmp" tofile="${index.build}"/>
     </target>
+    
+    <target name="optimize-require">
+        <echo>Optimizing Require.js Modules</echo>
+        <!-- Get list of modules -->
+        <exec executable="node" failonerror="true" outputproperty="js.rjs.modules">
+            <arg line="${config.dir}/get_modules.js"/>
+        </exec>
+        <echo>Found modules: ${js.rjs.modules}</echo>
+        <!-- Run optimization -->
+        <exec executable="${r.js}" failonerror="true">
+            <arg line="-o baseUrl=./app"/>
+            <arg line="include=app,${js.rjs.modules}"/>
+            <arg line="excludeShallow=app,${js.rjs.modules}"/>
+            <arg line="out=${js.rjs.target}"/>
+        </exec>
+    </target>
+    
+    <!-- Macro: Require.js -->
+    <!-- r.js -o baseUrl=./app include=gv,config out=test.r.js -->
+    <macrodef name="rjs">
+        <attribute name="module" default=""/>
+        <sequential>
+            <echo>Processing @{module}</echo>
+            <exec executable="${r.js}" failonerror="true">
+                <arg line="-o baseUrl=./src exclude=text"/>
+                <arg line="paths.jquery=empty:"/>
+                <arg line="paths.handlebars=lib/handlebars.runtime"/>
+                <arg line="paths.mustache=lib/mustache.0.5.0-dev"/>
+                <arg line="name=@{module} out=${tmp.dir}/@{module}.js"/>
+            </exec>
+        </sequential>
+    </macrodef>
     
     <!-- Deployment targets -->
             
