@@ -32,7 +32,31 @@ define(['gv', 'views/BookView', 'views/InfoWindowView'], function(gv, BookView, 
         
         initialize: function() {
             var view = this;
-            view.infoWindowView = new InfoWindowView({ model: view.model });
+            view.infoWindowView = new InfoWindowView();
+        },
+        
+        clear: function() {
+            this.infoWindowView.clear();
+            BookView.prototype.clear.call(this);
+        },
+        
+        getLabeller: function() {
+            var view = this;
+            view.labelUtils = view.labelUtils || new LabelUtils(
+                bandInfo, view.model.labels(), function() { return false; }
+            );
+            return view.labelUtils;
+        },
+        
+        render: function() {
+            var view = this,
+                book = view.model,
+                // create themes by frequency
+                colorScale = d3.scale.quantize()
+                    .domain([1, book.places.first().get('frequency')])
+                    .range(colorThemes),
+                labelUtils = view.getLabeller();
+            
             // listen for state changes
             view.bindState('change:pageid',     view.updateTimeline, view);
             view.bindState('change:mapzoom',    view.updateMapZoom, view);
@@ -44,24 +68,6 @@ define(['gv', 'views/BookView', 'views/InfoWindowView'], function(gv, BookView, 
             view.bindState('change:topview',    view.stopAutoplay, view);
             view.bindState('change:placeid',    view.stopAutoplay, view);
             view.bindState('change:pageid',     view.stopAutoplay, view);
-        },
-        
-        clear: function() {
-            this.infoWindowView.clear();
-            BookView.prototype.clear.call(this);
-        },
-        
-        render: function() {
-            var view = this,
-                book = view.model,
-                // create themes by frequency
-                colorScale = d3.scale.quantize()
-                    .domain([1, book.places.first().get('frequency')])
-                    .range(colorThemes),
-                // add custom labeller
-                labelUtils = view.labelUtils = new LabelUtils(
-                    bandInfo, book.labels(), function() { return false; }
-                );
             
             // render template HTML
             view.$el.html(view.template);
@@ -292,7 +298,8 @@ define(['gv', 'views/BookView', 'views/InfoWindowView'], function(gv, BookView, 
         // go to a specific page
         scrollTo: function(pageId, animate) {
             var view = this,
-                d = view.labelUtils.labelToDate(pageId);
+                labelUtils = view.getLabeller(), 
+                d = labelUtils.labelToDate(pageId);
             // stop anything that's running
             if (view.animation) {
                 view.animation.stop();

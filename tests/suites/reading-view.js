@@ -316,6 +316,7 @@ casper
     .then(function() {
         this.closeInfoWindow();
     })
+    .waitForInfoWindowClose()
     .then(function() {
         t.assertRoute(/^book\/2\/read\/2$/, 'Reading route correct, no place');
         t.assertDoesNotExist('div.infowindow',
@@ -354,6 +355,7 @@ casper
     .then(function() {
         this.closeInfoWindow();
     })
+    .waitForInfoWindowClose()
     .back()
     .waitForInfoWindow('Info window re-opens on back')
     .then(function() {

@@ -20,8 +20,12 @@ casper.describe = function(msg) {
 
 // helpers
 
-casper.waitForSelector = function(selector, msg) {
-    this.waitUntilVisible(selector, function() {
+casper.waitForSelector = function(selector, msg, negate) {
+    this.waitFor(function() {
+        var toBool = negate ? '!' : '!!';
+            f = new Function("return " + toBool + "$('" + selector + ":visible').length");
+        return casper.evaluate(f)
+    }, function() {
         t.pass(msg || 'Selector ' + selector + ' found');
     },  function() {
         t.fail(msg || 'Selector ' + selector + ' not found');
@@ -31,6 +35,9 @@ casper.waitForSelector = function(selector, msg) {
 
 casper.waitForInfoWindow = function(msg) {
     return this.waitForSelector('div.infowindow', msg || "Info window is open");
+};
+casper.waitForInfoWindowClose = function(msg) {
+    return this.waitForSelector('div.infowindow', msg || "Info window is closed", true);
 };
 
 casper.closeInfoWindow = function() {

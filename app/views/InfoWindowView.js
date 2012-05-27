@@ -11,7 +11,7 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         className: 'infowindow',
         template: '#info-window-template',
         
-        initialize: function(opts) {
+        initialize: function() {
             var view = this;
             // listen for state changes
             view.bindState('change:placeid',    view.render, view);
@@ -21,8 +21,10 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         },
         
         clear: function() {
-            this.freqBars && this.freqBars.clear();
-            BookView.prototype.clear.call(this);
+            var view = this;
+            view.map && view.map.closeBubble();
+            view.freqBars && view.freqBars.clear();
+            BookView.prototype.clear.call(view);
         },
         
         // render and update functions
@@ -40,9 +42,7 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
                 placeId = state.get('placeid'),
                 place;
             // if no map has been set, give up
-            if (!map) {
-                return;
-            }
+            if (!map) return;
             // if there's no place selected, close the window
             if (!placeId) {
                 map.closeBubble();
@@ -84,18 +84,23 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         
         renderNextPrevControl: function() {
             var view = this,
-                book = view.model,
                 pageId = state.get('pageid'),
-                placeId = state.get('placeid'),
-                prev = view.prev = book.prevPlaceRef(pageId, placeId),
-                next = view.next = book.nextPlaceRef(pageId, placeId);
-            view.$('.prev').toggleClass('on', !!prev);
-            view.$('.next').toggleClass('on', !!next);
-            view.$('.controls').toggle(!!(prev || next));
+                placeId = state.get('placeid');
+            view.ready(function() {
+                var book = view.model,
+                    prev = view.prev = book.prevPlaceRef(pageId, placeId),
+                    next = view.next = book.nextPlaceRef(pageId, placeId);
+                view.$('.prev').toggleClass('on', !!prev);
+                view.$('.next').toggleClass('on', !!next);
+                view.$('.controls').toggle(!!(prev || next));
+            });
         },
         
         renderBarHighlight: function() {
-            this.freqBars && this.freqBars.updateHighlight();
+            var view = this;
+            view.ready(function() {
+                view.freqBars && view.freqBars.updateHighlight();
+            });
         },
         
         getPoint: function() {

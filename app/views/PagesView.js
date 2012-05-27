@@ -13,6 +13,7 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
         initialize: function() {
             var view = this;
             view.changeLink = new ChangeLinkView();
+            view.render = view.bindReady('render');
             // listen for state changes
             view.bindState('change:pageid', view.render, view);
         },

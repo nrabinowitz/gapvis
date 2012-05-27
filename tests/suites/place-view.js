@@ -74,6 +74,7 @@ casper
     .then(function() {
         this.click('.related-places-view p:nth-child(4) span');
     })
+    .waitForSelector('.place-summary-view h3:contains(Hispania)')
     .then(function() {
         t.assertRoute('book/2/place/1027',
             "Route is correct");
