@@ -22,7 +22,6 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
         
         clear: function() {
             var view = this;
-            view.map && view.map.closeBubble();
             view.freqBars && view.freqBars.clear();
             BookView.prototype.clear.call(view);
         },

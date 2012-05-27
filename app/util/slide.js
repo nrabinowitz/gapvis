@@ -4,7 +4,8 @@
 define(function() {
     
     // CSS-based slide
-    return function slide($el, slideIn, direction) {
+    return function slide($el, slideIn, direction, callback) {
+        callback = callback || $.noop;
         if ($.support.transition) {
         
             var slideClass = 'sliding',
@@ -24,9 +25,13 @@ define(function() {
                 .one($.support.transition.end, function () {
                     if (!slideIn) $el.hide();
                     $el.removeClass([startPos, direction, slideClass].join(' '));
+                    callback();
                 });
                 
-        } else $el.toggle(slideIn);
+        } else {
+            $el.toggle(slideIn);
+            callback();
+        }
     }
     
 });
