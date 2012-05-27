@@ -18,7 +18,7 @@ define(['gv'], function(gv) {
                 state = gv.state,
                 bookId = state.get('bookid'),
                 book = view.model;
-            if (!book || book.id != bookId) {
+            if (!book || book.id != bookId || !book.isFullyLoaded()) {
                 book = view.model = gv.books.getOrCreate(bookId);
                 book.ready(function() {
                     // set the page id if not set

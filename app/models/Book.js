@@ -26,16 +26,21 @@ define(['gv', 'models/Model', 'models/Places', 'models/Pages'],
             // set backreferences
             places.book = book;
             pages.book = book;
-            book.on('ready', book.initCollections, book);
+        },
+        
+        parse: function(data) {
+            this.initCollections(data.places, data.pages);
+            return data;
         },
         
         // reset collections with current data
-        initCollections: function() {
+        initCollections: function(placeData, pageData) {
+            if (DEBUG) console.log('Initializing ' + pageData.length + ' pages and ' + placeData.length + ' places');
             var places = this.places,
                 pages = this.pages;
-            places.reset(this.get('places'));
+            places.reset(placeData);
             // convert page ids to strings
-            pages.reset(this.get('pages').map(function(p) {
+            pages.reset(pageData.map(function(p) {
                 p.id = String(p.id);
                 return p;
             }));
