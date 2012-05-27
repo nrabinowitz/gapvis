@@ -11,7 +11,6 @@ define(['gv'], function(gv) {
     }
     
     function clear() {
-        console.log('clearing timeout');
         window.clearTimeout(timeoutId);
         delete timeoutId;
     }
