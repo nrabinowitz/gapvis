@@ -8,7 +8,7 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
     
     // View: PagesView (master view for the book reading screen)
     return BookView.extend({
-        className: 'page-view loading',
+        className: 'page-view loading full-height',
         
         initialize: function() {
             var view = this;
