@@ -25,6 +25,9 @@ function concatConfigs(configs) {
 function concatView(viewConfig) {
     viewConfig = typeof viewConfig == "string" ? 
         { layout: viewConfig } : viewConfig;
+    if (Array.isArray(viewConfig)) {
+        return viewConfig.forEach(concatView);
+    }
     if (checkRequire(viewConfig)) modules.push(viewConfig.layout);
     if (viewConfig.slots) concatConfigs(viewConfig.slots);
 }

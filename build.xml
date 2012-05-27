@@ -294,7 +294,7 @@
         <exec executable="${r.js}" failonerror="true">
             <arg line="-o baseUrl=./app"/>
             <arg line="include=app,${js.rjs.modules}"/>
-            <arg line="excludeShallow=app,${js.rjs.modules}"/>
+            <arg line="excludeShallow=app"/>
             <arg line="out=${js.rjs.target}"/>
         </exec>
     </target>
@@ -331,6 +331,7 @@
                 remotedir="${alexandria.path}"
                 userid="${alexandria.username}"
                 password="${alexandria.password}"
+                verbose="yes"
                 depends="yes">
             <fileset dir="${target.dir}">
                 <include name="images/**"/>
