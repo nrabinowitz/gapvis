@@ -1,0 +1,35 @@
+var fs = require('fs'); 
+
+// a bit ugly
+var text = fs.readFileSync('app/config.js').toString();
+global.define = function(o) { return o };
+var config = eval(text),
+    modules = config.globalViews || [];
+    
+function checkRequire(viewConfig) {
+    var layout = viewConfig.layout;
+    // does this look like a require dependency?
+    return (layout &&
+        typeof layout == "string"
+        // string test could match some selectors, so allow explicit choices
+        && !viewConfig.noRequire
+        && (viewConfig.useRequire || layout.match(/^\w+$/) || layout.match(/\//)));
+}
+
+function concatConfigs(configs) {
+    for (var key in configs) {
+        concatView(configs[key]);
+    }
+}
+
+function concatView(viewConfig) {
+    viewConfig = typeof viewConfig == "string" ? 
+        { layout: viewConfig } : viewConfig;
+    if (checkRequire(viewConfig)) modules.push(viewConfig.layout);
+    if (viewConfig.slots) concatConfigs(viewConfig.slots);
+}
+
+concatConfigs(config.views);
+
+// spit out registered modules
+console.log(modules.join(','));
