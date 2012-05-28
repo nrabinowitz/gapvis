@@ -21,17 +21,23 @@ casper.describe = function(msg) {
 // helpers
 
 casper.waitForSelector = function(selector, msg, negate) {
+    msg = msg || 'Selector ' + selector + ' found';
     this.waitFor(function() {
         var toBool = negate ? '!' : '!!';
             f = new Function("return " + toBool + "$('" + selector + ":visible').length");
         return casper.evaluate(f)
     }, function() {
-        t.pass(msg || 'Selector ' + selector + ' found');
+        t.pass(msg);
     },  function() {
-        t.fail(msg || 'Selector ' + selector + ' not found');
+        t.fail(msg);
     });
     return this;
 };
+
+casper.waitForSelectorToLeave = function(selector, msg) {
+    msg = msg || 'Selector ' + selector + ' is gone';
+    return this.waitForSelector(selector, msg, true);
+}
 
 casper.waitForInfoWindow = function(msg) {
     return this.waitForSelector('div.infowindow', msg || "Info window is open");

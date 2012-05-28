@@ -54,6 +54,7 @@ casper
             google.maps.event.trigger(marker, 'click');
         });
     })
+    .waitForSelectorToLeave('.place-summary-view h3:contains(Roma)')
     .then(function() {
         t.assertRoute('book/2/place/1027',
             "Route is correct");
@@ -74,7 +75,7 @@ casper
     .then(function() {
         this.click('.related-places-view p:nth-child(4) span');
     })
-    .waitForSelector('.place-summary-view h3:contains(Hispania)')
+    .waitForSelectorToLeave('.place-summary-view h3:contains(Roma)')
     .then(function() {
         t.assertRoute('book/2/place/1027',
             "Route is correct");
@@ -85,6 +86,57 @@ casper
         t.assertText('.related-places-view p:nth-child(2)', 'Zella (8)',
             "Related places have been re-rendered");
     });
+    
+casper
+    .describe('Place View page > Book references')
+    .thenOpen(baseUrl + '#book/3/place/1052')
+    .assertAtBookPlaceView()
+    .then(function() {
+        t.assertText("h2.book-title", 'The History of the Peloponnesian War',
+            "Book title shown");
+        t.assertText('.book-refs-view p span.book-title', 'The Works of Cornelius Tacitus: The History',
+            "Book reference was found");
+    })
+    .then(function() {
+        casper.click('.book-refs-view p span.book-title');
+    })
+    .waitForSelectorToLeave('h2.book-title h3:contains(Peloponnesian)')
+    .assertAtBookPlaceView()
+    .then(function() {
+        t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
+            "Book title shown");
+        t.assertRoute('book/2/place/1052',
+            'Book place route correct');
+        t.assertPermalink(RegExp(baseUrl + '#book/2/place/1052\\?'),
+            "Permalink is correct");
+        t.assertText('.book-refs-view p span.book-title', 'The History of the Peloponnesian War',
+            "Book reference was found");
+    })
+    .then(function() {
+        casper.click('.book-refs-view p span.book-title');
+    })
+    .waitForSelectorToLeave('h2.book-title h3:contains(Tacitus)')
+    .assertAtBookPlaceView()
+    .then(function() {
+        t.assertText("h2.book-title", 'The History of the Peloponnesian War',
+            "Book title shown");
+        t.assertRoute('book/3/place/1052',
+            'Book place route correct');
+        t.assertPermalink(RegExp(baseUrl + '#book/3/place/1052\\?'),
+            "Permalink is correct");
+        t.assertText('.book-refs-view p span.book-title', 'The Works of Cornelius Tacitus: The History',
+            "Book reference was found");
+    });
+    
+casper
+    .describe('Place View page > Book references (none found)')
+    .thenOpen(viewUrl)
+    .assertAtBookPlaceView()
+    .then(function() {
+        t.assertText('.book-refs-view p', 'No other book references were found.',
+            "Book references were not found");
+    });
+    
     
 casper.run(function() {
     t.done();

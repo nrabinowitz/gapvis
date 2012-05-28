@@ -59,6 +59,7 @@ define({
             layout:  '#layout-book-2panel',
             className: 'place-view',
             router: 'book/:bookid/place/:placeid',
+            refreshOn: 'change:placeid',
             slots: {
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',

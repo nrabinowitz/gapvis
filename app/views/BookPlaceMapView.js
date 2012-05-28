@@ -92,6 +92,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                             // UI listener
                             gmaps.event.addListener(marker, 'click', function() {
                                 state.set({ placeid: place.id });
+                                gv.app.updateView(true);
                             });
                         }
                         
