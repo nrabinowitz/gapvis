@@ -9,9 +9,9 @@ define(['gv'], function(gv) {
     gv.StateRouter = StateRouter.extend({
     
         navigate: function(route) {
-            if (DEBUG) console.log('Navigating: ' + route);
+            if (DEBUG) console.log('(' + this.viewKey + ') Navigating: ' + route);
             // ping analytics if available
-            if (window._gaq) {
+            if (route && window._gaq) {
                 _gaq.push(['_trackPageview', location.pathname + '#' + route]);
             }
             superMethod(route);

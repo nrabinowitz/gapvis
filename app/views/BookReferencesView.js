@@ -21,7 +21,7 @@ define(['gv', 'views/BookView', 'models/Collection',], function(gv, BookView, Co
     
     // View: BookReferencesView (list of places)
     return BookView.extend({
-        className: 'book-refs-view',
+        className: 'book-refs-view loading',
         
         // render and update functions
         
@@ -54,6 +54,7 @@ define(['gv', 'views/BookView', 'models/Collection',], function(gv, BookView, Co
                 // just make the template inline
                 template = _.template('<p><span class="book-title control on" data-book-id="<%= id %>">' +
                     '<%= title %></span> (<%= tokenCount %>)</p>');
+            view.$el.removeClass('loading');
             // create list
             refs.filter(function(book) {
                     return book.id != bookId;
@@ -73,9 +74,12 @@ define(['gv', 'views/BookView', 'models/Collection',], function(gv, BookView, Co
         uiRefClick: function(e) {
             var bookId = $(e.target).attr('data-book-id'),
                 placeId = state.get('placeid');
-            if (bookId) state.set('bookid', bookId);
-            // reset place
-            state.set({ placeid: placeId });
+            if (bookId) {
+                state.set('bookid', bookId);
+                // reset place
+                state.set({ placeid: placeId });
+                gv.app.updateView(true);
+            }
         }
     });
     

@@ -20,7 +20,6 @@ define({
             layout: '#layout-book-3panel',
             className: 'summary-view',
             router: 'book/:bookid',
-            refreshOn: 'change:bookid',
             slots: {
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',
@@ -37,7 +36,6 @@ define({
                 'book/:bookid/read/:pageid',
                 'book/:bookid/read/:pageid/:placeid'
             ],
-            refreshOn: 'change:bookid',
             slots: {
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',
@@ -61,7 +59,6 @@ define({
             layout:  '#layout-book-2panel',
             className: 'place-view',
             router: 'book/:bookid/place/:placeid',
-            refreshOn: ['change:bookid', 'change:placeid'],
             slots: {
                 '.navigation-view': 'views/NavigationView',
                 '.book-title-view': 'views/BookTitleView',

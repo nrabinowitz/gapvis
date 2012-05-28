@@ -27,7 +27,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                     $('<p><span class="place" data-place-id="' + 
                         r.place.id + '">' + r.place.get('title') +
                         '</span> (' + r.count + ')</p>').appendTo(view.el);
-                })
+                });
             });
             return this;
         },
@@ -40,7 +40,10 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         
         uiPlaceClick: function(e) {
             var placeId = $(e.target).attr('data-place-id');
-            if (placeId) state.set('placeid', placeId);
+            if (placeId) {
+                state.set('placeid', placeId);
+                gv.app.updateView(true);
+            }
         }
     });
     
