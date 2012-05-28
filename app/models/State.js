@@ -15,7 +15,8 @@ define(['gv'], function(gv) {
         },
     
         defaults: {
-            pageview: 'text'
+            pageview: 'text',
+            barsort: 'ref'
         },
         
         // clear all data relating to the current book
@@ -23,7 +24,7 @@ define(['gv'], function(gv) {
             var s = this,
                 opts = silent ? {silent:true} : {};
             _(_.keys(s.attributes))
-                .without('view','bookid','pageview')
+                .without('view','bookid','pageview','barsort')
                 .forEach(function(k) {
                     s.unset(k, opts)
                 });

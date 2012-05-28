@@ -35,7 +35,9 @@ define(['gv', 'models/Model', 'models/Places', 'models/Pages'],
         
         // reset collections with current data
         initCollections: function(placeData, pageData) {
-            if (DEBUG) console.log('Initializing ' + pageData.length + ' pages and ' + placeData.length + ' places');
+            if (DEBUG) console.log('Initializing ' +
+                pageData.length + ' pages and ' +
+                placeData.length + ' places');
             var places = this.places,
                 pages = this.pages;
             places.reset(placeData);

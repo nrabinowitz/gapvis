@@ -8,6 +8,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
     // View: BookTitleView (title and metadata)
     PlaceFrequencyBarsView =  BookView.extend({
         className: 'freq-bars-view panel padded-scroll fill loading',
+        template: '#bars-header-template',
         
         settings: {
             buckets: 50,
@@ -16,7 +17,21 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         },
         
         initialize: function(opts) {
-            _.extend(this.settings, this.options);
+            var view = this;
+            _.extend(view.settings, view.options);
+            // listen for state changes
+            view.bindState('change:barsort', function() {
+                // XXX: is this the right place for this logic?
+                var places = view.model.places,
+                    sort = state.get('barsort');
+                places.comparator = function(place) {
+                    return sort == 'ref' ? 
+                        -place.get('frequency') :
+                        place.get('title')
+                };
+                places.sort();
+                view.render();
+            });
         },
         
         render: function() {
@@ -41,14 +56,17 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                 bw = function(d) { return x(frequency(d)) };
                 
             // remove loading spinner
-            view.$el.removeClass('loading');
+            view.$el
+                .empty()
+                .removeClass('loading');
                 
             // make div container (for padding)
             var $container = $('<div></div>').appendTo(view.el);
             
             // title if we're showing the whole book
             if (!singlePlace) {
-                $container.append('<h3>Most-Referenced Places</h3>');
+                $container.append(view.template);
+                view.renderControls();
             }
         
             // create svg container
@@ -194,6 +212,16 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
             return this;
         },
         
+        renderControls: function() {
+            var view = this,
+                barSort = state.get('barsort');
+            console.log(view.$('.ref'), barSort != 'ref');
+            console.log(view.$('.alpha'), barSort != 'alpha');
+            // render
+            view.$('.ref').toggleClass('on', barSort != 'ref');
+            view.$('.alpha').toggleClass('on', barSort != 'alpha');
+        },
+        
         // highlight the current page
         updateHighlight: function() {
             var pages = this.model.pages,
@@ -216,6 +244,17 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                     .attr('class', 'selected')
                     .style('fill', settings.hicolor);
             }
+        },
+        
+        // UI Event Handlers - update state
+        
+        events: {
+            'click .ref.on':       'uiSort',
+            'click .alpha.on':     'uiSort'
+        },
+        
+        uiSort: function(e) {
+            state.set({ barsort: $(e.target).is('.ref') ? 'ref' : 'alpha' })
         }
         
     });

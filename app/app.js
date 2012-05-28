@@ -67,6 +67,7 @@ require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views
     gv.addParameter('pageid', { deserialize: String });
     gv.addParameter('placeid', { deserialize: parseInt });
     gv.addParameter('pageview');
+    gv.addParameter('barsort');
     gv.addParameter('mapzoom', { deserialize: parseInt });
     gv.addParameter('mapcenter', { 
         deserialize: function(s) {
