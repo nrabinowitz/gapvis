@@ -40,9 +40,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         
         uiPlaceClick: function(e) {
             var placeId = $(e.target).attr('data-place-id');
-            if (placeId) {
-                state.set('placeid', placeId);
-            }
+            if (placeId) state.set('placeid', placeId);
         }
     });
     

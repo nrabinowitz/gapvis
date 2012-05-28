@@ -105,7 +105,7 @@
     <!-- Set properties for Production build -->
     <target name="-start-build-production">
         <property name="js.uglify.files" 
-                  value="${js.lib.uglify},
+                  value="${js.lib.production.uglify},
                          ${js.libext},
                          ${js.rjs.target},
                          ${js.app.init}"/>
@@ -198,20 +198,6 @@
         <replace file="${index.build}" token="${placeholder.js}" value=""/>
     </target>
     
-    <target name="concat-libs-js">
-        <echo>Add JS libraries</echo>
-        <!-- Add compressed libs -->
-        <for list="${js.lib.min}" param="file" trim="true">
-            <sequential>
-                <echo>Adding @{file} to ${js.concat.build}</echo>
-                <!-- add to file -->
-                <concat destfile="${js.concat.build}" append="yes">
-                    <fileset file="@{file}"/>
-                </concat>
-            </sequential>
-        </for>
-    </target>
-    
     <target name="-uglify-concat-js" if="js.uglify.files">
         <echo>Minifying and concatenating JS files</echo>
         <!-- Compress and add extensions and apps -->
@@ -261,6 +247,20 @@
     </target>
     
     <!-- Production Targets -->
+    
+    <target name="concat-libs-js">
+        <echo>Add JS libraries</echo>
+        <!-- Add compressed libs -->
+        <for list="${js.lib.production.min}" param="file" trim="true">
+            <sequential>
+                <echo>Adding @{file} to ${js.concat.build}</echo>
+                <!-- add to file -->
+                <concat destfile="${js.concat.build}" append="yes">
+                    <fileset file="@{file}"/>
+                </concat>
+            </sequential>
+        </for>
+    </target>
     
     <target name="build-analytics">
         <echo>Inserting Google Analytics code</echo>

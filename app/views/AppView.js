@@ -9,7 +9,6 @@ define(['gv', 'util/slide'], function(gv, slide) {
         open: function(view, fromRight) {
             view.layout();
             slide(view.$el, true, fromRight ? 'left' : 'right');
-            view.layout();
         },
         
         close: function(view, fromRight, callback) {

@@ -70,6 +70,7 @@ define({
                     slots: {
                         'this': [
                             'views/PlaceSummaryView',
+                            'views/BookReferencesView',
                             'views/RelatedPlacesView'
                         ]
                     }

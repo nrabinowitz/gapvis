@@ -1,12 +1,10 @@
 <h3><%= title %></h3>
 <div class="frequency-bars"></div>
 <p>
-    <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %>
+    <span class="frequency"><%= frequency %></span> reference<%= frequency == 1 ? "" : "s" %> | <span class="change-this control on">Report a problem with this record</span>
 </p>
-<div><span class="change-this control on">Report a problem with this record</span></div>
-<h4>External Resources</h4>
+<div></div>
 <ul>
     <li><a href="<%= uri %>" target="_blank">Place page on Pleiades</a></li>
-    <li><a href="http://gap.alexandriaarchive.org/places/books?uri=http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F<%= id %>" target="_blank">Books referencing <%= title %></a></li>
-    <li><a href="http://pelagios.dme.ait.ac.at/graph-explorer/#pleiadesID=<%= id %>" target="_blank">Pelagios Graph Explorer</a></li>
+    <li><a href="http://pelagios.dme.ait.ac.at/api/places/http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F<%= id %>" target="_blank">References in Pelagios</a></li>
 </ul>

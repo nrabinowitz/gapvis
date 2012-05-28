@@ -215,8 +215,6 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         renderControls: function() {
             var view = this,
                 barSort = state.get('barsort');
-            console.log(view.$('.ref'), barSort != 'ref');
-            console.log(view.$('.alpha'), barSort != 'alpha');
             // render
             view.$('.ref').toggleClass('on', barSort != 'ref');
             view.$('.alpha').toggleClass('on', barSort != 'alpha');

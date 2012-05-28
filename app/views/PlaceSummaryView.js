@@ -8,7 +8,7 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
     
     // View: PlaceSummaryView
     return BookView.extend({
-        className: 'place-summary-view',
+        className: 'place-summary-view loading',
         template: '#place-summary-template',
         
         clear: function() {
@@ -29,9 +29,6 @@ define(['gv', 'views/BookView', 'views/PlaceFrequencyBarsView'],
             }
             // get the place
             place = book.places.get(placeId);
-            if (!place.isFullyLoaded()) {
-                view.$el.addClass('loading');
-            }
             place.ready(function() {
                 view.$el.removeClass('loading');
                 // create content
