@@ -56,13 +56,15 @@ define(['gv', 'views/BookView', 'models/Collection',], function(gv, BookView, Co
                     '<%= title %></span> (<%= tokenCount %>)</p>');
             view.$el.removeClass('loading');
             // create list
-            refs.filter(function(book) {
-                    return book.id != bookId;
-                })
-                .slice(0, 5)
+            refs = refs.filter(function(book) {
+                return book.id != bookId;
+            });
+            if (refs.length)
+                refs.slice(0, 5)
                 .forEach(function(book) {
                     view.$el.append(template(book.toJSON()));
                 });
+            else view.$el.append('<p>No other book references were found.</p>');
         },
         
         // UI Event Handlers - update state
