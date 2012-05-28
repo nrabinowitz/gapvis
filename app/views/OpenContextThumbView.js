@@ -1,16 +1,16 @@
 /*
- * Place Detail Flickr View
+ * Open Context Thumbnail view
  */
 define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state,
-        FLICKR_URL_BASE = 'http://api.flickr.com/services/feeds/photos_public.gne?tags=pleiades%3Aplace%3D[id]&format=json&jsoncallback=?';
+        OC_URL_BASE = 'http://opencontext.org/sets/.json?targURI=http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F[id]&callback=?';
     
-    // View: BookPlaceFlickrView (Flickr photos for the place detail page)
+    // View: OpenContextThumbView (photos for the place detail page)
     return BookView.extend({
         className: 'place-flickr-view panel fill',
-        template: '#flickr-photos-template',
     
         initialize: function() {
+            this.template = '<div><h4>Open Context Items</h4><div class="photos"></div></div>';
             this.photoTemplate = _.template($('#flickr-photo-template').html());
         },
         
@@ -29,20 +29,20 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
              
             // get Flickr data for this place
             $.ajax({
-                url: FLICKR_URL_BASE.replace('[id]', placeId),
+                url: OC_URL_BASE.replace('[id]', placeId),
                 dataType: 'jsonp',
                 success: function(data) {
                     view.$el.removeClass('loading');
-                    var photos = data && data.items || [];
+                    var photos = data && data.results || [];
                     // XXX hide on fail?
                     if (photos.length) {
-                        view.$('span.flickr-link a')
-                            .attr('href', data.link)
-                            .parent().show();
                         photos.slice(0,10).forEach(function(photo) {
-                            // get the thumbnail image
-                            photo.src = photo.media.m.replace('_m.jpg', '_s.jpg');
-                            view.$('.photos').append(view.photoTemplate(photo))
+                            // add the thumbnail image
+                            view.$('.photos').append(view.photoTemplate({
+                                src: photo.thumbIcon,
+                                link: photo.uri,
+                                title: photo.label
+                            }))
                         });
                     } else {
                         view.$('.photos').append('<p>No photos were found.</p>');
