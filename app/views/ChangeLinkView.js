@@ -32,11 +32,16 @@ define(['gv', 'views/ChangeFormView'], function(gv, ChangeFormView) {
         },
         
         // lazy instantiation of form view
-        openForm: function() {
-            if (!this.form) {
-                this.form = new ChangeFormView({ model: this.model });
+        openForm: function(token) {
+            var view = this;
+            if (!view.form) {
+                view.form = new ChangeFormView({ 
+                    model: view.model,
+                    token: view.token,
+                    placeId: view.placeId
+                });
             }
-            this.form.open();
+            view.form.open();
         },
         
         // UI Event Handlers
@@ -51,8 +56,8 @@ define(['gv', 'views/ChangeFormView'], function(gv, ChangeFormView) {
             this.clearTimer();
         },
         
-        uiButtonClick: function() {
-            this.openForm();
+        uiButtonClick: function(e) {
+            this.openForm($(e.target).text());
             this.close();
         },
         

@@ -6,7 +6,7 @@ define(function() {
     // removed in production by uglify
     if (DEBUG) {
         API_ROOT = '/api';
-        REPORT_URL = '/api/report/issue';
+        REPORT_URL = '/api/flags/new';
         API_DATA_TYPE = 'json';
     }
     

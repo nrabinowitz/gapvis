@@ -73,13 +73,15 @@ define(['gv', 'views/BookView', 'views/PageView', 'views/ChangeLinkView'],
         
         uiShowChangeLink: function(e) {
             var $placeSpan = $(e.target),
-                offset = $placeSpan.offset();
-            // set the place to edit in the state
-            state.set({ changelinkid: $placeSpan.attr('data-place-id') });
+                offset = $placeSpan.offset(),
+                changeLink = this.changeLink;
+            // set the place and token to edit
+            changeLink.placeId = $placeSpan.attr('data-place-id');
+            changeLink.token = $placeSpan.text();
             // clear existing timer, if any
-            this.changeLink.clearTimer();
+            changeLink.clearTimer();
             // show the link
-            this.changeLink.open(
+            changeLink.open(
                 offset.top, 
                 offset.left, 
                 $placeSpan.width(), 

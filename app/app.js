@@ -57,7 +57,10 @@ require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views
             cache: true
         }, options);
         defaultSync(method, model, options);
-    }
+    };
+    
+    // fake PUT and DELETE requests
+    Backbone.emulateHTTP = true;
     
     // initialize empty book list
     gv.books = new Books();

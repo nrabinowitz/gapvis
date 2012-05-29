@@ -2,7 +2,11 @@
  * Change This Form View
  */
 define(['gv', 'views/BookView'], function(gv, BookView) {
-    var state = gv.state;
+    var state = gv.state,
+        USE_MODEL = true,
+        Flag = Backbone.Model.extend({
+            url: gv.settings.REPORT_URL
+        });
     
     // View: ChangeFormView (change this form)
     return BookView.extend({
@@ -22,29 +26,41 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         
         open: function() {
             var view = this,
-                placeId = state.get('changelinkid'),
+                opts = view.options,
+                placeId = opts.placeId,
+                token = opts.token,
                 pageId = state.get('pageid');
             view.ready(function() {
                 var book = view.model,
-                    bookName = book.get('title'),
-                    placeName = '"' + book.places.get(placeId).get('title') + '"';
-                // set form value and span to match state
-                view.$('input[name="book-id"]')
-                    .val(placeId);
+                    bookName = book.get('title');
+                // set text to match state
                 view.$('#ctf-book-title')
                     .html(bookName);
-                view.$('input[name="place-id"]')
-                    .val(placeId);
                 view.$('#ctf-place-name')
-                    .html(placeName);
-                // set page if appropriate
+                    .html(token);
+                // show page if appropriate
                 if (!view.options.placeOnly) {
-                    view.$('input[name="page-id"]')
-                        .val(pageId);
                     view.$('#ctf-page-id')
                         .html(pageId);
+                } else view.$('span.pagenum').hide();
+                if (USE_MODEL) {
+                    // create model
+                    view.note = new Flag({
+                        bookid: view.model.id,
+                        placeid: placeId,
+                        pageid: pageId,
+                        token: token
+                    });
+                } else {
+                    view.$('input[name="book-id"]')
+                        .val(view.model.id);
+                    view.$('input[name="place-id"]')
+                        .val(placeId);
+                    view.$('input[name="page-id"]')
+                        .val(pageId);
+                    view.$('input[name="token"]')
+                        .val(token);
                 }
-                view.$('span.pagenum').toggle(!view.options.placeOnly);
                 // open window
                 view.$el.modal('show');
             });
@@ -52,6 +68,7 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
         
         submit: function() {
             var view = this,
+                note = view.note,
                 showSuccess = function() {
                     state.set({
                         message: { 
@@ -67,19 +84,27 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                             type: "error"
                         }
                     });
+                },
+                options = {
+                    success: function(model, resp) {
+                        if (resp && resp.success) showSuccess(); 
+                        else showError();
+                    },
+                    error: showError
                 };
             // post to the server
-            $.ajax({
-                type: 'POST',
-                url: gv.settings.REPORT_URL,
-                data: view.$('form').serializeArray(),
-                success: function(data) {
-                    if (data && data.success) showSuccess(); 
-                    else showError();
-                },
-                error: showError,
-                dataType: 'json'
-            });
+            if (DEBUG) options.type = 'GET';
+            if (USE_MODEL) {
+                note.save({ 
+                    note: view.$('textarea[name="note"]').val() 
+                }, options);
+            } else {
+                $.ajax(_.extend(options, {
+                    url: gv.settings.REPORT_URL,
+                    data: view.$('form').serializeArray(),
+                    dataType: 'json'
+                }));
+            }
             state.set({ message: "Submitting..." });
             // close out
             view.close();
