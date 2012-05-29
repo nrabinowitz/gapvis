@@ -34,22 +34,4 @@ define(['gv'], function(gv) {
         
     });
     
-    // parent for views that require a place
-    // XXX: Currently unreachable, should be a separate file
-    var PlaceView = BookView.extend({
-        
-        ready: function(callback) {
-            var view = this,
-                placeId = gv.state.get('placeid');
-            // if no place has been set, give up
-            if (!placeId) return;
-            // get the book, then the place
-            BookView.prototype.ready.call(view, function() {
-                view.model.places.get(placeId)
-                    .ready(callback)
-            });
-        }
-        
-    });
-    
 });

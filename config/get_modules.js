@@ -1,7 +1,10 @@
-var fs = require('fs'); 
+var fs = require('fs'),
+    configFile = process.argv[2];
 
+if (!configFile) process.exit(0);    
+
+var text = fs.readFileSync(configFile).toString();
 // a bit ugly
-var text = fs.readFileSync('app/config.js').toString();
 global.define = function(o) { return o };
 var config = eval(text),
     modules = config.globalViews || [];

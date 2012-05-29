@@ -19,10 +19,6 @@ define(function() {
             return Model.prototype.url.call(this) + '.json'
         },
         
-        // remove save/destroy
-        save: $.noop,
-        destroy: $.noop,
-        
         isFullyLoaded: function() {
             // override in subclasses
             return true;

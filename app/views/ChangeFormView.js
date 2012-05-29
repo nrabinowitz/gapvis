@@ -1,11 +1,8 @@
 /*
  * Change This Form View
  */
-define(['gv', 'views/BookView'], function(gv, BookView) {
-    var state = gv.state,
-        Flag = Backbone.Model.extend({
-            url: gv.settings.REPORT_URL
-        });
+define(['gv', 'views/BookView', 'models/Flag'], function(gv, BookView, Flag) {
+    var state = gv.state;
     
     // View: ChangeFormView (change this form)
     return BookView.extend({

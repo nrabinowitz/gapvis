@@ -1,0 +1,53 @@
+<h3>Edit Flag for "<%= text_string %>", p. <%= pageID %></h3>
+
+<form class="form-horizontal">
+  <fieldset>
+    <div class="top-group">
+        <div>
+          <label class="radio">
+            <input type="radio" name="action" id="action-ignore" value="ignore" checked="">
+            Ignore
+          </label>
+          <label class="radio">
+            <input type="radio" name="action" id="action-fix" value="fix">
+            Fix
+          </label>
+          <fieldset class="fix-actions hide">
+              <div class="control-group">
+                <label class="control-label">Action</label>
+                <div class="controls">
+                  <label class="radio">
+                    <input type="radio" name="fix" id="fix-remove" value="remove" checked="">
+                    Remove place reference
+                  </label>
+                  <label class="radio">
+                    <input type="radio" name="fix" id="fix-switch" value="switch">
+                    Switch to a different place:
+                  </label>
+                  <input type="text" class="input-xlarge" id="new-uri">
+                </div>
+              </div>
+              <div class="control-group">
+                <label class="control-label">Also Apply to:</label>
+                <div class="controls">
+                  <label class="checkbox toggle">
+                    <input type="checkbox">
+                    Select all/none
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" name="otherflag" value="2">
+                    ...design to compose the <span class="place">Titus</span> it is a favourite plan, rich in materials...
+                  </label>
+                  <label class="checkbox">
+                    <input type="checkbox" name="otherflag" value="7">
+                    ... a series of great events, and <span class="place">Titus</span> bloody; a portion of time big with intestine divisions ...
+                  </label>
+                </div>
+              </div>
+          </fieldset>
+        </div>
+        <div>
+            <button class="btn btn-primary">Save Changes</button>
+        </div>
+  </fieldset>
+</form>
