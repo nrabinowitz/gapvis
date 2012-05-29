@@ -3,7 +3,6 @@
  */
 define(['gv', 'views/BookView'], function(gv, BookView) {
     var state = gv.state,
-        USE_MODEL = true,
         Flag = Backbone.Model.extend({
             url: gv.settings.REPORT_URL
         });
@@ -43,24 +42,13 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                     view.$('#ctf-page-id')
                         .html(pageId);
                 } else view.$('span.pagenum').hide();
-                if (USE_MODEL) {
-                    // create model
-                    view.note = new Flag({
-                        bookid: view.model.id,
-                        placeid: placeId,
-                        pageid: pageId,
-                        token: token
-                    });
-                } else {
-                    view.$('input[name="book-id"]')
-                        .val(view.model.id);
-                    view.$('input[name="place-id"]')
-                        .val(placeId);
-                    view.$('input[name="page-id"]')
-                        .val(pageId);
-                    view.$('input[name="token"]')
-                        .val(token);
-                }
+                // create model
+                view.note = new Flag({
+                    bookid: view.model.id,
+                    placeid: placeId,
+                    pageid: pageId,
+                    token: token
+                });
                 // open window
                 view.$el.modal('show');
             });
@@ -94,17 +82,9 @@ define(['gv', 'views/BookView'], function(gv, BookView) {
                 };
             // post to the server
             if (DEBUG) options.type = 'GET';
-            if (USE_MODEL) {
-                note.save({ 
-                    note: view.$('textarea[name="note"]').val() 
-                }, options);
-            } else {
-                $.ajax(_.extend(options, {
-                    url: gv.settings.REPORT_URL,
-                    data: view.$('form').serializeArray(),
-                    dataType: 'json'
-                }));
-            }
+            note.save({ 
+                note: view.$('textarea[name="note"]').val() 
+            }, options);
             state.set({ message: "Submitting..." });
             // close out
             view.close();
