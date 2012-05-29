@@ -290,17 +290,33 @@ casper
     .then(function() {
         this.click('div.infowindow span.goto-place');
     })
+    .assertAtBookPlaceView()
     .then(function() {
-        t.assertRoute(/^book\/2\/place\/423025/, 'Place details route correct');
-        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+        t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
+            "Book title shown");
+        t.assertText('.place-summary-view h3', 'Roma',
+            "Place title shown in summary");
+        t.assertPermalink(RegExp(baseUrl + '#book/2/place/423025\\?'),
+            "Permalink is correct");
     })
     .back()
+    .assertAtBookReadingView()
+    .waitForInfoWindow()
+    .then(function() {
+        t.assertRoute("book/2/read/2/423025", 'Reading details route correct');
+        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+    })
     .then(function() {
         this.click('div.navigation-view button[data-view-id="place-view"]');
     })
+    .assertAtBookPlaceView()
     .then(function() {
-        t.assertRoute(/^book\/2\/place\/423025/, 'Place details route correct');
-        t.assertInfoWindow('Roma', 'Roma is still selected in info window');
+        t.assertText("h2.book-title", 'The Works of Cornelius Tacitus: The History',
+            "Book title shown");
+        t.assertText('.place-summary-view h3', 'Roma',
+            "Place title shown in summary");
+        t.assertPermalink(RegExp(baseUrl + '#book/2/place/423025\\?'),
+            "Permalink is correct");
     });
     
 casper
