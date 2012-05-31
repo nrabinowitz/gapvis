@@ -14,5 +14,8 @@ define({
                 '.right-panel': 'views/PagesView'
             }
         }
-    }
+    },
+    // whether to fake PUT/DELETE
+    emulateHTTP: true,
+    disableChangeLink: true
 });

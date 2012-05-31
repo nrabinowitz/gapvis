@@ -19,13 +19,8 @@ require.config({
 require(['gv', 'edit/config', 'models/Books', 'models/State', 'views/AppView', 'views/Layout', 'routers/Router'], 
     function(gv, config, Books) {
     
-    // fake PUT and DELETE requests
-    Backbone.emulateHTTP = true;
-    
     // initialize empty book list
     gv.books = new Books();
-    
-    gv.settings.disableChangeLink = true;
     
     // kick things off
     $(function() {

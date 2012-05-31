@@ -57,8 +57,6 @@ require(['gv', 'config', 'models/Books', 'models/State', 'views/AppView', 'views
     $(function() {
         gv.configure(config)
             .start();
-        // fake PUT and DELETE requests?
-        Backbone.emulateHTTP = !!gv.settings.emulateHTTP;
         if (DEBUG) console.log('Application initialized');
     });
     
