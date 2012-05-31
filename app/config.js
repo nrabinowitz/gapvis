@@ -83,5 +83,11 @@ define({
                 }
             }
         }
-    }
+    },
+    // number of related places to show
+    relatedCount: 8,
+    // number of book references to show
+    bookRefCount: 5,
+    // whether to fake PUT/DELETE
+    emulateHTTP: true
 });

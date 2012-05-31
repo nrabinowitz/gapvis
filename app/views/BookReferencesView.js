@@ -60,7 +60,7 @@ define(['gv', 'views/BookView', 'models/Collection',], function(gv, BookView, Co
                 return book.id != bookId;
             });
             if (refs.length)
-                refs.slice(0, 5)
+                refs.slice(0, gv.settings.bookRefCount)
                 .forEach(function(book) {
                     view.$el.append(template(book.toJSON()));
                 });

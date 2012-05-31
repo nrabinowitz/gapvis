@@ -54,21 +54,19 @@ define(function() {
             return TimeMapTheme.createCircleTheme({ color: color })
         });
 
-    var gv = window.gv = _.extend(spf, {
-        settings: {
-            // core settings (set from config)
-            API_ROOT: API_ROOT,
-            REPORT_URL: REPORT_URL,
-            API_DATA_TYPE: API_DATA_TYPE,
-            
-             // google maps style settings
-            mapStyle: mapStyle,
-            scaleColors: scaleColors,
-            colorThemes: colorThemes,
-            
-            // number of related places to show
-            relatedCount: 8
-        }
+    var gv = window.gv = spf;
+    
+    gv.settings = _.extend(spf.config, {
+        // core settings (set from config)
+        API_ROOT: API_ROOT,
+        REPORT_URL: REPORT_URL,
+        API_DATA_TYPE: API_DATA_TYPE,
+        
+         // google maps style settings
+        mapStyle: mapStyle,
+        scaleColors: scaleColors,
+        colorThemes: colorThemes
+        
     });
     
     return gv;
