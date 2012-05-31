@@ -2,7 +2,6 @@
  * Flag model
  */
 define(['gv', 'models/Model'], function(gv, Model) {
-    var settings = gv.settings;
        
     // Model: Flag
     return Model.extend({
