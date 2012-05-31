@@ -1,7 +1,6 @@
-<h3>Edit Flag for "<%= text_string %>", p. <%= pageID %></h3>
-
 <form class="form-horizontal fill">
   <fieldset>
+    <h3>Edit Flag for "<%= text_string %>", p. <%= pageID %></h3>
     <div class="top-group">
         <div>
           <label class="radio">
@@ -39,7 +38,7 @@
                     <% _.each(other_tokens, function(token) { %>
                       <label class="checkbox">
                         <input type="checkbox" name="othertoken" value="<%= token.id %>">
-                        <%= token.snippet %>
+                        <%= token.snippet %> (p. <%= token.pageID %>)
                       </label>
                     <% }); %>
                     </div>
