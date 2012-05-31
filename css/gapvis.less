@@ -1,5 +1,5 @@
 
-@import "../lib/bootstrap/less/bootstrap.less";
+@import "bootstrap.less";
 
 // ---------------------------------------------------
 // Settings
@@ -506,12 +506,20 @@ div.timeline-event-label {
 .flag-edit-view {
     form {
         margin: 1em 0;
-        padding: .5em 1em;
         width: inherit;
         background: whiteSmoke;
+        overflow-x: hidden;
+        overflow-y: auto;
+        
+        > fieldset {
+            padding: 1em;
+        }
     }
     label.checkbox.toggle {
         font-style: italic;
         color: #999;
+    }
+    .panel.padded-scroll {
+        max-height: 10em;
     }
 }

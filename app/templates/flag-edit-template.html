@@ -1,6 +1,6 @@
 <h3>Edit Flag for "<%= text_string %>", p. <%= pageID %></h3>
 
-<form class="form-horizontal">
+<form class="form-horizontal fill">
   <fieldset>
     <div class="top-group">
         <div>
@@ -34,14 +34,16 @@
                     <input type="checkbox">
                     Select all/none
                   </label>
-                  <label class="checkbox">
-                    <input type="checkbox" name="otherflag" value="2">
-                    ...design to compose the <span class="place">Titus</span> it is a favourite plan, rich in materials...
-                  </label>
-                  <label class="checkbox">
-                    <input type="checkbox" name="otherflag" value="7">
-                    ... a series of great events, and <span class="place">Titus</span> bloody; a portion of time big with intestine divisions ...
-                  </label>
+                  <div class="panel padded-scroll">
+                    <div>
+                    <% _.each(other_tokens, function(token) { %>
+                      <label class="checkbox">
+                        <input type="checkbox" name="othertoken" value="<%= token.id %>">
+                        <%= token.snippet %>
+                      </label>
+                    <% }); %>
+                    </div>
+                  </div>
                 </div>
               </div>
           </fieldset>

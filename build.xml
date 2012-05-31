@@ -11,7 +11,13 @@
         </classpath>
     </taskdef>
     
-    <!-- get properties -->
+    <!-- get custom properties.
+    You can override the default configuration settings with your own by running:
+    ant -Dconfig.file=path/to/my.config.properties
+    -->
+    <property file="${config.file}" />
+    
+    <!-- get core properties -->
     <property name="config.dir" value="config" />
     <property file="${config.dir}/build.properties" />
     
@@ -21,17 +27,17 @@
     
     <!-- Build Targets -->
     
-    <target name="build-dev" depends="-view-settings">
+    <target name="build-dev">
         <property name="js.settings" value="${js.settings.dev}"/>
         <ant target="-start-build-dev"/>
     </target>
     
-    <target name="build-production" depends="-view-settings">
+    <target name="build-production">
         <property name="js.settings" value="${js.settings.production}"/>
         <ant target="-start-build-production"/>
     </target>
                      
-    <target name="build-production-test" depends="-view-settings">
+    <target name="build-production-test">
         <property name="index.file" value="index.html" />
         <property name="js.settings" value="${js.settings.dev}"/>
         <ant target="-start-build-production"/>
@@ -40,11 +46,6 @@
     <target name="build-dev-local">
         <property name="locallibs" value="true"/>
         <ant target="build-dev"/>
-    </target>
-    
-    <target name="build-edit" depends="-edit-settings">
-        <property name="js.settings" value="${js.settings.dev}"/>
-        <ant target="-start-build-dev"/>
     </target>
     
     <!-- Private build targets -->
@@ -70,19 +71,6 @@
                      finish-build"/>
                      
     <!-- Settings for builds -->
-    <target name="-view-settings">
-        <property name="index.file" value="index.html" />
-        <property name="app.file.prefix" value="view-" />
-        <property name="js.app.init" value="${js.app.init.view}" />
-        <property name="js.app.config" value="${js.app.config.view}" />
-    </target>
-    
-    <target name="-edit-settings">
-        <property name="index.file" value="edit.html" />
-        <property name="app.file.prefix" value="edit-" />
-        <property name="js.app.init" value="${js.app.init.edit}" />
-        <property name="js.app.config" value="${js.app.config.edit}" />
-    </target>
     
     <target name="-start-build-settings">
     
@@ -99,8 +87,8 @@
         <property name="css.concat.target" value="${target.dir}/${css.concat}" />
         
         <pathconvert property="js.app.templates.files" pathsep="," dirsep="/">
-            <fileset dir="${js.app.templates.dir}"/>
-            <fileset dir="${js.app.layouts.dir}"/>
+            <fileset dir="${js.app.templates.dir}" excludes="*edit-*"/>
+            <fileset dir="${js.app.layouts.dir}" excludes="*edit-*"/>
         </pathconvert>
         
     </target>
@@ -122,6 +110,7 @@
     
     <!-- Set properties for Production build -->
     <target name="-start-build-production" depends="-start-build-settings">
+        <!-- Note: js.lib.production.min is already added in concat-libs-js -->
         <property name="js.uglify.files" 
                   value="${js.lib.production.uglify},
                          ${js.libext},
@@ -305,7 +294,7 @@
         <echo>Optimizing Require.js Modules</echo>
         <!-- Get list of modules -->
         <exec executable="node" failonerror="true" outputproperty="js.rjs.modules">
-            <arg line="${config.dir}/get_modules.js ${js.app.config}"/>
+            <arg line="lib/backbone-spf/util/get_modules.js ${js.app.config}"/>
         </exec>
         <echo>Found modules: ${js.rjs.modules}</echo>
         <!-- Run optimization -->

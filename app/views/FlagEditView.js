@@ -41,7 +41,7 @@ define(['gv', 'views/BookView', 'models/Flag'], function(gv, BookView, Flag) {
         
         uiToggleCheckboxes: function(e) {
             var on = $(e.target).prop('checked');
-            this.$('input[name="otherflag"]')
+            this.$('input[name="othertoken"]')
                 .prop('checked', on);
         }
         
